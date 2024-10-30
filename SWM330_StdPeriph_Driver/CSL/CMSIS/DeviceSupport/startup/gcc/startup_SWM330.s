@@ -48,94 +48,46 @@ __isr_vector:
     /* External interrupts */
     .long    UART0_Handler
     .long    UART1_Handler
-    .long    TIMR0_Handler
-    .long    TIMR1_Handler
-    .long    DMA_Handler
-    .long    SPI0_Handler
-    .long    PWM0_Handler
-    .long    WDT_Handler
     .long    UART2_Handler
+    .long    UART3_Handler
+    .long    UART4_Handler
+    .long    PWM0_Handler
     .long    PWM1_Handler
+    .long    PWMBRK_Handler
+    .long    SPI0_Handler
+    .long    I2S0_Handler
     .long    ADC0_Handler
     .long    BTIMR0_Handler
-    .long    HALL0_Handler
-    .long    PWM2_Handler
-    .long    PWMBRK_Handler
-    .long    I2C0_Handler
-    .long    CAN0_Handler
-    .long    SPI1_Handler
-    .long    RTC_Handler
-    .long    PWM3_Handler
-    .long    TIMR2_Handler
-    .long    UART3_Handler
-    .long    TIMR3_Handler
-    .long    ADC1_Handler
-    .long    BOD_Handler
-    .long    CORDIC_Handler
     .long    BTIMR1_Handler
-    .long    PWM4_Handler
-    .long    HALL3_Handler
     .long    BTIMR2_Handler
-    .long    I2C1_Handler
     .long    BTIMR3_Handler
-    .long    ACMP_Handler
-    .long    XTALSTOP_Handler
-    .long    FSPI_Handler
-    .long    GPIOA_Handler
-    .long    GPIOB_Handler
-    .long    GPIOC_Handler
-    .long    GPIOD_Handler
-    .long    GPIOM_Handler
-    .long    GPION_Handler
-    .long    GPIOA0_Handler
-    .long    GPIOA1_Handler
-    .long    GPIOA5_Handler
-    .long    GPIOA6_Handler
-    .long    GPIOA10_Handler
-    .long    GPIOA11_Handler
-    .long    GPIOA12_Handler
-    .long    GPIOA13_Handler
-    .long    GPIOB0_Handler
-    .long    GPIOB1_Handler
-    .long    GPIOB2_Handler
-    .long    GPIOC0_Handler
-    .long    GPIOC1_Handler
-    .long    GPIOC2_Handler
-    .long    GPIOC3_Handler
-    .long    GPIOC4_Handler
-    .long    GPIOD3_Handler
-    .long    GPIOD4_Handler
-    .long    GPIOD5_Handler
-    .long    GPIOD6_Handler
-    .long    GPIOD7_Handler
-    .long    GPIOD8_Handler
-    .long    GPIOC9_Handler
-    .long    GPIOC10_Handler
-    .long    GPIOC11_Handler
-    .long    GPIOC12_Handler
-    .long    GPIOM0_Handler
-    .long    GPIOM1_Handler
-    .long    GPIOM2_Handler
-    .long    GPIOM3_Handler
-    .long    GPIOM4_Handler
-    .long    DIV_Handler
+    .long    TIMR0_Handler
+    .long    TIMR1_Handler
+    .long    CAN0_Handler
+    .long    I2C0_Handler
+    .long    I2C1_Handler
+    .long    DMA_Handler
+    .long    DMA2D_Handler
+    .long    BOD_Handler
+    .long    QSPI0_Handler
+    .long    QSPI1_Handler
+    .long    SRA_Handler
+    .long    DVP_Handler
     .long    LCD_Handler
-    .long    GPIOE_Handler
     .long    JPEG_Handler
     .long    SDIO_Handler
-    .long    USB_Handler
-    .long    CAN1_Handler
-    .long    TIMR4_Handler
-    .long    BTIMR4_Handler
-    .long    BTIMR5_Handler
-    .long    BTIMR6_Handler
-    .long    BTIMR7_Handler
-    .long    BTIMR8_Handler
-    .long    BTIMR9_Handler
-    .long    BTIMR10_Handler
-    .long    BTIMR11_Handler
-    .long    DMA2D_Handler
-    .long    QEI_Handler
+    .long    WDT_Handler
+    .long    RTC_Handler
+    .long    EXTI0_Handler
+    .long    EXTI1_Handler
+    .long    EXTI2_Handler
+    .long    EXTI3_Handler
+    .long    EXTI4_Handler
+    .long    EXTI5_Handler
+    .long    EXTI6_Handler
+    .long    EXTI7_Handler
+    .long    EXTI8_11_Handler
+    .long    EXTI12_15_Handler
 
 
 	.section .text.Reset_Handler
@@ -198,94 +150,46 @@ Reset_Handler:
 
     def_default_handler    UART0_Handler
     def_default_handler    UART1_Handler
-    def_default_handler    TIMR0_Handler
-    def_default_handler    TIMR1_Handler
-    def_default_handler    DMA_Handler
-    def_default_handler    SPI0_Handler
-    def_default_handler    PWM0_Handler
-    def_default_handler    WDT_Handler
     def_default_handler    UART2_Handler
+    def_default_handler    UART3_Handler
+    def_default_handler    UART4_Handler
+    def_default_handler    PWM0_Handler
     def_default_handler    PWM1_Handler
+    def_default_handler    PWMBRK_Handler
+    def_default_handler    SPI0_Handler
+    def_default_handler    I2S0_Handler
     def_default_handler    ADC0_Handler
     def_default_handler    BTIMR0_Handler
-    def_default_handler    HALL0_Handler
-    def_default_handler    PWM2_Handler
-    def_default_handler    PWMBRK_Handler
-    def_default_handler    I2C0_Handler
-    def_default_handler    CAN0_Handler
-    def_default_handler    SPI1_Handler
-    def_default_handler    RTC_Handler
-    def_default_handler    PWM3_Handler
-    def_default_handler    TIMR2_Handler
-    def_default_handler    UART3_Handler
-    def_default_handler    TIMR3_Handler
-    def_default_handler    ADC1_Handler
-    def_default_handler    BOD_Handler
-    def_default_handler    CORDIC_Handler
     def_default_handler    BTIMR1_Handler
-    def_default_handler    PWM4_Handler
-    def_default_handler    HALL3_Handler
     def_default_handler    BTIMR2_Handler
-    def_default_handler    I2C1_Handler
     def_default_handler    BTIMR3_Handler
-    def_default_handler    ACMP_Handler
-    def_default_handler    XTALSTOP_Handler
-    def_default_handler    FSPI_Handler
-    def_default_handler    GPIOA_Handler
-    def_default_handler    GPIOB_Handler
-    def_default_handler    GPIOC_Handler
-    def_default_handler    GPIOD_Handler
-    def_default_handler    GPIOM_Handler
-    def_default_handler    GPION_Handler
-    def_default_handler    GPIOA0_Handler
-    def_default_handler    GPIOA1_Handler
-    def_default_handler    GPIOA5_Handler
-    def_default_handler    GPIOA6_Handler
-    def_default_handler    GPIOA10_Handler
-    def_default_handler    GPIOA11_Handler
-    def_default_handler    GPIOA12_Handler
-    def_default_handler    GPIOA13_Handler
-    def_default_handler    GPIOB0_Handler
-    def_default_handler    GPIOB1_Handler
-    def_default_handler    GPIOB2_Handler
-    def_default_handler    GPIOC0_Handler
-    def_default_handler    GPIOC1_Handler
-    def_default_handler    GPIOC2_Handler
-    def_default_handler    GPIOC3_Handler
-    def_default_handler    GPIOC4_Handler
-    def_default_handler    GPIOD3_Handler
-    def_default_handler    GPIOD4_Handler
-    def_default_handler    GPIOD5_Handler
-    def_default_handler    GPIOD6_Handler
-    def_default_handler    GPIOD7_Handler
-    def_default_handler    GPIOD8_Handler
-    def_default_handler    GPIOC9_Handler
-    def_default_handler    GPIOC10_Handler
-    def_default_handler    GPIOC11_Handler
-    def_default_handler    GPIOC12_Handler
-    def_default_handler    GPIOM0_Handler
-    def_default_handler    GPIOM1_Handler
-    def_default_handler    GPIOM2_Handler
-    def_default_handler    GPIOM3_Handler
-    def_default_handler    GPIOM4_Handler
-    def_default_handler    DIV_Handler
+    def_default_handler    TIMR0_Handler
+    def_default_handler    TIMR1_Handler
+    def_default_handler    CAN0_Handler
+    def_default_handler    I2C0_Handler
+    def_default_handler    I2C1_Handler
+    def_default_handler    DMA_Handler
+    def_default_handler    DMA2D_Handler
+    def_default_handler    BOD_Handler
+    def_default_handler    QSPI0_Handler
+    def_default_handler    QSPI1_Handler
+    def_default_handler    SRA_Handler
+    def_default_handler    DVP_Handler
     def_default_handler    LCD_Handler
-    def_default_handler    GPIOE_Handler
     def_default_handler    JPEG_Handler
     def_default_handler    SDIO_Handler
-    def_default_handler    USB_Handler
-    def_default_handler    CAN1_Handler
-    def_default_handler    TIMR4_Handler
-    def_default_handler    BTIMR4_Handler
-    def_default_handler    BTIMR5_Handler
-    def_default_handler    BTIMR6_Handler
-    def_default_handler    BTIMR7_Handler
-    def_default_handler    BTIMR8_Handler
-    def_default_handler    BTIMR9_Handler
-    def_default_handler    BTIMR10_Handler
-    def_default_handler    BTIMR11_Handler
-    def_default_handler    DMA2D_Handler
-    def_default_handler    QEI_Handler
+    def_default_handler    WDT_Handler
+    def_default_handler    RTC_Handler
+    def_default_handler    EXTI0_Handler
+    def_default_handler    EXTI1_Handler
+    def_default_handler    EXTI2_Handler
+    def_default_handler    EXTI3_Handler
+    def_default_handler    EXTI4_Handler
+    def_default_handler    EXTI5_Handler
+    def_default_handler    EXTI6_Handler
+    def_default_handler    EXTI7_Handler
+    def_default_handler    EXTI8_11_Handler
+    def_default_handler    EXTI12_15_Handler
 
     def_default_handler    Default_Handler
 

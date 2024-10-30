@@ -28,19 +28,23 @@ void UART_Init(UART_TypeDef * UARTx, UART_InitStructure * initStruct)
 	switch((uint32_t)UARTx)
 	{
 	case ((uint32_t)UART0):
-		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_UART0_Pos);
+		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_UART0_Pos);
 		break;
 	
 	case ((uint32_t)UART1):
-		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_UART1_Pos);
+		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_UART1_Pos);
 		break;
 	
 	case ((uint32_t)UART2):
-		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_UART2_Pos);
+		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_UART2_Pos);
 		break;
 	
 	case ((uint32_t)UART3):
-		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_UART3_Pos);
+		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_UART3_Pos);
+		break;
+	
+	case ((uint32_t)UART4):
+		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_UART4_Pos);
 		break;
 	}
 	

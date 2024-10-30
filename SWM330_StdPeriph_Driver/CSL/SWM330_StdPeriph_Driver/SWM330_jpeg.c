@@ -31,7 +31,7 @@ void JPEG_Init(JPEG_TypeDef * JPEGx, JPEG_InitStructure * initStruct)
 	switch((uint32_t)JPEGx)
 	{
 	case ((uint32_t)JPEG):
-		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_JPEG_Pos);
+		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_JPEG_Pos);
 		break;
 	}
 	

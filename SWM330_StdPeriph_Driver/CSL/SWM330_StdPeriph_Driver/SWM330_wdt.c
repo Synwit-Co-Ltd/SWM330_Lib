@@ -27,7 +27,7 @@
 *******************************************************************************************************************************/
 void WDT_Init(WDT_TypeDef * WDTx, uint32_t int_period, uint32_t rst_period)
 {
-	SYS->CLKEN0 |= (1 << SYS_CLKEN0_WDT_Pos);
+	SYS->CLKEN1 |= (1 << SYS_CLKEN1_WDT_Pos);
 	
 	WDTx->CR &= ~WDT_CR_CKDIV_Msk;
 	WDTx->CR |= (4 << WDT_CR_CKDIV_Pos);	// divide the frequency of the clock source by 32

@@ -35,7 +35,7 @@ void TIMR_Init(TIMR_TypeDef * TIMRx, uint32_t mode, uint16_t prediv, uint32_t pe
 	}
 	else
 	{
-		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_BTIMR_Pos);
+		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_BTIMR_Pos);
 	}
 	
 	TIMR_Stop(TIMRx);

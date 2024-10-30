@@ -8,107 +8,59 @@
  */
 typedef enum IRQn
 {
-/******  Cortex-M0 Processor Exceptions Numbers **********************************************/
+/******  Cortex-M33 Processor Exceptions Numbers **********************************************/
   NonMaskableInt_IRQn     = -14,    /*!< 2 Non Maskable Interrupt                        */
-  MemoryManagement_IRQn   = -12,    /*!< 4 Cortex-M4 Memory Management Interrupt         */
-  BusFault_IRQn           = -11,    /*!< 5 Cortex-M4 Bus Fault Interrupt                 */
-  UsageFault_IRQn         = -10,    /*!< 6 Cortex-M4 Usage Fault Interrupt               */
-  SVCall_IRQn             = -5,     /*!< 11 Cortex-M4 SV Call Interrupt                  */
-  DebugMonitor_IRQn       = -4,     /*!< 12 Cortex-M4 Debug Monitor Interrupt            */
-  PendSV_IRQn             = -2,     /*!< 14 Cortex-M4 Pend SV Interrupt                  */
-  SysTick_IRQn            = -1,     /*!< 15 Cortex-M4 System Tick Interrupt              */
+  MemoryManagement_IRQn   = -12,    /*!< 4 Cortex-M33 Memory Management Interrupt         */
+  BusFault_IRQn           = -11,    /*!< 5 Cortex-M33 Bus Fault Interrupt                 */
+  UsageFault_IRQn         = -10,    /*!< 6 Cortex-M33 Usage Fault Interrupt               */
+  SVCall_IRQn             = -5,     /*!< 11 Cortex-M33 SV Call Interrupt                  */
+  DebugMonitor_IRQn       = -4,     /*!< 12 Cortex-M33 Debug Monitor Interrupt            */
+  PendSV_IRQn             = -2,     /*!< 14 Cortex-M33 Pend SV Interrupt                  */
+  SysTick_IRQn            = -1,     /*!< 15 Cortex-M33 System Tick Interrupt              */
   
-/******  Cortex-M4 specific Interrupt Numbers ************************************************/
+/******  Cortex-M33 specific Interrupt Numbers ************************************************/
   UART0_IRQn              = 0,
   UART1_IRQn              = 1,
-  TIMR0_IRQn              = 2,
-  TIMR1_IRQn              = 3,
-  DMA_IRQn                = 4,
-  SPI0_IRQn               = 5,
-  PWM0_IRQn               = 6,
-  WDT_IRQn                = 7,
-  UART2_IRQn              = 8,
-  PWM1_IRQn               = 9,
+  UART2_IRQn              = 2,
+  UART3_IRQn              = 3,
+  UART4_IRQn              = 4,
+  PWM0_IRQn               = 5,
+  PWM1_IRQn               = 6,
+  PWMBRK_IRQn             = 7,
+  SPI0_IRQn               = 8,
+  I2S0_IRQn               = 9,
   ADC0_IRQn               = 10,
   BTIMR0_IRQn             = 11,
-  HALL0_IRQn              = 12,
-  PWM2_IRQn               = 13,
-  PWMBRK_IRQn             = 14,
-  I2C0_IRQn               = 15,
-  CAN0_IRQn               = 16,
-  SPI1_IRQn               = 17,
-  RTC_IRQn                = 18,
-  PWM3_IRQn               = 19,
-  TIMR2_IRQn              = 20,
-  UART3_IRQn              = 21,
-  TIMR3_IRQn              = 22,
-  ADC1_IRQn               = 23,
-  BOD_IRQn                = 24,
-  CORDIC_IRQn             = 25,
-  BTIMR1_IRQn             = 26,
-  PWM4_IRQn               = 27,
-  HALL3_IRQn              = 28,
-  BTIMR2_IRQn             = 29,
-  I2C1_IRQn               = 30,
-  BTIMR3_IRQn             = 31,
-  ACMP_IRQn               = 32,
-  XTALSTOP_IRQn           = 33,
-  FSPI_IRQn               = 34,
-  GPIOA_IRQn              = 35,
-  GPIOB_IRQn              = 36,
-  GPIOC_IRQn              = 37,
-  GPIOD_IRQn              = 38,
-  GPIOM_IRQn              = 39,
-  GPION_IRQn              = 40,
-  GPIOA0_IRQn             = 41,
-  GPIOA1_IRQn             = 42,
-  GPIOA5_IRQn             = 43,
-  GPIOA6_IRQn             = 44,
-  GPIOA10_IRQn            = 45,
-  GPIOA11_IRQn            = 46,
-  GPIOA12_IRQn            = 47,
-  GPIOA13_IRQn            = 48,
-  GPIOB0_IRQn             = 49,
-  GPIOB1_IRQn             = 50,
-  GPIOB2_IRQn             = 51,
-  GPIOC0_IRQn             = 52,
-  GPIOC1_IRQn             = 53,
-  GPIOC2_IRQn             = 54,
-  GPIOC3_IRQn             = 55,
-  GPIOC4_IRQn             = 56,
-  GPIOD3_IRQn             = 57,
-  GPIOD4_IRQn             = 58,
-  GPIOD5_IRQn             = 59,
-  GPIOD6_IRQn             = 60,
-  GPIOD7_IRQn             = 61,
-  GPIOD8_IRQn             = 62,
-  GPIOC9_IRQn             = 63,
-  GPIOC10_IRQn            = 64,
-  GPIOC11_IRQn            = 65,
-  GPIOC12_IRQn            = 66,
-  GPIOM0_IRQn             = 67,
-  GPIOM1_IRQn             = 68,
-  GPIOM2_IRQn             = 69,
-  GPIOM3_IRQn             = 70,
-  GPIOM4_IRQn             = 71,
-  DIV_IRQn                = 72,
-  LCD_IRQn                = 73,
-  GPIOE_IRQn              = 74,
-  JPEG_IRQn               = 75,
-  SDIO_IRQn               = 76,
-  USB_IRQn                = 77,
-  CAN1_IRQn				  = 78,
-  TIMR4_IRQn			  = 79,
-  BTIMR4_IRQn			  = 80,
-  BTIMR5_IRQn			  = 81,
-  BTIMR6_IRQn			  = 82,
-  BTIMR7_IRQn			  = 83,
-  BTIMR8_IRQn			  = 84,
-  BTIMR9_IRQn			  = 85,
-  BTIMR10_IRQn			  = 86,
-  BTIMR11_IRQn			  = 87,
-  DMA2D_IRQn              = 88,
-  QEI_IRQn				  = 90,
+  BTIMR1_IRQn             = 12,
+  BTIMR2_IRQn             = 13,
+  BTIMR3_IRQn             = 14,
+  TIMR0_IRQn              = 15,
+  TIMR1_IRQn              = 16,
+  CAN0_IRQn               = 17,
+  I2C0_IRQn               = 18,
+  I2C1_IRQn               = 19,
+  DMA_IRQn                = 20,
+  DMA2D_IRQn              = 21,
+  BOD_IRQn                = 22,
+  QSPI0_IRQn              = 23,
+  QSPI1_IRQn              = 24,
+  SRA_IRQn                = 25,
+  DVP_IRQn                = 26,
+  LCD_IRQn                = 27,
+  JPEG_IRQn               = 28,
+  SDIO_IRQn               = 29,
+  WDT_IRQn                = 30,
+  RTC_IRQn                = 31,
+  EXTI0_IRQn              = 32,
+  EXTI1_IRQn              = 33,
+  EXTI2_IRQn              = 34,
+  EXTI3_IRQn              = 35,
+  EXTI4_IRQn              = 36,
+  EXTI5_IRQn              = 37,
+  EXTI6_IRQn              = 38,
+  EXTI7_IRQn              = 39,
+  EXTI8_11_IRQn           = 40,
+  EXTI12_15_IRQn          = 41,
 } IRQn_Type;
 
 /*
@@ -117,7 +69,7 @@ typedef enum IRQn
  * ==========================================================================
  */
 
-/* Configuration of the Cortex-M4 Processor and Core Peripherals */
+/* Configuration of the Cortex-M33 Processor and Core Peripherals */
 #define __CM33_REV                0x0000  /*!< Core revision r0p1                            */
 #define __NVIC_PRIO_BITS          3       /*!< SWM330 uses 3 Bits for the Priority Levels    */
 #define __Vendor_SysTickConfig    0       /*!< Set to 1 if different SysTick Config is used  */
@@ -147,10 +99,8 @@ typedef struct {
 	__IO uint32_t CLKEN0;					// Clock Enable
 	
 	__IO uint32_t CLKEN1;
-
-	__IO uint32_t SLEEP;
 	
-		 uint32_t RESERVED[4];
+		 uint32_t RESERVED[5];
 	
 	__IO uint32_t RSTSR;					// Reset Status
 	
@@ -160,25 +110,15 @@ typedef struct {
 	
 	__IO uint32_t RTCWKSR;
 	
-		 uint32_t RESERVED3[14];
+	__IO uint32_t EMCADJ;
 	
-	__IO uint32_t USBPHYCR;
+		 uint32_t RESERVED3[17];
 	
-	__IO uint32_t USBCR;
-	
-		 uint32_t RESERVED4[2];
-		
 	__I  uint32_t CHIPID[4];
 	
 	__IO uint32_t BACKUP[4];				// Data Backup Register
 	
-		 uint32_t RESERVED5[12];
-	
-	__IO uint32_t PRNGCR;
-	__IO uint32_t PRNGDL;					// PRNG Data Low Word
-	__IO uint32_t PRNGDH;
-	
-		 uint32_t RESERVED6[9];
+		 uint32_t RESERVED4[24];
 	
 	__IO uint32_t PAWKEN;				    // PORTA Wakeup Enable
 	__IO uint32_t PBWKEN;
@@ -186,75 +126,48 @@ typedef struct {
 	__IO uint32_t PDWKEN;
 	__IO uint32_t PEWKEN;
 	
-         uint32_t RESERVED7[3];
+         uint32_t RESERVED5[7];
 	
-	__IO uint32_t PMWKEN;
-	__IO uint32_t PNWKEN;
-	
-	     uint32_t RESERVED8[2];
-
 	__IO uint32_t PAWKSR;				    // PORTA Wakeup Status, Write 1 to clear
 	__IO uint32_t PBWKSR;
 	__IO uint32_t PCWKSR;
 	__IO uint32_t PDWKSR;
 	__IO uint32_t PEWKSR;
 	
-		 uint32_t RESERVED9[3];
-	
-	__IO uint32_t PMWKSR;
-	__IO uint32_t PNWKSR;
-	
-		 uint32_t RESERVED10[(0x400-0x154)/4-1];
-	
-	__IO uint32_t IOFILT0;					// IO Filter 0
-	__IO uint32_t IOFILT1;
-
-	uint32_t RESERVED11[(0x720-0x404)/4-1];
+		 uint32_t RESERVED6[(0x720-0x140)/4-1];
 	
 	__IO uint32_t PRSTEN;					// Peripheral reset enabled. PRSTR0 and PRSTR1 can be written only when the value of PRSTEN is 0x55
 	__IO uint32_t PRSTR0;
 	__IO uint32_t PRSTR1;
 	
-    //Analog Control: 0x400AA000
-         uint32_t RESERVED12[(0x400AA000-0x40000728)/4-1];
+    //Analog Control: 0x400A5800
+         uint32_t RESERVED7[(0x400A5800-0x40000728)/4-1];
 	
 	__IO uint32_t HRCCR;					// High speed RC Control Register
-		 uint32_t RESERVED13[3];
+		 uint32_t RESERVED8[3];
     
     __IO uint32_t BODCR;
 	__IO uint32_t BODSR;
 	
-	__IO uint32_t ADCCR;
-	
-		 uint32_t RESERVED14;
+		 uint32_t RESERVED9[2];
 	
 	__IO uint32_t XTALCR;
 	__IO uint32_t XTALSR;
 	
-		 uint32_t RESERVED15[6];
+		 uint32_t RESERVED10[6];
 	
 	__IO uint32_t PLLCR;
     __IO uint32_t PLLDIV;
-		 uint32_t RESERVED16;
+		 uint32_t RESERVED11;
     __IO uint32_t PLLLOCK;                  // [0] 1 PLL locked
 	
     __IO uint32_t LRCCR;					// Low speed RC Control Register
    
-         uint32_t RESERVED17[7];
+         uint32_t RESERVED12[15];
 	
-	__IO uint32_t OPACR;					// OPA Control Register
-	
-		 uint32_t RESERVED18[3];
-	
-	__IO uint32_t ACMPCR;					// Analog Comparator Control Register
-	__IO uint32_t ACMPSR;					// Analog Comparator Status Register
-	__IO uint32_t ACMPCR2;
-	
-		 uint32_t RESERVED19;
-		
 	__IO uint32_t DACCR;
 	
-		 uint32_t RESERVED20;
+		 uint32_t RESERVED13;
 	
 	__IO uint32_t TEMPCR;					// Temperature Sensor
 } SYS_TypeDef;
@@ -266,22 +179,14 @@ typedef struct {
 #define SYS_CLKSEL_CLK_DIVx_Msk		(0x01 << SYS_CLKSEL_CLK_DIVx_Pos)
 #define SYS_CLKSEL_CLK_Pos			2		// Clock Source, 0 LRC, 1 PLL, 2 XTAL_32K, 3 XTAL, 4 HRC
 #define SYS_CLKSEL_CLK_Msk			(0x07 << SYS_CLKSEL_CLK_Pos)
-#define SYS_CLKSEL_RTC_Pos			5		// RTC clock select, 0 LRC, 1 XTAL_32K
-#define SYS_CLKSEL_RTC_Msk			(0x01 << SYS_CLKSEL_RTC_Pos)
-#define SYS_CLKSEL_IOFILT_Pos		6		// IO Filter clock select, 0 HRC, 2 XTAL, 3 LRC
-#define SYS_CLKSEL_IOFILT_Msk		(0x03 << SYS_CLKSEL_IOFILT_Pos)
 #define SYS_CLKSEL_SDIO_Pos			10		// SDIO clock select, 0 SYSCLK/2, 1 SYSCLK/8, 2 SYSCLK/4, 3 SYSCLK
 #define SYS_CLKSEL_SDIO_Msk			(0x03 << SYS_CLKSEL_SDIO_Pos)
 #define SYS_CLKSEL_WDT_Pos			12		// WDT clock select, 0 HRC, 1 XTAL, 2 LRC, 3 XTAL_32K
 #define SYS_CLKSEL_WDT_Msk			(0x03 << SYS_CLKSEL_WDT_Pos)
-#define SYS_CLKSEL_AD0_Pos			16		// ADC0 clock select, 0 HRC, 1 XTAL, 2 PLL
-#define SYS_CLKSEL_AD0_Msk			(0x03 << SYS_CLKSEL_AD0_Pos)
-#define SYS_CLKSEL_AD0DIV_Pos		18		// ADC0 clock divider, 0 div1, 1 div2, 2 div4, 3 div8
-#define SYS_CLKSEL_AD0DIV_Msk		(0x03 << SYS_CLKSEL_AD0DIV_Pos)
-#define SYS_CLKSEL_AD1_Pos			20
-#define SYS_CLKSEL_AD1_Msk			(0x03 << SYS_CLKSEL_AD1_Pos)
-#define SYS_CLKSEL_AD1DIV_Pos		22
-#define SYS_CLKSEL_AD1DIV_Msk		(0x03 << SYS_CLKSEL_AD1DIV_Pos)
+#define SYS_CLKSEL_ADC0_Pos			16		// ADC0 clock select, 0 HRC, 1 XTAL, 2 PLL
+#define SYS_CLKSEL_ADC0_Msk			(0x03 << SYS_CLKSEL_ADC0_Pos)
+#define SYS_CLKSEL_ADC0DIV_Pos		18		// ADC0 clock divider, 0 div1, 1 div2, 2 div4, 3 div8
+#define SYS_CLKSEL_ADC0DIV_Msk		(0x03 << SYS_CLKSEL_ADC0DIV_Pos)
 #define SYS_CLKSEL_SLEEP_Pos		24		// sleep clock, 0 LRC, 1 XTAL_32K
 #define SYS_CLKSEL_SLEEP_Msk		(0x01 << SYS_CLKSEL_SLEEP_Pos)
 
@@ -296,127 +201,82 @@ typedef struct {
 #define SYS_CLKEN0_GPIOC_Msk		(0x01 << SYS_CLKEN0_GPIOC_Pos)
 #define SYS_CLKEN0_GPIOD_Pos		3
 #define SYS_CLKEN0_GPIOD_Msk		(0x01 << SYS_CLKEN0_GPIOD_Pos)
-#define SYS_CLKEN0_GPIOM_Pos		4
-#define SYS_CLKEN0_GPIOM_Msk		(0x01 << SYS_CLKEN0_GPIOM_Pos)
-#define SYS_CLKEN0_GPION_Pos		5
-#define SYS_CLKEN0_GPION_Msk		(0x01 << SYS_CLKEN0_GPION_Pos)
-#define SYS_CLKEN0_UART0_Pos		6
-#define SYS_CLKEN0_UART0_Msk		(0x01 << SYS_CLKEN0_UART0_Pos)
-#define SYS_CLKEN0_UART1_Pos		7
-#define SYS_CLKEN0_UART1_Msk		(0x01 << SYS_CLKEN0_UART1_Pos)
-#define SYS_CLKEN0_UART2_Pos		8
-#define SYS_CLKEN0_UART2_Msk		(0x01 << SYS_CLKEN0_UART2_Pos)
-#define SYS_CLKEN0_UART3_Pos		9
-#define SYS_CLKEN0_UART3_Msk		(0x01 << SYS_CLKEN0_UART3_Pos)
-#define SYS_CLKEN0_WDT_Pos			10
-#define SYS_CLKEN0_WDT_Msk			(0x01 << SYS_CLKEN0_WDT_Pos)
-#define SYS_CLKEN0_TIMR_Pos			11
-#define SYS_CLKEN0_TIMR_Msk			(0x01 << SYS_CLKEN0_TIMR_Pos)
-#define SYS_CLKEN0_PWM_Pos			12
-#define SYS_CLKEN0_PWM_Msk			(0x01 << SYS_CLKEN0_PWM_Pos)
-#define SYS_CLKEN0_SPI0_Pos			13
+#define SYS_CLKEN0_SPI0_Pos			4
 #define SYS_CLKEN0_SPI0_Msk			(0x01 << SYS_CLKEN0_SPI0_Pos)
-#define SYS_CLKEN0_SPI1_Pos			14
-#define SYS_CLKEN0_SPI1_Msk			(0x01 << SYS_CLKEN0_SPI1_Pos)
-#define SYS_CLKEN0_I2C0_Pos			15
-#define SYS_CLKEN0_I2C0_Msk			(0x01 << SYS_CLKEN0_I2C0_Pos)
-#define SYS_CLKEN0_I2C1_Pos			16
-#define SYS_CLKEN0_I2C1_Msk			(0x01 << SYS_CLKEN0_I2C1_Pos)
-#define SYS_CLKEN0_CRC_Pos			19
-#define SYS_CLKEN0_CRC_Msk			(0x01 << SYS_CLKEN0_CRC_Pos)
-#define SYS_CLKEN0_CORDIC_Pos		20
-#define SYS_CLKEN0_CORDIC_Msk		(0x01 << SYS_CLKEN0_CORDIC_Pos)
-#define SYS_CLKEN0_DIV_Pos			21
-#define SYS_CLKEN0_DIV_Msk			(0x01 << SYS_CLKEN0_DIV_Pos)
-#define SYS_CLKEN0_SDIO_Pos			22
-#define SYS_CLKEN0_SDIO_Msk			(0x01 << SYS_CLKEN0_SDIO_Pos)
-#define SYS_CLKEN0_USB_Pos			24
-#define SYS_CLKEN0_USB_Msk			(0x01 << SYS_CLKEN0_USB_Pos)
-#define SYS_CLKEN0_ANAC_Pos			25		// analog control unit clock enable
-#define SYS_CLKEN0_ANAC_Msk			(0x01 << SYS_CLKEN0_ANAC_Pos)
-#define SYS_CLKEN0_ADC0_Pos			26
+#define SYS_CLKEN0_I2S0_Pos			5
+#define SYS_CLKEN0_I2S0_Msk			(0x01 << SYS_CLKEN0_I2S0_Pos)
+#define SYS_CLKEN0_DAC0_Pos			6
+#define SYS_CLKEN0_DAC0_Msk			(0x01 << SYS_CLKEN0_DAC0_Pos)
+#define SYS_CLKEN0_ADC0_Pos			7
 #define SYS_CLKEN0_ADC0_Msk			(0x01 << SYS_CLKEN0_ADC0_Pos)
-#define SYS_CLKEN0_CAN0_Pos			28
-#define SYS_CLKEN0_CAN0_Msk			(0x01 << SYS_CLKEN0_CAN0_Pos)
-#define SYS_CLKEN0_DMA2D_Pos		29
-#define SYS_CLKEN0_DMA2D_Msk		(0x01 << SYS_CLKEN0_DMA2D_Pos)
-#define SYS_CLKEN0_LCD_Pos			30
+#define SYS_CLKEN0_TIMR_Pos			8
+#define SYS_CLKEN0_TIMR_Msk			(0x01 << SYS_CLKEN0_TIMR_Pos)
+#define SYS_CLKEN0_BTIMR_Pos		9
+#define SYS_CLKEN0_BTIMR_Msk		(0x01 << SYS_CLKEN0_BTIMR_Pos)
+#define SYS_CLKEN0_PWM_Pos			10
+#define SYS_CLKEN0_PWM_Msk			(0x01 << SYS_CLKEN0_PWM_Pos)
+#define SYS_CLKEN0_SDIO_Pos			11
+#define SYS_CLKEN0_SDIO_Msk			(0x01 << SYS_CLKEN0_SDIO_Pos)
+#define SYS_CLKEN0_LCD_Pos			12
 #define SYS_CLKEN0_LCD_Msk			(0x01 << SYS_CLKEN0_LCD_Pos)
+#define SYS_CLKEN0_CRC_Pos			13
+#define SYS_CLKEN0_CRC_Msk			(0x01 << SYS_CLKEN0_CRC_Pos)
+#define SYS_CLKEN0_QSPI0_Pos		14
+#define SYS_CLKEN0_QSPI0_Msk		(0x01 << SYS_CLKEN0_QSPI0_Pos)
+#define SYS_CLKEN0_QSPI1_Pos		15
+#define SYS_CLKEN0_QSPI1_Msk		(0x01 << SYS_CLKEN0_QSPI1_Pos)
+#define SYS_CLKEN0_SRA_Pos			16
+#define SYS_CLKEN0_SRA_Msk			(0x01 << SYS_CLKEN0_SRA_Pos)
+#define SYS_CLKEN0_DMA2D_Pos		17
+#define SYS_CLKEN0_DMA2D_Msk		(0x01 << SYS_CLKEN0_DMA2D_Pos)
+#define SYS_CLKEN0_JPEG_Pos			18
+#define SYS_CLKEN0_JPEG_Msk			(0x01 << SYS_CLKEN0_JPEG_Pos)
+#define SYS_CLKEN0_DVP_Pos			19
+#define SYS_CLKEN0_DVP_Msk			(0x01 << SYS_CLKEN0_DVP_Pos)
+#define SYS_CLKEN0_PSRAM_Pos		20
+#define SYS_CLKEN0_PSRAM_Msk		(0x01 << SYS_CLKEN0_PSRAM_Pos)
 
-#define SYS_CLKEN1_GPIOE_Pos		0
-#define SYS_CLKEN1_GPIOE_Msk		(0x01 << SYS_CLKEN1_GPIOE_Pos)
-#define SYS_CLKEN1_SPI2_Pos			8
-#define SYS_CLKEN1_SPI2_Msk			(0x01 << SYS_CLKEN1_SPI2_Pos)
-#define SYS_CLKEN1_SDRAM_Pos		12
-#define SYS_CLKEN1_SDRAM_Msk		(0x01 << SYS_CLKEN1_SDRAM_Pos)
-#define SYS_CLKEN1_SFC_Pos			13
-#define SYS_CLKEN1_SFC_Msk			(0x01 << SYS_CLKEN1_SFC_Pos)
-#define SYS_CLKEN1_ADC1_Pos			16
-#define SYS_CLKEN1_ADC1_Msk			(0x01 << SYS_CLKEN1_ADC1_Pos)
-#define SYS_CLKEN1_CAN1_Pos			17
-#define SYS_CLKEN1_CAN1_Msk			(0x01 << SYS_CLKEN1_CAN1_Pos)
-#define SYS_CLKEN1_RTC_Pos			19
+#define SYS_CLKEN1_WDT_Pos			0
+#define SYS_CLKEN1_WDT_Msk			(0x01 << SYS_CLKEN1_WDT_Pos)
+#define SYS_CLKEN1_UART0_Pos		1
+#define SYS_CLKEN1_UART0_Msk		(0x01 << SYS_CLKEN1_UART0_Pos)
+#define SYS_CLKEN1_UART1_Pos		2
+#define SYS_CLKEN1_UART1_Msk		(0x01 << SYS_CLKEN1_UART1_Pos)
+#define SYS_CLKEN1_UART2_Pos		3
+#define SYS_CLKEN1_UART2_Msk		(0x01 << SYS_CLKEN1_UART2_Pos)
+#define SYS_CLKEN1_UART3_Pos		4
+#define SYS_CLKEN1_UART3_Msk		(0x01 << SYS_CLKEN1_UART3_Pos)
+#define SYS_CLKEN1_UART4_Pos		5
+#define SYS_CLKEN1_UART4_Msk		(0x01 << SYS_CLKEN1_UART4_Pos)
+#define SYS_CLKEN1_RTC_Pos			6
 #define SYS_CLKEN1_RTC_Msk			(0x01 << SYS_CLKEN1_RTC_Pos)
-#define SYS_CLKEN1_IOFILT_Pos		20		//IO Filter
-#define SYS_CLKEN1_IOFILT_Msk		(0x01 << SYS_CLKEN1_IOFILT_Pos)
-#define SYS_CLKEN1_BTIMR_Pos		22
-#define SYS_CLKEN1_BTIMR_Msk		(0x01 << SYS_CLKEN1_BTIMR_Pos)
-#define SYS_CLKEN1_JPEG_Pos			25
-#define SYS_CLKEN1_JPEG_Msk			(0x01 << SYS_CLKEN1_JPEG_Pos)
-#define SYS_CLKEN1_DAC_Pos			26
-#define SYS_CLKEN1_DAC_Msk			(0x01 << SYS_CLKEN1_DAC_Pos)
-#define SYS_CLKEN1_QEI_Pos			27
-#define SYS_CLKEN1_QEI_Msk			(0x01 << SYS_CLKEN1_QEI_Pos)
-
-#define SYS_SLEEP_SLEEP_Pos			0		// write 1 to enter sleep mode
-#define SYS_SLEEP_SLEEP_Msk			(0x01 << SYS_SLEEP_SLEEP_Pos)
-#define SYS_SLEEP_STOP_Pos			1		// write 1 to enter stop mode
-#define SYS_SLEEP_STOP_Msk			(0x01 << SYS_SLEEP_STOP_Pos)
+#define SYS_CLKEN1_I2C0_Pos			7
+#define SYS_CLKEN1_I2C0_Msk			(0x01 << SYS_CLKEN1_I2C0_Pos)
+#define SYS_CLKEN1_I2C1_Pos			8
+#define SYS_CLKEN1_I2C1_Msk			(0x01 << SYS_CLKEN1_I2C1_Pos)
+#define SYS_CLKEN1_CAN0_Pos			9
+#define SYS_CLKEN1_CAN0_Msk			(0x01 << SYS_CLKEN1_CAN0_Pos)
+#define SYS_CLKEN1_ANAC_Pos			10
+#define SYS_CLKEN1_ANAC_Msk			(0x01 << SYS_CLKEN1_ANAC_Pos)
+#define SYS_CLKEN1_GPIOE_Pos		11
+#define SYS_CLKEN1_GPIOE_Msk		(0x01 << SYS_CLKEN1_GPIOE_Pos)
 
 #define SYS_RSTSR_POR_Pos			0		// POR reset happened, write 1 to clear
 #define SYS_RSTSR_POR_Msk			(0x01 << SYS_RSTSR_POR_Pos)
 #define SYS_RSTSR_WDT_Pos			1		// WDT reset happened, write 1 to clear
 #define SYS_RSTSR_WDT_Msk			(0x01 << SYS_RSTSR_WDT_Pos)
+#define SYS_RSTSR_BOD_Pos			2		// BOD reset happened, write 1 to clear
+#define SYS_RSTSR_BOD_Msk			(0x01 << SYS_RSTSR_BOD_Pos)
 
 #define SYS_RTCWKCR_EN_Pos			0		// RTC wakeup enable
 #define SYS_RTCWKCR_EN_Msk			(0x01 << SYS_RTCWKCR_EN_Pos)
+#define SYS_RTCWKCR_WREN_Pos		1		// RTC register write enable
+#define SYS_RTCWKCR_WREN_Msk		(0x01 << SYS_RTCWKCR_WREN_Pos)
+#define SYS_RTCWKCR_IOFUNC_Pos		2		// RTC IO pad function, 0 PA7 used as RTC IO, 1 PA7 used as GPIO
+#define SYS_RTCWKCR_IOFUNC_Msk		(0x01 << SYS_RTCWKCR_IOFUNC_Pos)
 
 #define SYS_RTCWKSR_FLAG_Pos		0		// RTC wakeup flag, write 1 to clear
 #define SYS_RTCWKSR_FLAG_Msk		(0x01 << SYS_RTCWKSR_FLAG_Pos)
-
-#define SYS_USBPHYCR_IDEN_Pos		0		// ID PIN sample enalbe
-#define SYS_USBPHYCR_IDEN_Msk		(0x01 << SYS_USBPHYCR_IDEN_Pos)
-#define SYS_USBPHYCR_OPMODE_Pos		1		// 0 Normal Operation, 1 Non-Driving (Disable Pull-up register)
-#define SYS_USBPHYCR_OPMODE_Msk		(0x03 << SYS_USBPHYCR_OPMODE_Pos)
-#define SYS_USBPHYCR_XCVR_Pos		4		// Transceiver mode select, 1 FS, 2 LS
-#define SYS_USBPHYCR_XCVR_Msk		(0x03 << SYS_USBPHYCR_XCVR_Pos)
-#define SYS_USBPHYCR_PLLEN_Pos		7		// built-in PLL switch
-#define SYS_USBPHYCR_PLLEN_Msk		(0x01 << SYS_USBPHYCR_PLLEN_Pos)
-
-#define SYS_USBCR_RST48M_Pos		0		// reset for 48MHz clock domain
-#define SYS_USBCR_RST48M_Msk		(0x01 << SYS_USBCR_RST48M_Pos)
-#define SYS_USBCR_RST12M_Pos		1		// reset for 12MHz clock domain
-#define SYS_USBCR_RST12M_Msk		(0x01 << SYS_USBCR_RST12M_Pos)
-#define SYS_USBCR_RSTPLL_Pos		2		// reset for PLL clock domain
-#define SYS_USBCR_RSTPLL_Msk		(0x01 << SYS_USBCR_RSTPLL_Pos)
-#define SYS_USBCR_ROLE_Pos			3		// USB mode: 0 determined by the ID pin, 2 Host, 3 Device
-#define SYS_USBCR_ROLE_Msk			(0x03 << SYS_USBCR_ROLE_Pos)
-#define SYS_USBCR_VBUS_Pos			5		// 0 determined by the VBUS pin, 1 force high
-#define SYS_USBCR_VBUS_Msk			(0x01 << SYS_USBCR_VBUS_Pos)
-
-#define SYS_PRNGCR_CLR_Pos			0		// seed clear, keep at least one LRC clock cycle
-#define SYS_PRNGCR_CLR_Msk			(0x01 << SYS_PRNGCR_CLR_Pos)
-#define SYS_PRNGCR_MODE_Pos			1		// 0 close, 2 three-clock mode (RCHF, RCLF, XTAH)   3 two-clock mode (RCHF, RCLF)
-#define SYS_PRNGCR_MODE_Msk			(0x03 << SYS_PRNGCR_MODE_Pos)
-#define SYS_PRNGCR_RDY_Pos			8		// 1 ready, can read PRNGDL and PRNGDH
-#define SYS_PRNGCR_RDY_Msk			(0x01 << SYS_PRNGCR_RDY_Pos)
-
-#define SYS_IOFILT_TIM_Pos			0		// filter window time = Tfilter_clk * CLKDIV * 2^TIM
-#define SYS_IOFILT_TIM_Msk			(0x0F << SYS_IOFILT_TIM_Pos)
-#define SYS_IOFILT_CLKDIV_Pos		4		// 0 div1, 1 div32
-#define SYS_IOFILT_CLKDIV_Msk		(0x01 << SYS_IOFILT_CLKDIV_Pos)
-#define SYS_IOFILT_IOSEL_Pos		5		// filtered IO select, each IOFILT can filter one of the four IO
-#define SYS_IOFILT_IOSEL_Msk		(0x03 << SYS_IOFILT_IOSEL_Pos)
 
 #define SYS_PRSTR0_GPIOA_Pos		0
 #define SYS_PRSTR0_GPIOA_Msk		(0x01 << SYS_PRSTR0_GPIOA_Pos)
@@ -426,75 +286,65 @@ typedef struct {
 #define SYS_PRSTR0_GPIOC_Msk		(0x01 << SYS_PRSTR0_GPIOC_Pos)
 #define SYS_PRSTR0_GPIOD_Pos		3
 #define SYS_PRSTR0_GPIOD_Msk		(0x01 << SYS_PRSTR0_GPIOD_Pos)
-#define SYS_PRSTR0_GPIOM_Pos		4
-#define SYS_PRSTR0_GPIOM_Msk		(0x01 << SYS_PRSTR0_GPIOM_Pos)
-#define SYS_PRSTR0_GPION_Pos		5
-#define SYS_PRSTR0_GPION_Msk		(0x01 << SYS_PRSTR0_GPION_Pos)
-#define SYS_PRSTR0_UART0_Pos		6
-#define SYS_PRSTR0_UART0_Msk		(0x01 << SYS_PRSTR0_UART0_Pos)
-#define SYS_PRSTR0_UART1_Pos		7
-#define SYS_PRSTR0_UART1_Msk		(0x01 << SYS_PRSTR0_UART1_Pos)
-#define SYS_PRSTR0_UART2_Pos		8
-#define SYS_PRSTR0_UART2_Msk		(0x01 << SYS_PRSTR0_UART2_Pos)
-#define SYS_PRSTR0_UART3_Pos		9
-#define SYS_PRSTR0_UART3_Msk		(0x01 << SYS_PRSTR0_UART3_Pos)
-#define SYS_PRSTR0_WDT_Pos			10
-#define SYS_PRSTR0_WDT_Msk			(0x01 << SYS_PRSTR0_WDT_Pos)
-#define SYS_PRSTR0_TIMR_Pos			11
-#define SYS_PRSTR0_TIMR_Msk			(0x01 << SYS_PRSTR0_TIMR_Pos)
-#define SYS_PRSTR0_PWM_Pos			12
-#define SYS_PRSTR0_PWM_Msk			(0x01 << SYS_PRSTR0_PWM_Pos)
-#define SYS_PRSTR0_SPI0_Pos			13
+#define SYS_PRSTR0_SPI0_Pos			4
 #define SYS_PRSTR0_SPI0_Msk			(0x01 << SYS_PRSTR0_SPI0_Pos)
-#define SYS_PRSTR0_SPI1_Pos			14
-#define SYS_PRSTR0_SPI1_Msk			(0x01 << SYS_PRSTR0_SPI1_Pos)
-#define SYS_PRSTR0_I2C0_Pos			15
-#define SYS_PRSTR0_I2C0_Msk			(0x01 << SYS_PRSTR0_I2C0_Pos)
-#define SYS_PRSTR0_I2C1_Pos			16
-#define SYS_PRSTR0_I2C1_Msk			(0x01 << SYS_PRSTR0_I2C1_Pos)
-#define SYS_PRSTR0_CRC_Pos			19
-#define SYS_PRSTR0_CRC_Msk			(0x01 << SYS_PRSTR0_CRC_Pos)
-#define SYS_PRSTR0_CORDIC_Pos		20
-#define SYS_PRSTR0_CORDIC_Msk		(0x01 << SYS_PRSTR0_CORDIC_Pos)
-#define SYS_PRSTR0_DIV_Pos			21
-#define SYS_PRSTR0_DIV_Msk			(0x01 << SYS_PRSTR0_DIV_Pos)
-#define SYS_PRSTR0_SDIO_Pos			22
-#define SYS_PRSTR0_SDIO_Msk			(0x01 << SYS_PRSTR0_SDIO_Pos)
-#define SYS_PRSTR0_USB_Pos			24
-#define SYS_PRSTR0_USB_Msk			(0x01 << SYS_PRSTR0_USB_Pos)
-#define SYS_PRSTR0_ANAC_Pos			25
-#define SYS_PRSTR0_ANAC_Msk			(0x01 << SYS_PRSTR0_ANAC_Pos)
-#define SYS_PRSTR0_ADC0_Pos			26
+#define SYS_PRSTR0_I2S0_Pos			5
+#define SYS_PRSTR0_I2S0_Msk			(0x01 << SYS_PRSTR0_I2S0_Pos)
+#define SYS_PRSTR0_DAC0_Pos			6
+#define SYS_PRSTR0_DAC0_Msk			(0x01 << SYS_PRSTR0_DAC0_Pos)
+#define SYS_PRSTR0_ADC0_Pos			7
 #define SYS_PRSTR0_ADC0_Msk			(0x01 << SYS_PRSTR0_ADC0_Pos)
-#define SYS_PRSTR0_CAN0_Pos			28
-#define SYS_PRSTR0_CAN0_Msk			(0x01 << SYS_PRSTR0_CAN0_Pos)
-#define SYS_PRSTR0_DMA2D_Pos		29
-#define SYS_PRSTR0_DMA2D_Msk		(0x01 << SYS_PRSTR0_DMA2D_Pos)
-#define SYS_PRSTR0_LCD_Pos			30
+#define SYS_PRSTR0_TIMR_Pos			8
+#define SYS_PRSTR0_TIMR_Msk			(0x01 << SYS_PRSTR0_TIMR_Pos)
+#define SYS_PRSTR0_BTIMR_Pos		9
+#define SYS_PRSTR0_BTIMR_Msk		(0x01 << SYS_PRSTR0_BTIMR_Pos)
+#define SYS_PRSTR0_PWM_Pos			10
+#define SYS_PRSTR0_PWM_Msk			(0x01 << SYS_PRSTR0_PWM_Pos)
+#define SYS_PRSTR0_SDIO_Pos			11
+#define SYS_PRSTR0_SDIO_Msk			(0x01 << SYS_PRSTR0_SDIO_Pos)
+#define SYS_PRSTR0_LCD_Pos			12
 #define SYS_PRSTR0_LCD_Msk			(0x01 << SYS_PRSTR0_LCD_Pos)
+#define SYS_PRSTR0_CRC_Pos			13
+#define SYS_PRSTR0_CRC_Msk			(0x01 << SYS_PRSTR0_CRC_Pos)
+#define SYS_PRSTR0_QSPI0_Pos		14
+#define SYS_PRSTR0_QSPI0_Msk		(0x01 << SYS_PRSTR0_QSPI0_Pos)
+#define SYS_PRSTR0_QSPI1_Pos		15
+#define SYS_PRSTR0_QSPI1_Msk		(0x01 << SYS_PRSTR0_QSPI1_Pos)
+#define SYS_PRSTR0_SRA_Pos			16
+#define SYS_PRSTR0_SRA_Msk			(0x01 << SYS_PRSTR0_SRA_Pos)
+#define SYS_PRSTR0_DMA2D_Pos		17
+#define SYS_PRSTR0_DMA2D_Msk		(0x01 << SYS_PRSTR0_DMA2D_Pos)
+#define SYS_PRSTR0_JPEG_Pos			18
+#define SYS_PRSTR0_JPEG_Msk			(0x01 << SYS_PRSTR0_JPEG_Pos)
+#define SYS_PRSTR0_DVP_Pos			19
+#define SYS_PRSTR0_DVP_Msk			(0x01 << SYS_PRSTR0_DVP_Pos)
+#define SYS_PRSTR0_PSRAM_Pos		20
+#define SYS_PRSTR0_PSRAM_Msk		(0x01 << SYS_PRSTR0_PSRAM_Pos)
 
-#define SYS_PRSTR1_GPIOE_Pos		0
-#define SYS_PRSTR1_GPIOE_Msk		(0x01 << SYS_PRSTR1_GPIOE_Pos)
-#define SYS_PRSTR1_SDRAM_Pos		12
-#define SYS_PRSTR1_SDRAM_Msk		(0x01 << SYS_PRSTR1_SDRAM_Pos)
-#define SYS_PRSTR1_SFC_Pos			13
-#define SYS_PRSTR1_SFC_Msk			(0x01 << SYS_PRSTR1_SFC_Pos)
-#define SYS_PRSTR1_ADC1_Pos			16
-#define SYS_PRSTR1_ADC1_Msk			(0x01 << SYS_PRSTR1_ADC1_Pos)
-#define SYS_PRSTR1_CAN1_Pos			17
-#define SYS_PRSTR1_CAN1_Msk			(0x01 << SYS_PRSTR1_CAN1_Pos)
-#define SYS_PRSTR1_RTC_Pos			19
+#define SYS_PRSTR1_WDT_Pos			0
+#define SYS_PRSTR1_WDT_Msk			(0x01 << SYS_PRSTR1_WDT_Pos)
+#define SYS_PRSTR1_UART0_Pos		1
+#define SYS_PRSTR1_UART0_Msk		(0x01 << SYS_PRSTR1_UART0_Pos)
+#define SYS_PRSTR1_UART1_Pos		2
+#define SYS_PRSTR1_UART1_Msk		(0x01 << SYS_PRSTR1_UART1_Pos)
+#define SYS_PRSTR1_UART2_Pos		3
+#define SYS_PRSTR1_UART2_Msk		(0x01 << SYS_PRSTR1_UART2_Pos)
+#define SYS_PRSTR1_UART3_Pos		4
+#define SYS_PRSTR1_UART3_Msk		(0x01 << SYS_PRSTR1_UART3_Pos)
+#define SYS_PRSTR1_UART4_Pos		5
+#define SYS_PRSTR1_UART4_Msk		(0x01 << SYS_PRSTR1_UART4_Pos)
+#define SYS_PRSTR1_RTC_Pos			6
 #define SYS_PRSTR1_RTC_Msk			(0x01 << SYS_PRSTR1_RTC_Pos)
-#define SYS_PRSTR1_IOFILT_Pos		20
-#define SYS_PRSTR1_IOFILT_Msk		(0x01 << SYS_PRSTR1_IOFILT_Pos)
-#define SYS_PRSTR1_BTIMR_Pos		22
-#define SYS_PRSTR1_BTIMR_Msk		(0x01 << SYS_PRSTR1_BTIMR_Pos)
-#define SYS_PRSTR1_JPEG_Pos			25
-#define SYS_PRSTR1_JPEG_Msk			(0x01 << SYS_PRSTR1_JPEG_Pos)
-#define SYS_PRSTR1_DAC_Pos			26
-#define SYS_PRSTR1_DAC_Msk			(0x01 << SYS_PRSTR1_DAC_Pos)
-#define SYS_PRSTR1_QEI_Pos			27
-#define SYS_PRSTR1_QEI_Msk			(0x01 << SYS_PRSTR1_QEI_Pos)
+#define SYS_PRSTR1_I2C0_Pos			7
+#define SYS_PRSTR1_I2C0_Msk			(0x01 << SYS_PRSTR1_I2C0_Pos)
+#define SYS_PRSTR1_I2C1_Pos			8
+#define SYS_PRSTR1_I2C1_Msk			(0x01 << SYS_PRSTR1_I2C1_Pos)
+#define SYS_PRSTR1_CAN0_Pos			9
+#define SYS_PRSTR1_CAN0_Msk			(0x01 << SYS_PRSTR1_CAN0_Pos)
+#define SYS_PRSTR1_ANAC_Pos			10
+#define SYS_PRSTR1_ANAC_Msk			(0x01 << SYS_PRSTR1_ANAC_Pos)
+#define SYS_PRSTR1_GPIOE_Pos		11
+#define SYS_PRSTR1_GPIOE_Msk		(0x01 << SYS_PRSTR1_GPIOE_Pos)
 
 #define SYS_HRCCR_ON_Pos			0		// High speed RC ON
 #define SYS_HRCCR_ON_Msk			(0x01 << SYS_HRCCR_ON_Pos)
@@ -503,43 +353,20 @@ typedef struct {
 
 #define SYS_BODCR_IE_Pos		    1		// Interrupt Enable
 #define SYS_BODCR_IE_Msk		    (0x01 << SYS_BODCR_IE_Pos)
-#define SYS_BODCR_INTLVL_Pos		4		// BOD interrupt trigger level, 0 1.9v, 1 2.1v, 2 2.3v, 3 2.5v, 4 2.7v
+#define SYS_BODCR_INTLVL_Pos		4		// BOD interrupt trigger level
 #define SYS_BODCR_INTLVL_Msk		(0x07 << SYS_BODCR_INTLVL_Pos)
-#define SYS_BODCR_RSTLVL_Pos		7		// BOD reset level, 0 1.7v, 1 1.9v, 2 2.1v, 3 2.7v
-#define SYS_BODCR_RSTLVL_Msk		(0x07 << SYS_BODCR_RSTLVL_Pos)
 
 #define SYS_BODSR_IF_Pos			0		// interrupt flag, write 1 to clear
 #define SYS_BODSR_IF_Msk			(0x01 << SYS_BODSR_IF_Pos)
 #define SYS_BODSR_ST_Pos			1		// BOD Status
 #define SYS_BODSR_ST_Msk			(0x01 << SYS_BODSR_ST_Pos)
 
-#define SYS_ADCCR_0IVREN_Pos		0		// ADC0 Internal Vref Enable
-#define SYS_ADCCR_0IVREN_Msk		(0x01 << SYS_ADCCR_0IVREN_Pos)
-#define SYS_ADCCR_1IVREN_Pos		1		// ADC1 Internal Vref Enable
-#define SYS_ADCCR_1IVREN_Msk		(0x01 << SYS_ADCCR_1IVREN_Pos)
-#define SYS_ADCCR_0IVRSEL_Pos		2		// ADC0 Internal Vref Select, 0 reference current multiplied by resistance, 1 VDD33 resistive subdivision
-#define SYS_ADCCR_0IVRSEL_Msk		(0x01 << SYS_ADCCR_0IVRSEL_Pos)
-#define SYS_ADCCR_1IVRSEL_Pos		3		// ADC1 Internal Vref Select, 0 reference current multiplied by resistance, 1 VDD33 resistive subdivision
-#define SYS_ADCCR_1IVRSEL_Msk		(0x01 << SYS_ADCCR_1IVRSEL_Pos)
-#define SYS_ADCCR_IVRFLT_Pos		4		// Internal Vref Filter, 0 high-pass filter, 1 low-pass filter
-#define SYS_ADCCR_IVRFLT_Msk		(0x01 << SYS_ADCCR_IVRFLT_Pos)
-#define SYS_ADCCR_IVROuA_Pos		5		// Internal Vref Output uA, 0 50uA, 1 150uA
-#define SYS_ADCCR_IVROuA_Msk		(0x01 << SYS_ADCCR_IVROuA_Pos)
-#define SYS_ADCCR_IVRLVL_Pos		6		// Internal Vref Output Level, X00b 1.2V, X01 1.6V, X10 2.0V, X11 2.5V
-#define SYS_ADCCR_IVRLVL_Msk		(0x07 << SYS_ADCCR_IVRLVL_Pos)
-#define SYS_ADCCR_IVRTRIM_Pos		9		// Internal Vref Output Level Trimming, 000 +0V, 001 +0.04V, 010 +0.8V, 011 +0.12V, 100 -0.04V, 101 -0.08V, 110 -0.12V, 111 -0.16V
-#define SYS_ADCCR_IVRTRIM_Msk		(0x07 << SYS_ADCCR_IVRTRIM_Pos)
-
-#define SYS_XTALCR_32KON_Pos		0		// XTAL_32K On
-#define SYS_XTALCR_32KON_Msk		(0x01 << SYS_XTALCR_32KON_Pos)
 #define SYS_XTALCR_ON_Pos			1		// XTAL On
 #define SYS_XTALCR_ON_Msk			(0x01 << SYS_XTALCR_ON_Pos)
 #define SYS_XTALCR_32KDET_Pos		4		// XTAL_32K Stop Detect
 #define SYS_XTALCR_32KDET_Msk		(0x01 << SYS_XTALCR_32KDET_Pos)
 #define SYS_XTALCR_DET_Pos			5		// XTAL Stop Detect
 #define SYS_XTALCR_DET_Msk			(0x01 << SYS_XTALCR_DET_Pos)
-#define SYS_XTALCR_32KDRV_Pos		8		// XTAL_32K drive capability
-#define SYS_XTALCR_32KDRV_Msk		(0x0F << SYS_XTALCR_32KDRV_Pos)
 #define SYS_XTALCR_DRV_Pos			16		// XTAL drive capability
 #define SYS_XTALCR_DRV_Msk			(0x1F << SYS_XTALCR_DRV_Pos)
 
@@ -566,62 +393,6 @@ typedef struct {
 
 #define SYS_LRCCR_ON_Pos			0		// Low Speed RC On
 #define SYS_LRCCR_ON_Msk			(0x01 << SYS_LRCCR_ON_Pos)
-
-#define SYS_OPACR_OPA0ON_Pos		0		// OPA0 on
-#define SYS_OPACR_OPA0ON_Msk		(0x01 << SYS_OPACR_OPA0ON_Pos)
-#define SYS_OPACR_OPA1ON_Pos		1
-#define SYS_OPACR_OPA1ON_Msk		(0x01 << SYS_OPACR_OPA1ON_Pos)
-#define SYS_OPACR_OPA2ON_Pos		2
-#define SYS_OPACR_OPA2ON_Msk		(0x01 << SYS_OPACR_OPA2ON_Pos)
-#define SYS_OPACR_OPA3ON_Pos		3
-#define SYS_OPACR_OPA3ON_Msk		(0x01 << SYS_OPACR_OPA3ON_Pos)
-
-#define SYS_ACMPCR_CMP0ON_Pos		0		// CMP0 on
-#define SYS_ACMPCR_CMP0ON_Msk		(0x01 << SYS_ACMPCR_CMP0ON_Pos)
-#define SYS_ACMPCR_CMP1ON_Pos		1
-#define SYS_ACMPCR_CMP1ON_Msk		(0x01 << SYS_ACMPCR_CMP1ON_Pos)
-#define SYS_ACMPCR_CMP2ON_Pos		2
-#define SYS_ACMPCR_CMP2ON_Msk		(0x01 << SYS_ACMPCR_CMP2ON_Pos)
-#define SYS_ACMPCR_CMP0HYS_Pos		8		// CMP0 hysteretic on
-#define SYS_ACMPCR_CMP0HYS_Msk		(0x01 << SYS_ACMPCR_CMP0HYS_Pos)
-#define SYS_ACMPCR_CMP1HYS_Pos		9
-#define SYS_ACMPCR_CMP1HYS_Msk		(0x01 << SYS_ACMPCR_CMP1HYS_Pos)
-#define SYS_ACMPCR_CMP2HYS_Pos		10
-#define SYS_ACMPCR_CMP2HYS_Msk		(0x01 << SYS_ACMPCR_CMP2HYS_Pos)
-#define SYS_ACMPCR_0NVREF_Pos		16		// 1 ACMP0 N input connect to VREF
-#define SYS_ACMPCR_0NVREF_Msk		(0x01 << SYS_ACMPCR_0NVREF_Pos)
-#define SYS_ACMPCR_1NVREF_Pos		17
-#define SYS_ACMPCR_1NVREF_Msk		(0x01 << SYS_ACMPCR_1NVREF_Pos)
-#define SYS_ACMPCR_2NVREF_Pos		18
-#define SYS_ACMPCR_2NVREF_Msk		(0x01 << SYS_ACMPCR_2NVREF_Pos)
-#define SYS_ACMPCR_CMP0IE_Pos		24		// CMP0 interrupt enable
-#define SYS_ACMPCR_CMP0IE_Msk		(0x01 << SYS_ACMPCR_CMP0IE_Pos)
-#define SYS_ACMPCR_CMP1IE_Pos		25
-#define SYS_ACMPCR_CMP1IE_Msk		(0x01 << SYS_ACMPCR_CMP1IE_Pos)
-#define SYS_ACMPCR_CMP2IE_Pos		26
-#define SYS_ACMPCR_CMP2IE_Msk		(0x01 << SYS_ACMPCR_CMP2IE_Pos)
-
-#define SYS_ACMPSR_CMP0OUT_Pos		0		// 0 N > P, 1 P > N
-#define SYS_ACMPSR_CMP0OUT_Msk		(0x01 << SYS_ACMPSR_CMP0OUT_Pos)
-#define SYS_ACMPSR_CMP1OUT_Pos		1
-#define SYS_ACMPSR_CMP1OUT_Msk		(0x01 << SYS_ACMPSR_CMP1OUT_Pos)
-#define SYS_ACMPSR_CMP2OUT_Pos		2
-#define SYS_ACMPSR_CMP2OUT_Msk		(0x01 << SYS_ACMPSR_CMP2OUT_Pos)
-#define SYS_ACMPSR_CMP0IF_Pos		8		// interrupt flag, write 1 to clear
-#define SYS_ACMPSR_CMP0IF_Msk		(0x01 << SYS_ACMPSR_CMP0IF_Pos)
-#define SYS_ACMPSR_CMP1IF_Pos		9
-#define SYS_ACMPSR_CMP1IF_Msk		(0x01 << SYS_ACMPSR_CMP1IF_Pos)
-#define SYS_ACMPSR_CMP2IF_Pos		10
-#define SYS_ACMPSR_CMP2IF_Msk		(0x01 << SYS_ACMPSR_CMP2IF_Pos)
-
-#define SYS_ACMPCR2_BRK0_Pos		0		// 1 ACMP0 output used as PWM_BRK0
-#define SYS_ACMPCR2_BRK0_Msk		(0x01 << SYS_ACMPCR2_BRK0_Pos)
-#define SYS_ACMPCR2_BRK1_Pos		1
-#define SYS_ACMPCR2_BRK1_Msk		(0x01 << SYS_ACMPCR2_BRK1_Pos)
-#define SYS_ACMPCR2_BRK2_Pos		2
-#define SYS_ACMPCR2_BRK2_Msk		(0x01 << SYS_ACMPCR2_BRK2_Pos)
-#define SYS_ACMPCR2_VREF_Pos		3		// ACMP internal refrence voltage = 0.6 + 0.04*VREF
-#define SYS_ACMPCR2_VREF_Msk		(0x3F << SYS_ACMPCR2_VREF_Pos)
 
 #define SYS_DACCR_VRADJ_Pos			0		// Vref Adjust
 #define SYS_DACCR_VRADJ_Msk			(0x1F << SYS_DACCR_VRADJ_Pos)
@@ -3012,10 +2783,11 @@ typedef struct {
 #define APB2_BASE			0x400A0000
 
 #define SFLASH_BASE			0x70000000	// Serial Flash
+#define QSPI0_BASE			0x78000000
+#define QSPI1_BASE			0x78000800
 
-#define SDRAMM_BASE			0x80000000
-#define SDRAMC_BASE			0x88000000
-
+#define PSRAMM_BASE			0x80000000
+#define PSRAMC_BASE			0x88000000
 
 
 /* AHB Peripheral memory map */
@@ -3023,14 +2795,20 @@ typedef struct {
 
 #define DMA_BASE			(AHB_BASE + 0x00800)
 
-#define SDIO_BASE			(AHB_BASE + 0x01800)
+#define SDIO_BASE			(AHB_BASE + 0x01000)
 
-#define LCD_BASE		    (AHB_BASE + 0x02000)
+#define LCD_BASE		    (AHB_BASE + 0x01800)
 
-#define CRC_BASE		    (AHB_BASE + 0x02800)
+#define CRC_BASE		    (AHB_BASE + 0x02000)
 
-#define JPEG_BASE			(AHB_BASE + 0x0B000)
-#define DMA2D_BASE			(AHB_BASE + 0x0C000)
+#define SRA_BASE			(AHB_BASE + 0x02800)
+
+#define DMA2D_BASE			(AHB_BASE + 0x03000)
+
+#define DVP_BASE			(AHB_BASE + 0x03800)
+
+#define JPEG_BASE			(AHB_BASE + 0x04000)
+
 
 /* APB Peripheral memory map */
 #define GPIOA_BASE			(APB1_BASE + 0x00000)
@@ -3038,52 +2816,53 @@ typedef struct {
 #define GPIOC_BASE			(APB1_BASE + 0x01000)
 #define GPIOD_BASE			(APB1_BASE + 0x01800)
 
-#define UART0_BASE			(APB1_BASE + 0x02000)
-#define UART1_BASE			(APB1_BASE + 0x02800)
-#define UART2_BASE			(APB1_BASE + 0x03000)
-#define UART3_BASE			(APB1_BASE + 0x03800)
+#define SPI0_BASE			(APB1_BASE + 0x02000)
 
-#define SPI0_BASE			(APB1_BASE + 0x04000)
+#define I2S0_BASE			(APB1_BASE + 0x02800)
 
-#define PWM0_BASE			(APB1_BASE + 0x06000)
-#define PWM1_BASE			(APB1_BASE + 0x06080)
-#define PWMG_BASE			(APB1_BASE + 0x06400)
+#define DAC0_BASE			(APB1_BASE + 0x03000)
 
-#define TIMR0_BASE			(APB1_BASE + 0x06800)
-#define TIMR1_BASE			(APB1_BASE + 0x06840)
-#define TIMRG_BASE			(APB1_BASE + 0x06C00)
+#define ADC0_BASE			(APB1_BASE + 0x03800)
 
-#define BTIMR0_BASE			(APB1_BASE + 0x08800)
-#define BTIMR1_BASE			(APB1_BASE + 0x08840)
-#define BTIMR2_BASE			(APB1_BASE + 0x08880)
-#define BTIMR3_BASE			(APB1_BASE + 0x088C0)
-#define BTIMRG_BASE			(APB1_BASE + 0x08C00)
+#define TIMR0_BASE			(APB1_BASE + 0x04000)
+#define TIMR1_BASE			(APB1_BASE + 0x04040)
+#define TIMRG_BASE			(APB1_BASE + 0x04400)
 
-#define ADC0_BASE			(APB1_BASE + 0x09000)
-#define ADC1_BASE			(APB1_BASE + 0x09800)
+#define BTIMR0_BASE			(APB1_BASE + 0x04800)
+#define BTIMR1_BASE			(APB1_BASE + 0x04840)
+#define BTIMR2_BASE			(APB1_BASE + 0x04880)
+#define BTIMR3_BASE			(APB1_BASE + 0x048C0)
+#define BTIMRG_BASE			(APB1_BASE + 0x04C00)
 
-#define FMC_BASE			(APB1_BASE + 0x0A000)	// Flash Memory Controller
+#define PWM0_BASE			(APB1_BASE + 0x05000)
+#define PWM1_BASE			(APB1_BASE + 0x05080)
+#define PWMG_BASE			(APB1_BASE + 0x05400)
 
-#define RTC_BASE			(APB1_BASE + 0x0B800)
+#define FMC_BASE			(APB1_BASE + 0x05800)	// Flash Memory Controller
 
-#define DAC_BASE			(APB1_BASE + 0x0C000)
 
 #define PORTA_BASE			(APB2_BASE + 0x00000)
 #define PORTB_BASE			(APB2_BASE + 0x00010)
 #define PORTC_BASE			(APB2_BASE + 0x00020)
 #define PORTD_BASE			(APB2_BASE + 0x00030)
 #define PORTE_BASE			(APB2_BASE + 0x00040)
-#define PORTM_BASE			(APB2_BASE + 0x00080)
-#define PORTN_BASE			(APB2_BASE + 0x00090)
 
 #define WDT_BASE			(APB2_BASE + 0x00800)
 
-#define GPIOE_BASE			(APB2_BASE + 0x01000)
+#define UART0_BASE			(APB2_BASE + 0x01000)
+#define UART1_BASE			(APB2_BASE + 0x01800)
+#define UART2_BASE			(APB2_BASE + 0x02000)
+#define UART3_BASE			(APB2_BASE + 0x02800)
+#define UART4_BASE			(APB2_BASE + 0x03000)
 
-#define I2C0_BASE			(APB2_BASE + 0x06000)
-#define I2C1_BASE			(APB2_BASE + 0x06800)
+#define RTC_BASE			(APB2_BASE + 0x03800)
 
-#define CAN0_BASE			(APB2_BASE + 0x08000)
+#define I2C0_BASE			(APB2_BASE + 0x04000)
+#define I2C1_BASE			(APB2_BASE + 0x04800)
+
+#define CAN0_BASE			(APB2_BASE + 0x05000)
+
+#define GPIOE_BASE			(APB2_BASE + 0x06000)
 
 
 
@@ -3118,6 +2897,7 @@ typedef struct {
 #define UART1				((UART_TypeDef *) UART1_BASE)
 #define UART2				((UART_TypeDef *) UART2_BASE)
 #define UART3   			((UART_TypeDef *) UART3_BASE)
+#define UART4   			((UART_TypeDef *) UART4_BASE)
 
 #define SPI0				((SPI_TypeDef  *) SPI0_BASE)
 
@@ -3131,28 +2911,31 @@ typedef struct {
 #define PWM1				((PWM_TypeDef  *) PWM1_BASE)
 #define PWMG				((PWMG_TypeDef *) PWMG_BASE)
 
+#define DAC0				((DAC_TypeDef  *) DAC0_BASE)
+
+#define DMA 				((DMA_TypeDef  *) DMA_BASE)
+
 #define CAN0 				((CAN_TypeDef  *) CAN0_BASE)
 
 #define SDIO				((SDIO_TypeDef *) SDIO_BASE)
-
-#define DMA 				((DMA_TypeDef  *) DMA_BASE)
 
 #define LCD					((LCD_TypeDef  *) LCD_BASE)
 
 #define DMA2D				((DMA2D_TypeDef*) DMA2D_BASE)
 
-#define DAC					((DAC_TypeDef  *) DAC_BASE)
+#define JPEG				((JPEG_TypeDef *) JPEG_BASE)
+
+#define SRA					((SRA_TypeDef  *) SRA_BASE)
+
+#define DVP					((DVP_TypeDef  *) DVP_BASE)
+
+#define FMC					((FMC_TypeDef  *) FMC_BASE)
 
 #define CRC					((CRC_TypeDef  *) CRC_BASE)
 
 #define RTC					((RTC_TypeDef  *) RTC_BASE)
 
 #define WDT					((WDT_TypeDef  *) WDT_BASE)
-
-#define FMC					((FMC_TypeDef  *) FMC_BASE)
-
-#define JPEG				((JPEG_TypeDef *) JPEG_BASE)
-
 
 
 #include "SWM330_port.h"

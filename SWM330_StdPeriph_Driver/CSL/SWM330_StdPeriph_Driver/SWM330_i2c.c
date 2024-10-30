@@ -28,11 +28,11 @@ void I2C_Init(I2C_TypeDef * I2Cx, I2C_InitStructure * initStruct)
 	switch((uint32_t)I2Cx)
 	{
 	case ((uint32_t)I2C0):
-		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_I2C0_Pos);
+		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_I2C0_Pos);
 		break;
 	
 	case((uint32_t)I2C1):
-		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_I2C1_Pos);
+		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_I2C1_Pos);
 		break;
 	}
 	

@@ -30,17 +30,10 @@ void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct)
 	switch((uint32_t)ADCx)
 	{
 	case ((uint32_t)ADC0):
-		SYS->CLKSEL &= ~(SYS_CLKSEL_AD0_Msk | SYS_CLKSEL_AD0DIV_Msk);
-		SYS->CLKSEL |= (initStruct->clk_src << SYS_CLKSEL_AD0_Pos);
-	
+		SYS->CLKSEL &= ~(SYS_CLKSEL_ADC0_Msk | SYS_CLKSEL_ADC0DIV_Msk);
+		SYS->CLKSEL |= (initStruct->clk_src << SYS_CLKSEL_ADC0_Pos);
+		
 		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_ADC0_Pos);
-		break;
-	
-	case ((uint32_t)ADC1):
-		SYS->CLKSEL &= ~(SYS_CLKSEL_AD1_Msk | SYS_CLKSEL_AD1DIV_Msk);
-		SYS->CLKSEL |= (initStruct->clk_src << SYS_CLKSEL_AD1_Pos);
-	
-		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_ADC1_Pos);
 		break;
 	}
 	
@@ -73,10 +66,6 @@ void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct)
 	{
 	case ((uint32_t)ADC0):
 		if(initStruct->EOC_IEn | initStruct->HalfIEn) NVIC_EnableIRQ(ADC0_IRQn);
-		break;
-	
-	case ((uint32_t)ADC1):
-		if(initStruct->EOC_IEn | initStruct->HalfIEn) NVIC_EnableIRQ(ADC1_IRQn);
 		break;
 	}
 }
@@ -159,7 +148,6 @@ void ADC_CMP_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_CMP_InitStructure * init
 		switch((uint32_t)ADCx)
 		{
 		case ((uint32_t)ADC0): NVIC_EnableIRQ(ADC0_IRQn); break;
-		case ((uint32_t)ADC1): NVIC_EnableIRQ(ADC1_IRQn); break;
 		}
 	}
 }

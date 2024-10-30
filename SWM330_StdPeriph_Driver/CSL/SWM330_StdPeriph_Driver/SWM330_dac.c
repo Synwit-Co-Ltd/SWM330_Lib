@@ -27,8 +27,8 @@ void DAC_Init(DAC_TypeDef * DACx, uint32_t format)
 {
 	switch((uint32_t)DACx)
 	{
-	case ((uint32_t)DAC):
-		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_DAC_Pos);
+	case ((uint32_t)DAC0):
+		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_DAC0_Pos);
 		break;
 	}
 	

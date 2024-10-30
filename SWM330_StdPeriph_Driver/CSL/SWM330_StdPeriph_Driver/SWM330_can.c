@@ -30,7 +30,7 @@ void CAN_Init(CAN_TypeDef * CANx, CAN_InitStructure * initStruct)
 	switch((uint32_t)CANx)
 	{
 	case ((uint32_t)CAN0):
-		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_CAN0_Pos);
+		SYS->CLKEN1 |= (0x01 << SYS_CLKEN1_CAN0_Pos);
 		break;
 	}
 	

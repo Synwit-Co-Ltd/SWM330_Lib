@@ -131,7 +131,7 @@ void SystemCoreClockUpdate(void)
 *******************************************************************************************************************************/
 void SystemInit(void)
 {
-	SYS->CLKEN0 |= (1 << SYS_CLKEN0_ANAC_Pos);
+	SYS->CLKEN1 |= (1 << SYS_CLKEN1_ANAC_Pos);
 	
 	Flash_Param_at_xMHz(150);
 	
@@ -340,7 +340,7 @@ void switchToXTAL_32K(void)
 {
 	switchTo20MHz();
 	
-	SYS->XTALCR |= (1 << SYS_XTALCR_32KON_Pos) | (7 << SYS_XTALCR_32KDRV_Pos) | (1 << SYS_XTALCR_32KDET_Pos);
+//	SYS->XTALCR |= (1 << SYS_XTALCR_32KON_Pos) | (7 << SYS_XTALCR_32KDRV_Pos) | (1 << SYS_XTALCR_32KDET_Pos);
 	
 	SYS->CLKDIVx_ON = 1;
 	
