@@ -32,8 +32,8 @@ int main(void)
 	
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTB, PIN13, PORTB_PIN13_UART2_RX, 1);	// Connect to PM1, receive the data sent by UART0, and send it as-is
-	PORT_Init(PORTB, PIN11, PORTB_PIN11_UART2_TX, 0);
+	PORT_Init(PORTA, PIN8, FUNMUX0_UART1_TXD, 0);
+	PORT_Init(PORTA, PIN9, FUNMUX1_UART1_RXD, 1);	// Connect to PA6, receive the data sent by UART0, and send it as-is
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;
@@ -45,19 +45,19 @@ int main(void)
 	UART_initStruct.TXThresholdIEn = 0;
 	UART_initStruct.TimeoutTime = 10;
 	UART_initStruct.TimeoutIEn = 1;
- 	UART_Init(UART2, &UART_initStruct);
-	UART_Open(UART2);
+ 	UART_Init(UART1, &UART_initStruct);
+	UART_Open(UART1);
 	
 	DMA_InitStructure DMA_initStruct;
 	
 	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
 	DMA_initStruct.Unit = DMA_UNIT_WORD;
 	DMA_initStruct.Count = RX_LEN;
-	DMA_initStruct.SrcAddr = (uint32_t)&UART2->DATA;
-	DMA_initStruct.SrcAddrInc = 0;
-	DMA_initStruct.DstAddr = (uint32_t)RX_Buffer;
-	DMA_initStruct.DstAddrInc = 1;
-	DMA_initStruct.Handshake = DMA_CH0_UART2RX;
+	DMA_initStruct.MemoryAddr = (uint32_t)RX_Buffer;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&UART1->DATA;
+	DMA_initStruct.PeripheralAddrInc = 0;
+	DMA_initStruct.Handshake = DMA_CH0_UART1RX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
 	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
@@ -66,11 +66,11 @@ int main(void)
 	DMA_initStruct.Mode = DMA_MODE_SINGLE;
 	DMA_initStruct.Unit = DMA_UNIT_BYTE;
 	DMA_initStruct.Count = strlen(TX_Buffer);
-	DMA_initStruct.SrcAddr = (uint32_t)TX_Buffer;
-	DMA_initStruct.SrcAddrInc = 1;
-	DMA_initStruct.DstAddr = (uint32_t)&UART2->DATA;
-	DMA_initStruct.DstAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_CH1_UART2TX;
+	DMA_initStruct.MemoryAddr = (uint32_t)TX_Buffer;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&UART1->DATA;
+	DMA_initStruct.PeripheralAddrInc = 0;
+	DMA_initStruct.Handshake = DMA_CH1_UART1TX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
 	DMA_CH_Init(DMA_CH1, &DMA_initStruct);
@@ -92,11 +92,11 @@ int main(void)
 }
 
 
-void UART2_Handler(void)
+void UART1_Handler(void)
 {
-	if(UART_INTStat(UART2, UART_IT_RX_TOUT))
+	if(UART_INTStat(UART1, UART_IT_RX_TOUT))
 	{
-		UART_INTClr(UART2, UART_IT_RX_TOUT);
+		UART_INTClr(UART1, UART_IT_RX_TOUT);
 		
 		int str_len = (RX_LEN + RX_LEN - DMA_CH_GetRemaining(DMA_CH0) - RX_Start) % RX_LEN;
 		for(int i = 0; i < str_len; i++)
@@ -104,8 +104,7 @@ void UART2_Handler(void)
 		
 		RX_Start += str_len;
 		
-		DMA_CH_SetSrcAddress(DMA_CH1, (uint32_t)TX_Buffer);
-		DMA_CH_SetCount(DMA_CH1, str_len);
+		DMA_CH_SetAddrAndCount(DMA_CH1, (uint32_t)TX_Buffer, str_len);
 		DMA_CH_Open(DMA_CH1);
 	}
 }
@@ -115,8 +114,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
-	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

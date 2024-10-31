@@ -1672,136 +1672,105 @@ typedef struct {
 
 
 
-typedef struct {
-	__IO uint32_t EN;                       // [0] ENABLE
+typedef struct {    
+	__IO uint32_t IF;						//Interrupt Flag
     
-	__IO uint32_t IE;                       // Interrupt Enable
-    
-	__IO uint32_t IM;                       // Interrupt Mask, DMA_IRQn = IM & IF
-    
-	__IO uint32_t IF;                       // Interrupt Flag, IF = IE & raw interrupt request
-	
-	__IO uint32_t DSTSGIE;					// Only used in Scatter Gather mode
-	
-	__IO uint32_t DSTSGIM;					// Only used in Scatter Gather mode
-	
-	__IO uint32_t DSTSGIF;					// Only used in Scatter Gather mode
-	
-	__IO uint32_t SRCSGIE;					// Only used in Scatter Gather mode
-	
-	__IO uint32_t SRCSGIM;					// Only used in Scatter Gather mode
-	
-	__IO uint32_t SRCSGIF;					// Only used in Scatter Gather mode
-	
-		 uint32_t RESERVED[5];
-	
-	__IO uint32_t PRI;						// priority, 1 high priority, 0 low priority
-	
+	__IO uint32_t IFC;						//Interrupt Flag Clear
+    	
+		 uint32_t RESERVED[2];
+		
 	struct {
-		__IO uint32_t CR;
-		
-		__IO uint32_t AM;                   // Adress Mode
-		
-		__IO uint32_t DST;
-		
-		__IO uint32_t DSTSGADDR1;			// Only used in Scatter Gather mode
-		
-		__IO uint32_t DSTSGADDR2;			// Only used in Scatter Gather mode
-		
-		__IO uint32_t DSTSGADDR3;			// Only used in Scatter Gather mode
-		
 		__IO uint32_t MUX;
 		
-		__IO uint32_t SRC;
+		__IO uint32_t CR;
 		
-		__IO uint32_t SRCSGADDR1;			// Only used in Scatter Gather mode
+		__IO uint32_t NDT;					//Number of data to transfer
 		
-		__IO uint32_t SRCSGADDR2;			// Only used in Scatter Gather mode
+		__IO uint32_t PAR;					//Peripheral address register
 		
-		__IO uint32_t SRCSGADDR3;			// Only used in Scatter Gather mode
-		
-		__I  uint32_t DSTSR;
-		
-		__I  uint32_t SRCSR;
+		__IO uint32_t MAR;					//Memory address register
 		
 			 uint32_t RESERVED[3];
-	} CH[4];
+	} CH[2];
 } DMA_TypeDef;
 
 
-#define DMA_IE_CH0_Pos			    0		
-#define DMA_IE_CH0_Msk			    (0x01 << DMA_IE_CH0_Pos)
-#define DMA_IE_CH1_Pos			    1		
-#define DMA_IE_CH1_Msk			    (0x01 << DMA_IE_CH1_Pos)
-#define DMA_IE_CH2_Pos			    2		
-#define DMA_IE_CH2_Msk			    (0x01 << DMA_IE_CH2_Pos)
-#define DMA_IE_CH3_Pos			    3		
-#define DMA_IE_CH3_Msk			    (0x01 << DMA_IE_CH3_Pos)
+#define DMA_IF_GLB0_Pos				0		//Channel 0 global interrupt
+#define DMA_IF_GLB0_Msk				(0x01 << DMA_IF_GLB0_Pos)
+#define DMA_IF_DONE0_Pos			1		//Channel 0 transfer done
+#define DMA_IF_DONE0_Msk			(0x01 << DMA_IF_DONE0_Pos)
+#define DMA_IF_HALF0_Pos			2		//Channel 0 half transfer
+#define DMA_IF_HALF0_Msk			(0x01 << DMA_IF_HALF0_Pos)
+#define DMA_IF_ERR0_Pos				3		//Channel 0 transfer error
+#define DMA_IF_ERR0_Msk				(0x01 << DMA_IF_ERR0_Pos)
+#define DMA_IF_GLB1_Pos				4
+#define DMA_IF_GLB1_Msk				(0x01 << DMA_IF_GLB1_Pos)
+#define DMA_IF_DONE1_Pos			5
+#define DMA_IF_DONE1_Msk			(0x01 << DMA_IF_DONE1_Pos)
+#define DMA_IF_HALF1_Pos			6
+#define DMA_IF_HALF1_Msk			(0x01 << DMA_IF_HALF1_Pos)
+#define DMA_IF_ERR1_Pos				7
+#define DMA_IF_ERR1_Msk				(0x01 << DMA_IF_ERR1_Pos)
 
-#define DMA_IM_CH0_Pos			    0		
-#define DMA_IM_CH0_Msk			    (0x01 << DMA_IM_CH0_Pos)
-#define DMA_IM_CH1_Pos			    1		
-#define DMA_IM_CH1_Msk			    (0x01 << DMA_IM_CH1_Pos)
-#define DMA_IM_CH2_Pos			    2		
-#define DMA_IM_CH2_Msk			    (0x01 << DMA_IM_CH2_Pos)
-#define DMA_IM_CH3_Pos			    3		
-#define DMA_IM_CH3_Msk			    (0x01 << DMA_IM_CH3_Pos)
+#define DMA_IFC_GLB0_Pos			0
+#define DMA_IFC_GLB0_Msk			(0x01 << DMA_IFC_GLB0_Pos)
+#define DMA_IFC_DONE0_Pos			1
+#define DMA_IFC_DONE0_Msk			(0x01 << DMA_IFC_DONE0_Pos)
+#define DMA_IFC_HALF0_Pos			2
+#define DMA_IFC_HALF0_Msk			(0x01 << DMA_IFC_HALF0_Pos)
+#define DMA_IFC_ERR0_Pos			3
+#define DMA_IFC_ERR0_Msk			(0x01 << DMA_IFC_ERR0_Pos)
+#define DMA_IFC_GLB1_Pos			4
+#define DMA_IFC_GLB1_Msk			(0x01 << DMA_IFC_GLB1_Pos)
+#define DMA_IFC_DONE1_Pos			5
+#define DMA_IFC_DONE1_Msk			(0x01 << DMA_IFC_DONE1_Pos)
+#define DMA_IFC_HALF1_Pos			6
+#define DMA_IFC_HALF1_Msk			(0x01 << DMA_IFC_HALF1_Pos)
+#define DMA_IFC_ERR1_Pos			7
+#define DMA_IFC_ERR1_Msk			(0x01 << DMA_IFC_ERR1_Pos)
 
-#define DMA_IF_CH0_Pos			    0		
-#define DMA_IF_CH0_Msk			    (0x01 << DMA_IF_CH0_Pos)
-#define DMA_IF_CH1_Pos			    1		
-#define DMA_IF_CH1_Msk			    (0x01 << DMA_IF_CH1_Pos)
-#define DMA_IF_CH2_Pos			    2		
-#define DMA_IF_CH2_Msk			    (0x01 << DMA_IF_CH2_Pos)
-#define DMA_IF_CH3_Pos			    3		
-#define DMA_IF_CH3_Msk			    (0x01 << DMA_IF_CH3_Pos)
-
-#define DMA_CR_LEN_Pos				0       // length, number of transmitted data
-#define DMA_CR_LEN_Msk				(0xFFFFF<< DMA_CR_LEN_Pos)
-#define DMA_CR_RXEN_Pos				24		// start transmission by software, direction is SRC-->DST
-#define DMA_CR_RXEN_Msk				(0x01 << DMA_CR_RXEN_Pos)
-#define DMA_CR_TXEN_Pos				25		// start transmission by software, direction is DST-->SRC
-#define DMA_CR_TXEN_Msk				(0x01 << DMA_CR_TXEN_Pos)
-#define DMA_CR_AUTORE_Pos			26      // Auto Restart enable, i.e. circle mode
-#define DMA_CR_AUTORE_Msk			(0x01 << DMA_CR_AUTORE_Pos)
-#define DMA_CR_STEPOP_Pos			27		// Step Operation, trigger once to transmit 1 data
-#define DMA_CR_STEPOP_Msk			(0x01 << DMA_CR_STEPOP_Pos)
-
-#define DMA_AM_DSTAM_Pos			0       // Address Mode	0 Fixed address, 1 Address increment, 2 scatter gather mode
-#define DMA_AM_DSTAM_Msk			(0x03 << DMA_AM_DSTAM_Pos)
-#define DMA_AM_DSTBIT_Pos			2		// Transmission bit width, 0 byte, 1 half-word, 2 word
-#define DMA_AM_DSTBIT_Msk			(0x03 << DMA_AM_DSTBIT_Pos)
-#define DMA_AM_DSTBURST_Pos			4		// 0 Single, 1 Burst (INC4)
-#define DMA_AM_DSTBURST_Msk			(0x01 << DMA_AM_DSTBURST_Pos)
-#define DMA_AM_SRCAM_Pos			8
-#define DMA_AM_SRCAM_Msk			(0x03 << DMA_AM_SRCAM_Pos)
-#define DMA_AM_SRCBIT_Pos			10
-#define DMA_AM_SRCBIT_Msk			(0x03 << DMA_AM_SRCBIT_Pos)
-#define DMA_AM_SRCBURST_Pos			12
-#define DMA_AM_SRCBURST_Msk			(0x01 << DMA_AM_SRCBURST_Pos)
-
-#define DMA_MUX_DSTHSSIG_Pos		0		// Target side handshake signal
-#define DMA_MUX_DSTHSSIG_Msk		(0x03 << DMA_MUX_DSTHSSIG_Pos)
-#define DMA_MUX_DSTHSEN_Pos			2		// Target side handshake enable
-#define DMA_MUX_DSTHSEN_Msk			(0x01 << DMA_MUX_DSTHSEN_Pos)
-#define DMA_MUX_SRCHSSIG_Pos		8		// Source side handshake signal
-#define DMA_MUX_SRCHSSIG_Msk		(0x03 << DMA_MUX_SRCHSSIG_Pos)
-#define DMA_MUX_SRCHSEN_Pos			10		// Source side handshake enable
-#define DMA_MUX_SRCHSEN_Msk			(0x01 << DMA_MUX_SRCHSEN_Pos)
-#define DMA_MUX_EXTHSSIG_Pos		16		// External handshake signal, 0 TIMR0, 1 TIMR1, 2 TIMR2, 3 TIMR3, 4 TIMR4, 5 DMA_TRIG0, 6 DMA_TRIG1
+#define DMA_MUX_MRDHSSIG_Pos		0		//memory read  handshake signal
+#define DMA_MUX_MRDHSSIG_Msk		(0x03 << DMA_MUX_MRDHSSIG_Pos)
+#define DMA_MUX_MRDHSEN_Pos			3		//memory read  handshake enable
+#define DMA_MUX_MRDHSEN_Msk			(0x01 << DMA_MUX_MRDHSEN_Pos)
+#define DMA_MUX_MWRHSSIG_Pos		4		//memory write handshake signal
+#define DMA_MUX_MWRHSSIG_Msk		(0x03 << DMA_MUX_MWRHSSIG_Pos)
+#define DMA_MUX_MWRHSEN_Pos			7		//memory write handshake enable
+#define DMA_MUX_MWRHSEN_Msk			(0x01 << DMA_MUX_MWRHSEN_Pos)
+#define DMA_MUX_EXTHSSIG_Pos		8		//外部握手信号，0 TIMR0   1 TIMR1   2 TIMR2   3 TIMR3   4 TIMR4   5 DMA_TRIG0   6 DMA_TRIG1
 #define DMA_MUX_EXTHSSIG_Msk		(0x07 << DMA_MUX_EXTHSSIG_Pos)
-#define DMA_MUX_EXTHSEN_Pos			19		// External handshake enable
+#define DMA_MUX_EXTHSEN_Pos			11
 #define DMA_MUX_EXTHSEN_Msk			(0x01 << DMA_MUX_EXTHSEN_Pos)
 
-#define DMA_DSTSR_LEN_Pos			0		// Residual number of transmitted data
-#define DMA_DSTSR_LEN_Msk			(0xFFFFF<<DMA_DSTSR_LEN_Pos)
-#define DMA_DSTSR_ERR_Pos			31		// Length configuration error
-#define DMA_DSTSR_ERR_Msk			(0x01u<< DMA_DSTSR_ERR_Pos)
+#define DMA_CR_EN_Pos				0
+#define DMA_CR_EN_Msk				(0x01 << DMA_CR_EN_Pos)
+#define DMA_CR_DONEIE_Pos			1
+#define DMA_CR_DONEIE_Msk			(0x01 << DMA_CR_DONEIE_Pos)
+#define DMA_CR_HALFIE_Pos			2
+#define DMA_CR_HALFIE_Msk			(0x01 << DMA_CR_HALFIE_Pos)
+#define DMA_CR_ERRIE_Pos			3
+#define DMA_CR_ERRIE_Msk			(0x01 << DMA_CR_ERRIE_Pos)
+#define DMA_CR_DIR_Pos				4
+#define DMA_CR_DIR_Msk				(0x01 << DMA_CR_DIR_Pos)
+#define DMA_CR_CIRC_Pos				5
+#define DMA_CR_CIRC_Msk				(0x01 << DMA_CR_CIRC_Pos)
+#define DMA_CR_PINC_Pos				6
+#define DMA_CR_PINC_Msk				(0x01 << DMA_CR_PINC_Pos)
+#define DMA_CR_MINC_Pos				7
+#define DMA_CR_MINC_Msk				(0x01 << DMA_CR_MINC_Pos)
+#define DMA_CR_PSIZ_Pos				8
+#define DMA_CR_PSIZ_Msk				(0x03 << DMA_CR_PSIZ_Pos)
+#define DMA_CR_MSIZ_Pos				10
+#define DMA_CR_MSIZ_Msk				(0x03 << DMA_CR_MSIZ_Pos)
+#define DMA_CR_PL_Pos				12
+#define DMA_CR_PL_Msk				(0x0F << DMA_CR_PL_Pos)
+#define DMA_CR_MEM2MEM_Pos			16
+#define DMA_CR_MEM2MEM_Msk			(0x01 << DMA_CR_MEM2MEM_Pos)
 
-#define DMA_SRCSR_LEN_Pos			0
-#define DMA_SRCSR_LEN_Msk			(0xFFFFF<<DMA_SRCSR_LEN_Pos)
-#define DMA_SRCSR_ERR_Pos			31
-#define DMA_SRCSR_ERR_Msk			(0x01u<< DMA_SRCSR_ERR_Pos)
+#define DMA_NDT_LEN_Pos				0		//通道关闭时，写入要传输的数据个数；通道使能后，指示剩余的待传输数据数目
+#define DMA_NDT_LEN_Msk				(0xFFFF << DMA_NDT_LEN_Pos)
+#define DMA_NDT_HALF_Pos			16		//传输 HALF 指定个数数据后，置位 DMA->IF.HALF 中断标志位
+#define DMA_NDT_HALF_Msk			(0xFFFF << DMA_NDT_HALF_Pos)
 
 
 
