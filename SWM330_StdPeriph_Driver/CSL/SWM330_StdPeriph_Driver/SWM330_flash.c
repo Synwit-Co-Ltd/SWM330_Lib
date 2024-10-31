@@ -17,10 +17,10 @@
 #include "SWM330_flash.h"
 
 
-const IAP_Cache_Reset_t IAP_Cache_Reset = (IAP_Cache_Reset_t)0x11000401;
-const IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x11000431;
-const IAP_Flash_Erase_t IAP_Flash_Erase = (IAP_Flash_Erase_t)0x11000471;
-const IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x110004C1;
+const IAP_Cache_Reset_t IAP_Cache_Reset = (IAP_Cache_Reset_t)0x01000401;
+const IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x01000431;
+const IAP_Flash_Erase_t IAP_Flash_Erase = (IAP_Flash_Erase_t)0x01000471;
+const IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x010004C1;
 
 
 /*******************************************************************************************************************************

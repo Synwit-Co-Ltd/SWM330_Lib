@@ -74,48 +74,4 @@ void SPI_INTClr(SPI_TypeDef * SPIx, uint32_t it);
 uint32_t SPI_INTStat(SPI_TypeDef * SPIx, uint32_t it);
 
 
-
-
-typedef struct {
-	uint8_t  Mode;				// I2S_MASTER_TX, I2S_MASTER_RX, I2S_MASTER_TX_RX, I2S_SLAVE_TX, I2S_SLAVE_RX, I2S_SLAVE_TX_RX
-	uint8_t  FrameFormat;		// I2S_I2S_PHILIPS, I2S_MSB_JUSTIFIED, I2S_PCM_SHORT, I2S_PCM_LONG0, I2S_PCM_LONG1
-	uint8_t  ChannelLen;		// I2S_CHNNLEN_16, I2S_CHNNLEN_32
-	uint8_t  DataLen;			// I2S_DATALEN_8, I2S_DATALEN_16, I2S_DATALEN_24, I2S_DATALEN_32
-	uint32_t ClkFreq;			// I2S_SCLK Frequency
-	
-	uint8_t  RXThreshold;
-	uint8_t  RXThresholdIEn;
-	
-	uint8_t  TXThreshold;
-	uint8_t  TXThresholdIEn;
-	
-	uint8_t  TXCompleteIEn;
-} I2S_InitStructure;
-
-
-#define I2S_MASTER_RX		5
-#define I2S_MASTER_TX		6
-#define I2S_SLAVE_RX		1
-#define I2S_SLAVE_TX		2
-
-#define I2S_I2S_PHILIPS		0
-#define I2S_MSB_JUSTIFIED	1
-#define I2S_PCM_SHORT		2
-#define I2S_PCM_LONG0		3	// PCM Long Mode Sync Width 1 SCLK period
-#define I2S_PCM_LONG1		4	// PCM Long Mode Sync Width 1 Data Length
-
-#define I2S_CHNNLEN_16		0
-#define I2S_CHNNLEN_32		1
-
-#define I2S_DATALEN_8		0
-#define I2S_DATALEN_16		1
-#define I2S_DATALEN_24		2
-#define I2S_DATALEN_32		3
-
-
-void I2S_Init(SPI_TypeDef * SPIx, I2S_InitStructure * initStruct);
-void I2S_Open(SPI_TypeDef * SPIx);
-void I2S_Close(SPI_TypeDef * SPIx);
-
-
 #endif

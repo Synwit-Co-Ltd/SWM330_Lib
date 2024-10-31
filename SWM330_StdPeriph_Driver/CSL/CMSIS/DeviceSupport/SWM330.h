@@ -566,63 +566,11 @@ typedef struct {
 
 
 typedef struct {
-	__IO uint32_t HALLIE;					// HALL interrupt enable
-	
-		 uint32_t RESERVED;
-	
-	__IO uint32_t HALLIF;
-	
-	__IO uint32_t HALLEN;					// HALL enable
-	
-	__IO uint32_t HALL0V;					// HALL for TIMR0 capture value (LOAD - VALUE)
-	
-	__IO uint32_t HALL3V;
-	
-		 uint32_t RESERVED2;
-	
-	__IO uint32_t HALLSR;					// HALL input status
-	
-		 uint32_t RESERVED3[8];
+		 uint32_t RESERVED3[16];
 	
 	__IO uint32_t EN;
 } TIMRG_TypeDef;
 
-
-#define TIMRG_HALLIE_HALL0_Pos		0		// HALL for TIMR0
-#define TIMRG_HALLIE_HALL0_Msk		(0x01 << TIMRG_HALLIE_HALL0_Pos)
-#define TIMRG_HALLIE_HALL3_Pos		1		// HALL for TIMR3
-#define TIMRG_HALLIE_HALL3_Msk		(0x01 << TIMRG_HALLIE_HALL3_Pos)
-
-#define TIMRG_HALLIF_H0IN0_Pos		0		// HALL0's input0 interrupt flag
-#define TIMRG_HALLIF_H0IN0_Msk		(0x01 << TIMRG_HALLIF_H0IN0_Pos)
-#define TIMRG_HALLIF_H0IN1_Pos		1
-#define TIMRG_HALLIF_H0IN1_Msk		(0x01 << TIMRG_HALLIF_H0IN1_Pos)
-#define TIMRG_HALLIF_H0IN2_Pos		2
-#define TIMRG_HALLIF_H0IN2_Msk		(0x01 << TIMRG_HALLIF_H0IN2_Pos)
-#define TIMRG_HALLIF_H3IN0_Pos		3		// HALL3's input0 interrupt flag
-#define TIMRG_HALLIF_H3IN0_Msk		(0x01 << TIMRG_HALLIF_H3IN0_Pos)
-#define TIMRG_HALLIF_H3IN1_Pos		4
-#define TIMRG_HALLIF_H3IN1_Msk		(0x01 << TIMRG_HALLIF_H3IN1_Pos)
-#define TIMRG_HALLIF_H3IN2_Pos		5
-#define TIMRG_HALLIF_H3IN2_Msk		(0x01 << TIMRG_HALLIF_H3IN2_Pos)
-
-#define TIMRG_HALLEN_HALL0_Pos		0		// HALL0 enable
-#define TIMRG_HALLEN_HALL0_Msk		(0x01 << TIMRG_HALLEN_HALL0_Pos)
-#define TIMRG_HALLEN_HALL3_Pos		1
-#define TIMRG_HALLEN_HALL3_Msk		(0x01 << TIMRG_HALLEN_HALL3_Pos)
-
-#define TIMRG_HALLSR_H0IN0_Pos		0		// current status of HALL0's input0
-#define TIMRG_HALLSR_H0IN0_Msk		(0x01 << TIMRG_HALLSR_H0IN0_Pos)
-#define TIMRG_HALLSR_H0IN1_Pos		1
-#define TIMRG_HALLSR_H0IN1_Msk		(0x01 << TIMRG_HALLSR_H0IN1_Pos)
-#define TIMRG_HALLSR_H0IN2_Pos		2
-#define TIMRG_HALLSR_H0IN2_Msk		(0x01 << TIMRG_HALLSR_H0IN2_Pos)
-#define TIMRG_HALLSR_H3IN0_Pos		3
-#define TIMRG_HALLSR_H3IN0_Msk		(0x01 << TIMRG_HALLSR_H3IN0_Pos)
-#define TIMRG_HALLSR_H3IN1_Pos		4
-#define TIMRG_HALLSR_H3IN1_Msk		(0x01 << TIMRG_HALLSR_H3IN1_Pos)
-#define TIMRG_HALLSR_H3IN2_Pos		5
-#define TIMRG_HALLSR_H3IN2_Msk		(0x01 << TIMRG_HALLSR_H3IN2_Pos)
 
 #define TIMRG_EN_TIMR0_Pos			0
 #define TIMRG_EN_TIMR0_Msk			(0x01 << TIMRG_EN_TIMR0_Pos)
@@ -632,22 +580,6 @@ typedef struct {
 #define TIMRG_EN_TIMR2_Msk			(0x01 << TIMRG_EN_TIMR2_Pos)
 #define TIMRG_EN_TIMR3_Pos			3
 #define TIMRG_EN_TIMR3_Msk			(0x01 << TIMRG_EN_TIMR3_Pos)
-#define TIMRG_EN_TIMR4_Pos			4
-#define TIMRG_EN_TIMR4_Msk			(0x01 << TIMRG_EN_TIMR4_Pos)
-#define TIMRG_EN_TIMR5_Pos			5
-#define TIMRG_EN_TIMR5_Msk			(0x01 << TIMRG_EN_TIMR5_Pos)
-#define TIMRG_EN_TIMR6_Pos			6
-#define TIMRG_EN_TIMR6_Msk			(0x01 << TIMRG_EN_TIMR6_Pos)
-#define TIMRG_EN_TIMR7_Pos			7
-#define TIMRG_EN_TIMR7_Msk			(0x01 << TIMRG_EN_TIMR7_Pos)
-#define TIMRG_EN_TIMR8_Pos			8
-#define TIMRG_EN_TIMR8_Msk			(0x01 << TIMRG_EN_TIMR8_Pos)
-#define TIMRG_EN_TIMR9_Pos			9
-#define TIMRG_EN_TIMR9_Msk			(0x01 << TIMRG_EN_TIMR9_Pos)
-#define TIMRG_EN_TIMR10_Pos			10
-#define TIMRG_EN_TIMR10_Msk			(0x01 << TIMRG_EN_TIMR10_Pos)
-#define TIMRG_EN_TIMR11_Pos			11
-#define TIMRG_EN_TIMR11_Msk			(0x01 << TIMRG_EN_TIMR11_Pos)
 
 
 
@@ -807,10 +739,6 @@ typedef struct {
 	__IO uint32_t IE;
 
 	__IO uint32_t IF;
-	
-	__IO uint32_t I2SCR;
-	
-	__IO uint32_t I2SPR;
 } SPI_TypeDef;
 
 
@@ -915,32 +843,6 @@ typedef struct {
 #define SPI_IF_SSFALL_Msk			(0x01 << SPI_IF_SSFALL_Pos)
 #define SPI_IF_SSRISE_Pos			11
 #define SPI_IF_SSRISE_Msk			(0x01 << SPI_IF_SSRISE_Pos)
-
-#define SPI_I2SCR_DIEN_Pos			0		// Data Input Enable
-#define SPI_I2SCR_DIEN_Msk			(0x01 << SPI_I2SCR_DIEN_Pos)
-#define SPI_I2SCR_DOEN_Pos			1		// Data Output Enable
-#define SPI_I2SCR_DOEN_Msk			(0x01 << SPI_I2SCR_DOEN_Pos)
-#define SPI_I2SCR_MSTR_Pos			2		// Master Mode
-#define SPI_I2SCR_MSTR_Msk			(0x01 << SPI_I2SCR_MSTR_Pos)
-#define SPI_I2SCR_EN_Pos			3
-#define SPI_I2SCR_EN_Msk			(0x01 << SPI_I2SCR_EN_Pos)
-#define SPI_I2SCR_FFMT_Pos			4		// I2S Frame Format, 0 I2S philips, 1 MSB justified, 2 PCM Short, 3 PCM Long
-#define SPI_I2SCR_FFMT_Msk			(0x03 << SPI_I2SCR_FFMT_Pos)
-#define SPI_I2SCR_DLEN_Pos			6		// I2S Data Length,  0 8-bit, 1 16-bit 2 24-bit 3 32-bit
-#define SPI_I2SCR_DLEN_Msk			(0x03 << SPI_I2SCR_DLEN_Pos)
-#define SPI_I2SCR_PCMSYNW_Pos		8		// I2S PCM Long Mode Sync Width, 0 1 SCLK period, 1 1 Data Length
-#define SPI_I2SCR_PCMSYNW_Msk		(0x01 << SPI_I2SCR_PCMSYNW_Pos)
-#define SPI_I2SCR_MCLKOE_Pos		9		// MCLK Output Enable
-#define SPI_I2SCR_MCLKOE_Msk		(0x01 << SPI_I2SCR_MCLKOE_Pos)
-#define SPI_I2SCR_CHLEN_Pos			10		// Channel width, 0 16-bit, 1 32-bit
-#define SPI_I2SCR_CHLEN_Msk			(0x01 << SPI_I2SCR_CHLEN_Pos)
-#define SPI_I2SCR_CHRIGHT_Pos		16		// 1 Right Channel, 0 Left Channel
-#define SPI_I2SCR_CHRIGHT_Msk		(0x01 << SPI_I2SCR_CHRIGHT_Pos)
-
-#define SPI_I2SPR_MCLKDIV_Pos		0		// Fmclk = Fpclk / (2 * (MCLKDIV + 1))
-#define SPI_I2SPR_MCLKDIV_Msk		(0x3F << SPI_I2SPR_MCLKDIV_Pos)
-#define SPI_I2SPR_SCLKDIV_Pos		8		// Fsclk = Fpclk / (2 * (SCLKDIV + 1))
-#define SPI_I2SPR_SCLKDIV_Msk		(0xFFF<< SPI_I2SPR_SCLKDIV_Pos)
 
 
 

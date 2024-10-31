@@ -21,8 +21,6 @@ int main(void)
 	
 	SerialInit();
 	
-	for(i = 0; i < SystemCoreClock/10; i++) __NOP();	// Wait for power to stabilize
-	
 	FLASH_Erase(EEPROM_ADDR);
 	
 	printf("\r\nAfter Erase: \r\n");
@@ -43,8 +41,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
-	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

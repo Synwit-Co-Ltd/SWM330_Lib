@@ -31,7 +31,7 @@
 #define SYS_CLK_32KHz		8		// 8 internal 32KHz
 #define SYS_CLK_XTAL_32K	9		// 9 exteranl 32KHz XTAL
 
-#define SYS_CLK   SYS_CLK_PLL
+#define SYS_CLK   SYS_CLK_40MHz
 
 
 #define __HSI		(20000000UL)	// high speed internal clock
