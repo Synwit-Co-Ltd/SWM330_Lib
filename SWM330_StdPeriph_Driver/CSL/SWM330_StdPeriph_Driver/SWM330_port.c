@@ -27,6 +27,27 @@
 *******************************************************************************************************************************/
 void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_in_en)
 {
+	if(func > 99)
+	{
+		uint8_t funmux = func - 100; func = 1;
+		
+		if(n < PIN6)
+		{
+			PORTx->FUNMUX0 &= ~(0x1F   << (n * 5));
+			PORTx->FUNMUX0 |=  (funmux << (n * 5));
+		}
+		else if(n < PIN12)
+		{
+			PORTx->FUNMUX1 &= ~(0x1F   << ((n - 6) * 5));
+			PORTx->FUNMUX1 |=  (funmux << ((n - 6) * 5));
+		}
+		else
+		{
+			PORTx->FUNMUX2 &= ~(0x1F   << ((n - 12) * 5));
+			PORTx->FUNMUX2 |=  (funmux << ((n - 12) * 5));
+		}
+	}
+	
 	if(n < PIN8)
 	{
 		PORTx->FUNC0 &= ~(0x0F << (n*4));

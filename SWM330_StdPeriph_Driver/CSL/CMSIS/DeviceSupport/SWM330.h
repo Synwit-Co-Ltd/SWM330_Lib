@@ -423,6 +423,14 @@ typedef struct {
          uint32_t RESERVED4[63];
 
 	__IO uint32_t OPEND;              		// open-drain enable
+	
+		 uint32_t RESERVED5[127];
+	
+	__IO uint32_t FUNMUX0;
+	
+	__IO uint32_t FUNMUX1;
+	
+	__IO uint32_t FUNMUX2;
 } PORT_TypeDef;
 
 
