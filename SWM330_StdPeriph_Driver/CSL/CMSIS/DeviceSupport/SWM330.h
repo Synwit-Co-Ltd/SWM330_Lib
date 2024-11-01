@@ -2265,27 +2265,29 @@ typedef struct {
 
 
 typedef struct {
-	__IO uint32_t IF;						// [0] frame transfer done, write 1 to clear
+	__IO uint32_t IF;
 	
 	__IO uint32_t IE;
-
-		 uint32_t RESERVED;
+	
+	__IO uint32_t OUTCR;
     
     __IO uint32_t START;
     
-    __IO uint32_t RESERVED2;
+    __IO uint32_t RESERVED;
     
     __IO uint32_t CR;
 	    
-    __IO uint32_t CRH;
+    __IO uint32_t CRH0;
+	
+	__IO uint32_t CRH1;
 		
-	__IO uint32_t CRV;
-	    
-		 uint32_t RESERVED3;
+	__IO uint32_t CRV0;
+	
+	__IO uint32_t CRV1;
 	
 	__IO uint32_t BGC;						// Background color
-			
-		 uint32_t RESERVED4[6];
+	
+		 uint32_t RESERVED2[5];
 	
 	struct {
 		__IO uint32_t LCR;					// Layer Control Register
@@ -2300,22 +2302,57 @@ typedef struct {
 		
 		__IO uint32_t CK;					// Color Key
 		
-			 uint32_t RESERVED5[10];
+			 uint32_t RESERVED3[10];
 	} L[2];									// Layer
 	
-		 uint32_t RESERVED5[16];
+		 uint32_t RESERVED4[16];
 	
-		__IO uint32_t MPUCR;
+	__IO uint32_t MPUCR;
 	
-		__IO uint32_t MPUIR;
+	union {
+		__IO uint8_t  MPUIRB;
+		
+		__IO uint16_t MPUIRH;
+		
+			 uint32_t RESERVED5;
+	};
 	
-		__IO uint32_t MPUDR;
+	union {
+		__IO uint8_t  MPUDRB;
+		
+		__IO uint16_t MPUDRH;
+		
+			 uint32_t RESERVED6;
+	};
 	
-		__IO uint32_t MPUAR;
+	__IO uint32_t MPUAR;
 	
-		__IO uint32_t MPULEN;
+	__IO uint32_t MPULEN;
 } LCD_TypeDef;
 
+
+#define LCD_IF_DONE_Pos				0		// frame transfer done interrupt flag, write 1 to clear
+#define LCD_IF_DONE_Msk				(0x01 << LCD_IF_DONE_Pos)
+#define LCD_IF_PART_Pos				1		// partial frame transfer done interrupt flag, write 1 to clear
+#define LCD_IF_PART_Msk				(0x01 << LCD_IF_PART_Pos)
+
+#define LCD_IE_DONE_Pos				0
+#define LCD_IE_DONE_Msk				(0x01 << LCD_IE_DONE_Pos)
+#define LCD_IE_PART_Pos				1
+#define LCD_IE_PART_Msk				(0x01 << LCD_IE_PART_Pos)
+
+#define LCD_OUTCR_BYTE0_Pos			0		// LCD_DATA[ 7: 0] output color component: 0 Blue   1 Green   2 Red
+#define LCD_OUTCR_BYTE0_Msk			(0x03 << LCD_OUTCR_BYTE0_Pos)
+#define LCD_OUTCR_BYTE0INV_Pos		2		// LCD_DATA[ 7: 0] output bit order inverse
+#define LCD_OUTCR_BYTE0INV_Msk		(0x01 << LCD_OUTCR_BYTE0INV_Pos)
+#define LCD_OUTCR_BYTE1_Pos			4		// LCD_DATA[15: 8] output color component: 0 Green   1 Red   2 Blue
+#define LCD_OUTCR_BYTE1_Msk			(0x03 << LCD_OUTCR_BYTE1_Pos)
+#define LCD_OUTCR_BYTE1INV_Pos		6		// LCD_DATA[15: 8] output bit order inverse
+#define LCD_OUTCR_BYTE1INV_Msk		(0x01 << LCD_OUTCR_BYTE1INV_Pos)
+#define LCD_OUTCR_BYTE2_Pos			8		// LCD_DATA[23:16] output color component: 0 Red   1 Blue   2 Green
+#define LCD_OUTCR_BYTE2_Msk			(0x03 << LCD_OUTCR_BYTE2_Pos)
+#define LCD_OUTCR_BYTE2INV_Pos		10		// LCD_DATA[23:16] output bit order inverse
+#define LCD_OUTCR_BYTE2INV_Msk		(0x01 << LCD_OUTCR_BYTE2INV_Pos)
 
 #define LCD_START_GO_Pos			1		// Write 1 Starts data transmission and automatically clears after transmission ends
 #define LCD_START_GO_Msk			(0x01 << LCD_START_GO_Pos)
@@ -2326,10 +2363,10 @@ typedef struct {
 #define LCD_CR_CLKINV_Msk			(0x01 << LCD_CR_CLKINV_Pos)
 #define LCD_CR_CLKALW_Pos			7		// DOTCLK Always, 0 DOTCLK keep at high level when idle
 #define LCD_CR_CLKALW_Msk			(0x01 << LCD_CR_CLKALW_Pos)
-#define LCD_CR_BURSTEN_Pos			8		// Burst Enable
-#define LCD_CR_BURSTEN_Msk			(0x01 << LCD_CR_BURSTEN_Pos)
-#define LCD_CR_BURSTLEN_Pos			9		// Burst Length, 0 Burst INCR4, 1 Burst INCR8
-#define LCD_CR_BURSTLEN_Msk			(0x01 << LCD_CR_BURSTLEN_Pos)
+#define LCD_CR_BURSTLEN_Pos			8		// Burst Length, 0 Single, 1 Burst INCR4, 2 Burst INCR8, 3 Burst INCR16
+#define LCD_CR_BURSTLEN_Msk			(0x03 << LCD_CR_BURSTLEN_Pos)
+#define LCD_CR_PARTSIZE_Pos			11		// size used to generate partial frame interrupt, 0 no partial frame interrupt, 1 1/4 frame, 2 2/4 frame, 3 3/4 frame
+#define LCD_CR_PARTSIZE_Msk			(0x01 << LCD_CR_PARTSIZE_Pos)
 #define LCD_CR_AUTORESTA_Pos		13		// Auto Restart
 #define LCD_CR_AUTORESTA_Msk		(0x01 << LCD_CR_AUTORESTA_Pos)
 #define LCD_CR_IMMRELOAD_Pos		14		// Immediate Reload, Immediately loads the value of the layer configuration register into the layer working register
@@ -2338,32 +2375,36 @@ typedef struct {
 #define LCD_CR_VBPRELOAD_Msk		(0x01 << LCD_CR_VBPRELOAD_Pos)
 #define LCD_CR_FORMAT_Pos			16		// 0 RGB565, 1 RGB888
 #define LCD_CR_FORMAT_Msk			(0x01 << LCD_CR_FORMAT_Pos)
-#define LCD_CR_SEREN_Pos			17		// Serial RGB Enable
-#define LCD_CR_SEREN_Msk			(0x01 << LCD_CR_SEREN_Pos)
-#define LCD_CR_MPUEN_Pos			18		// MPU Interface Enable
-#define LCD_CR_MPUEN_Msk			(0x01 << LCD_CR_MPUEN_Pos)
+#define LCD_CR_MODE_Pos				17		// 0 RGB, 1 serial RGB, 2 16-bit MPU, 3 8-bit MPU
+#define LCD_CR_MODE_Msk				(0x03 << LCD_CR_MODE_Pos)
 #define LCD_CR_VSYNCINV_Pos			19		// 1 VSYNC invert
 #define LCD_CR_VSYNCINV_Msk			(0x01 << LCD_CR_VSYNCINV_Pos)
 #define LCD_CR_HSYNCINV_Pos			20		// 1 HSYNC invert
 #define LCD_CR_HSYNCINV_Msk			(0x01 << LCD_CR_HSYNCINV_Pos)
+#define LCD_CR_VS2HS_Pos			22		// 1 VSYNC and HSYNC valid at same PIXCLK edge, 0 VSYNC valid one PIXCLK earlier than HSYNC
+#define LCD_CR_VS2HS_Msk			(0x01 << LCD_CR_VS2HS_Pos)
+#define LCD_CR_MPUMSB_Pos			23		// when 8-bit MPU mode, for 16-bit data access: 0 LSB, 1 MSB
+#define LCD_CR_MPUMSB_Msk			(0x01 << LCD_CR_MPUMSB_Pos)
 
-#define LCD_CRH_HSW_Pos				0		// Hsync Width, Output HSYNC low for how many DOTCLK cycles. 0 indicates 1 cycle
-#define LCD_CRH_HSW_Msk				(0xFF << LCD_CRH_HSW_Pos)
-#define LCD_CRH_HBP_Pos			    8		// 0 indicates one DOTCLK period
-#define LCD_CRH_HBP_Msk			    (0xFF << LCD_CRH_HBP_Pos)
-#define LCD_CRH_PIX_Pos				16		// number of horizontal pixels. 0 indicates 1 and the maximum value is 1023
-#define LCD_CRH_PIX_Msk				(0x3FF<< LCD_CRH_PIX_Pos)
-#define LCD_CRH_HFP_Pos			    26		// 0 indicates one DOTCLK period
-#define LCD_CRH_HFP_Msk			    (0x3Fu<< LCD_CRH_HFP_Pos)
+#define LCD_CRH0_HSW_Pos			0		// Hsync Width, Output HSYNC low for how many DOTCLK cycles. 0 indicates 1 cycle
+#define LCD_CRH0_HSW_Msk			(0x1FF<< LCD_CRH0_HSW_Pos)
+#define LCD_CRH0_HBP_Pos			10		// 0 indicates one DOTCLK period
+#define LCD_CRH0_HBP_Msk			(0x1FF<< LCD_CRH0_HBP_Pos)
+#define LCD_CRH0_HFP_Pos			20		// 0 indicates one DOTCLK period
+#define LCD_CRH0_HFP_Msk			(0x1FF<< LCD_CRH0_HFP_Pos)
 
-#define LCD_CRV_VSW_Pos				0		//Vsync Width, Output VSYNC low level for how many line cycles, 0 indicates 1 cycle
-#define LCD_CRV_VSW_Msk				(0xFF << LCD_CRV_VSW_Pos)
-#define LCD_CRV_VBP_Pos			    8		// 0 indicates 1 horizontal row cycle
-#define LCD_CRV_VBP_Msk			    (0xFF << LCD_CRV_VBP_Pos)
-#define LCD_CRV_PIX_Pos				16		// number of vertical pixels. 0 indicates 1, and the maximum value is 1023
-#define LCD_CRV_PIX_Msk				(0x3FF<< LCD_CRV_PIX_Pos)
-#define LCD_CRV_VFP_Pos			    26		// 0 indicates 1 horizontal row cycle
-#define LCD_CRV_VFP_Msk			    (0x3Fu<< LCD_CRV_VFP_Pos)
+#define LCD_CRH1_PIX_Pos			0		// number of horizontal pixels. 0 indicates 1 and the maximum value is 8191
+#define LCD_CRH1_PIX_Msk			(0x1FFF<< LCD_CRH1_PIX_Pos)
+
+#define LCD_CRV0_VSW_Pos			0		//Vsync Width, Output VSYNC low level for how many line cycles, 0 indicates 1 cycle
+#define LCD_CRV0_VSW_Msk			(0x1FF<< LCD_CRV0_VSW_Pos)
+#define LCD_CRV0_VBP_Pos			10		// 0 indicates 1 horizontal row cycle
+#define LCD_CRV0_VBP_Msk			(0x1FF<< LCD_CRV0_VBP_Pos)
+#define LCD_CRV0_VFP_Pos			20		// 0 indicates 1 horizontal row cycle
+#define LCD_CRV0_VFP_Msk			(0x1FF<< LCD_CRV0_VFP_Pos)
+
+#define LCD_CRV1_PIX_Pos			0		// number of vertical pixels. 0 indicates 1, and the maximum value is 8191
+#define LCD_CRV1_PIX_Msk			(0x1FFF<< LCD_CRV1_PIX_Pos)
 
 #define LCD_LCR_ALPHA_Pos			0		// Alpha value of this layer
 #define LCD_LCR_ALPHA_Msk			(0xFF << LCD_LCR_ALPHA_Pos)
@@ -2373,14 +2414,14 @@ typedef struct {
 #define LCD_LCR_CKEN_Msk			(0x01 << LCD_LCR_CKEN_Pos)
 
 #define LCD_WHP_STA_Pos				0		// Layer Window Horizontal start point
-#define LCD_WHP_STA_Msk				(0x3FF<< LCD_WHP_STA_Pos)
+#define LCD_WHP_STA_Msk				(0x1FFF<< LCD_WHP_STA_Pos)
 #define LCD_WHP_STP_Pos				16		// Layer Window Horizontal end point
-#define LCD_WHP_STP_Msk				(0x3FF<< LCD_WHP_STP_Pos)
+#define LCD_WHP_STP_Msk				(0x1FFF<< LCD_WHP_STP_Pos)
 
 #define LCD_WVP_STA_Pos				0		// Layer Window Vertical start point
-#define LCD_WVP_STA_Msk				(0x3FF<< LCD_WVP_STA_Pos)
+#define LCD_WVP_STA_Msk				(0x1FFF<< LCD_WVP_STA_Pos)
 #define LCD_WVP_STP_Pos				16		// Layer Window Vertical end point
-#define LCD_WVP_STP_Msk				(0x3FF<< LCD_WVP_STP_Pos)
+#define LCD_WVP_STP_Msk				(0x1FFF<< LCD_WVP_STP_Pos)
 
 #define LCD_MPUCR_RCS1_0_Pos		0		// for read, LCD_CS rising edge to falling edge delay
 #define LCD_MPUCR_RCS1_0_Msk		(0x1F << LCD_MPUCR_RCS1_0_Pos)
@@ -2396,9 +2437,9 @@ typedef struct {
 #define LCD_MPUCR_CS0WR0_Msk		(0x03 << LCD_MPUCR_CS0WR0_Pos)
 
 #define LCD_MPULEN_VPIX_Pos			0		// number of lines. 0 indicates 1 line
-#define LCD_MPULEN_VPIX_Msk			(0x3FF<< LCD_MPULEN_VPIX_Pos)
+#define LCD_MPULEN_VPIX_Msk			(0x1FFF<< LCD_MPULEN_VPIX_Pos)
 #define LCD_MPULEN_HPIX_Pos			16		// number of pixels per line, 0 represents 1 pixel
-#define LCD_MPULEN_HPIX_Msk			(0x3FF<< LCD_MPULEN_HPIX_Pos)
+#define LCD_MPULEN_HPIX_Msk			(0x1FFF<< LCD_MPULEN_HPIX_Pos)
 
 
 

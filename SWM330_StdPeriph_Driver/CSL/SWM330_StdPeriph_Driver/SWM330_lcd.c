@@ -38,20 +38,20 @@ void LCD_Init(LCD_TypeDef * LCDx, LCD_InitStructure * initStruct)
 				(initStruct->SampleEdge    << LCD_CR_CLKINV_Pos)   |
 				(1                         << LCD_CR_CLKALW_Pos)   |
 				((initStruct->Format & 1)  << LCD_CR_FORMAT_Pos)   |
-			    ((initStruct->Format >> 1) << LCD_CR_SEREN_Pos)    |
-				(1                         << LCD_CR_BURSTEN_Pos)  |
-				(1                         << LCD_CR_BURSTLEN_Pos) |
+			    ((initStruct->Format >> 1) << LCD_CR_MODE_Pos)     |
+				(2						   << LCD_CR_PARTSIZE_Pos) |
+				(3                         << LCD_CR_BURSTLEN_Pos) |
 				((1-initStruct->IntEOTEn)  << LCD_CR_AUTORESTA_Pos);
 	
-	LCDx->CRH = ((initStruct->HsyncWidth - 1) << LCD_CRH_HSW_Pos) |
-				((initStruct->Hbp - 1)        << LCD_CRH_HBP_Pos) |
-				((initStruct->HnPixel - 1)    << LCD_CRH_PIX_Pos) |
-				((initStruct->Hfp - 1)        << LCD_CRH_HFP_Pos);
-					
-	LCDx->CRV = ((initStruct->VsyncWidth - 1) << LCD_CRV_VSW_Pos) |
-				((initStruct->Vbp - 1)        << LCD_CRV_VBP_Pos) |
-				((initStruct->VnPixel - 1)    << LCD_CRV_PIX_Pos) |
-				((initStruct->Vfp - 1)        << LCD_CRV_VFP_Pos);
+	LCDx->CRH1 = ((initStruct->HnPixel - 1)    << LCD_CRH1_PIX_Pos);
+	LCDx->CRH0 = ((initStruct->HsyncWidth - 1) << LCD_CRH0_HSW_Pos) |
+				 ((initStruct->Hbp - 1)        << LCD_CRH0_HBP_Pos) |
+				 ((initStruct->Hfp - 1)        << LCD_CRH0_HFP_Pos);
+	
+	LCDx->CRV1 = ((initStruct->VnPixel - 1)    << LCD_CRV1_PIX_Pos);
+	LCDx->CRV0 = ((initStruct->VsyncWidth - 1) << LCD_CRV0_VSW_Pos) |
+				 ((initStruct->Vbp - 1)        << LCD_CRV0_VBP_Pos) |
+				 ((initStruct->Vfp - 1)        << LCD_CRV0_VFP_Pos);
 	
 	LCDx->BGC = initStruct->Background;
 	
@@ -184,41 +184,45 @@ uint32_t LCD_IsBusy(LCD_TypeDef * LCDx)
 /*******************************************************************************************************************************
 * @brief	LCD interrupt enable
 * @param	LCDx is the LCD to set
+* @param	it is interrupt type, can be LCD_IT_DONE, LCD_IT_PART and their '|' operation
 * @return
 *******************************************************************************************************************************/
-void LCD_INTEn(LCD_TypeDef * LCDx)
+void LCD_INTEn(LCD_TypeDef * LCDx, uint32_t it)
 {
-	LCDx->IE = 1;
+	LCDx->IE |= it;
 }
 
 /*******************************************************************************************************************************
 * @brief	LCD interrupt disable
 * @param	LCDx is the LCD to set
+* @param	it is interrupt type, can be LCD_IT_DONE, LCD_IT_PART and their '|' operation
 * @return
 *******************************************************************************************************************************/
-void LCD_INTDis(LCD_TypeDef * LCDx)
+void LCD_INTDis(LCD_TypeDef * LCDx, uint32_t it)
 {
-	LCDx->IE = 0;
+	LCDx->IE &= ~it;
 }
 
 /*******************************************************************************************************************************
 * @brief	LCD interrupt flag clear
 * @param	LCDx is the LCD to clear
+* @param	it is interrupt type, can be LCD_IT_DONE, LCD_IT_PART and their '|' operation
 * @return
 *******************************************************************************************************************************/
-void LCD_INTClr(LCD_TypeDef * LCDx)
+void LCD_INTClr(LCD_TypeDef * LCDx, uint32_t it)
 {
-	LCDx->IF = 1;
+	LCDx->IF = it;
 }
 
 /*******************************************************************************************************************************
 * @brief	LCD interrupt state query
 * @param	LCDx is the LCD to query
+
 * @return	0 interrupt not happen, !=0 interrupt happened
 *******************************************************************************************************************************/
-uint32_t LCD_INTStat(LCD_TypeDef * LCDx)
+uint32_t LCD_INTStat(LCD_TypeDef * LCDx, uint32_t it)
 {
-	return (LCDx->IF & 1);
+	return (LCDx->IF & it);
 }
 
 
@@ -238,8 +242,9 @@ void MPULCD_Init(LCD_TypeDef * LCDx, MPULCD_InitStructure * initStruct)
 		break;
 	}
 	
-	LCDx->CR  = (1              << LCD_CR_MPUEN_Pos) |
-				(LCD_FMT_RGB565 << LCD_CR_FORMAT_Pos);	// in MPU mode, only support RGB565
+	LCDx->CR  = (initStruct->BusWidth	<< LCD_CR_MODE_Pos) |
+				(initStruct->ByteOrder	<< LCD_CR_MPUMSB_Pos) |
+				(LCD_FMT_RGB565			<< LCD_CR_FORMAT_Pos);	// in MPU mode, only support RGB565
 	
 	LCDx->L[0].LCR |= (1 << LCD_LCR_EN_Pos);
 	
@@ -251,34 +256,59 @@ void MPULCD_Init(LCD_TypeDef * LCDx, MPULCD_InitStructure * initStruct)
 				  ((initStruct->WRCSRise_Fall - 1) << LCD_MPUCR_WCS1_0_Pos);
 }
 
-void LCD_WR_REG(LCD_TypeDef * LCDx, uint16_t reg)
+
+void MPULCD_WR_REG8(LCD_TypeDef * LCDx, uint8_t reg)
 {
-	LCDx->MPUIR = reg;
-	while(LCD_IsBusy(LCDx)) __NOP();
+	LCDx->MPUIRB = reg;
+	while(LCD_IsBusy(LCDx)) {}
 }
 
-void LCD_WR_DATA(LCD_TypeDef * LCDx, uint16_t val)
+void MPULCD_WR_DATA8(LCD_TypeDef * LCDx, uint8_t val)
 {
-	LCDx->MPUDR = val;
-	while(LCD_IsBusy(LCDx)) __NOP();
+	LCDx->MPUDRB = val;
+	while(LCD_IsBusy(LCDx)) {}
 }
 
-void LCD_WriteReg(LCD_TypeDef * LCDx, uint16_t reg, uint16_t val)
+void MPULCD_WR_REG16(LCD_TypeDef * LCDx, uint16_t reg)
 {
-	LCDx->MPUIR = reg;
-	while(LCD_IsBusy(LCDx)) __NOP();
+	LCDx->MPUIRH = reg;
+	while(LCD_IsBusy(LCDx)) {}
+}
+
+void MPULCD_WR_DATA16(LCD_TypeDef * LCDx, uint16_t val)
+{
+	LCDx->MPUDRH = val;
+	while(LCD_IsBusy(LCDx)) {}
+}
+
+void MPULCD_WriteReg8(LCD_TypeDef * LCDx, uint8_t reg, uint8_t val)
+{
+	MPULCD_WR_REG8(LCDx, reg);
 	
-	LCDx->MPUDR = val;
-	while(LCD_IsBusy(LCDx)) __NOP();
+	MPULCD_WR_DATA8(LCDx, val);
 }
 
-uint16_t LCD_ReadReg(LCD_TypeDef * LCDx, uint16_t reg)
+uint8_t MPULCD_ReadReg8(LCD_TypeDef * LCDx, uint8_t reg)
 {
-	LCDx->MPUIR = reg;
-	while(LCD_IsBusy(LCDx)) __NOP();
+	MPULCD_WR_REG8(LCDx, reg);
 	
-	return LCDx->MPUDR;
+	return LCDx->MPUDRB;
 }
+
+void MPULCD_WriteReg16(LCD_TypeDef * LCDx, uint16_t reg, uint16_t val)
+{
+	MPULCD_WR_REG16(LCDx, reg);
+	
+	MPULCD_WR_DATA16(LCDx, val);
+}
+
+uint16_t MPULCD_ReadReg16(LCD_TypeDef * LCDx, uint16_t reg)
+{
+	MPULCD_WR_REG16(LCDx, reg);
+	
+	return LCDx->MPUDRH;
+}
+
 
 /*******************************************************************************************************************************
 * @brief	Transfer display data to MPU screen by DMA

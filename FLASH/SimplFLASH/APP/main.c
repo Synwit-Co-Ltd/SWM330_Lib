@@ -1,7 +1,7 @@
 #include "SWM330.h"
 
 
-/* The on-chip Flash is used as an EEPROM to store data that needs to be retained after power-off */
+/* The on-chip Flash is used to store data that needs to be retained after power-off */
 
 
 #define EEPROM_ADDR	  0x10000
@@ -15,8 +15,6 @@ void SerialInit(void);
 
 int main(void)
 {
-	uint32_t i;
-	
 	SystemInit();
 	
 	SerialInit();
@@ -24,12 +22,12 @@ int main(void)
 	FLASH_Erase(EEPROM_ADDR);
 	
 	printf("\r\nAfter Erase: \r\n");
-	for(i = 0; i < 20; i++) printf("0x%08X, ",  *((volatile uint32_t *)(EEPROM_ADDR + i*4)));
+	for(int i = 0; i < 20; i++) printf("0x%08X, ",  *((volatile uint32_t *)(EEPROM_ADDR + i*4)));
 	
 	FLASH_Write(EEPROM_ADDR, WrBuff, 20);
 	
 	printf("\r\nAfter Write: \r\n");
-	for(i = 0; i < 20; i++) printf("0x%08X, ",  *((volatile uint32_t *)(EEPROM_ADDR + i*4)));
+	for(int i = 0; i < 20; i++) printf("0x%08X, ",  *((volatile uint32_t *)(EEPROM_ADDR + i*4)));
 	
 	while(1==1)
 	{

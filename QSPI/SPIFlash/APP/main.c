@@ -145,7 +145,6 @@ int main(void)
 		QSPI_Write_4bit(QSPI0, addr, (uint8_t *)rwbuff, 256);
 	}
 	
-	QSPI_CacheClear(QSPI0);
 	QSPI_MemoryMap(QSPI0, 4, 4);
 	
 	for(addr = 0; addr < 0x200000; addr += 4)
