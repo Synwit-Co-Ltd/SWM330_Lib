@@ -2358,119 +2358,325 @@ typedef struct {
 
 
 typedef struct {
-    __IO uint32_t MINSEC;                   // minute, second
+    __IO uint32_t TR;                   	//time register
     
-    __IO uint32_t DATHUR;                   // date, hour
+    __IO uint32_t DR;                   	//date register
     
-    __IO uint32_t MONDAY;                   // month, day
+    __IO uint32_t CR;                   	//control register
     
-    __IO uint32_t YEAR;                     // year, support 1901-2199
+    __IO uint32_t SR;                     	//status register
     
-    __IO uint32_t MINSECAL;                 // minute and second alarm
+    __IO uint32_t CKDIV;                 	//clock divide
     
-    __IO uint32_t DAYHURAL;                 // day and hour alarm
+    __IO uint32_t WKTIM;                 	//wakeup time
     
-    __IO uint32_t LOAD;                     // load configure register value to RTC internal working register, automatically clear
+    __IO uint32_t CALIBH;                   //calibration, 粗略
     
-    __IO uint32_t IE;
+    __IO uint32_t ALRMA;					//alarm A
     
-    __IO uint32_t IF;                       // write 1 to clear
+    __IO uint32_t ALRMB;                	//alarm B
     
-    __IO uint32_t EN;                       // [0] RTC enalbe
+    __IO uint32_t UNLOCK;                  	//unlock register，依次写 0xCA、0x53 解除寄存器写保护
     
-    __IO uint32_t CFGABLE;                  // [0] RTC configurable
+    __I  uint32_t SUBSEC;                  	//sub second
     
-    __IO uint32_t TRIM;
+    __IO uint32_t SHIFTR;                 	//shift control register
     
-    __IO uint32_t TRIMM;
+    __I  uint32_t TSTR;                    	//timestamp time register
+	
+	__I  uint32_t TSDR;						//timestamp date register
+	
+	__I  uint32_t TSSS;						//timestamp sub second
+	
+	__IO uint32_t CALIBL;					//calibration, 精密
+	
+	__IO uint32_t TAMPER;					//tamper configuration
+	
+	__IO uint32_t ALRMASS;					//alarm A sub second
+	
+	__IO uint32_t ALRMBSS;					//alram B sub second
+	
+	__I  uint32_t RESERVED;
+	
+	__IO uint32_t BACKUP[20];
+	
+	__I  uint32_t RESERVED2;
+	
+	__IO uint32_t LVRCR;
+	
+	__IO uint32_t X32KCR;					//32.768 KHz crystal control
+	
+	__IO uint32_t PWRCR;
 } RTC_TypeDef;
 
 
-#define RTC_LOAD_TIME_Pos			0
-#define RTC_LOAD_TIME_Msk			(0x01 << RTC_LOAD_TIME_Pos)
-#define RTC_LOAD_ALARM_Pos			1
-#define RTC_LOAD_ALARM_Msk			(0x01 << RTC_LOAD_ALARM_Pos)
+#define RTC_TR_SEC_Pos             	0		//秒的个位
+#define RTC_TR_SEC_Msk             	(0x0F << RTC_TR_SEC_Pos)
+#define RTC_TR_SEC10_Pos            4		//秒的十位
+#define RTC_TR_SEC10_Msk            (0x07 << RTC_TR_SEC10_Pos)
+#define RTC_TR_MIN_Pos             	8		//分的个位
+#define RTC_TR_MIN_Msk             	(0x0F << RTC_TR_MIN_Pos)
+#define RTC_TR_MIN10_Pos            12		//分的十位
+#define RTC_TR_MIN10_Msk            (0x07 << RTC_TR_MIN10_Pos)
+#define RTC_TR_HOUR_Pos             16		//小时
+#define RTC_TR_HOUR_Msk             (0x0F << RTC_TR_HOUR_Pos)
+#define RTC_TR_HOUR10_Pos         	20
+#define RTC_TR_HOUR10_Msk           (0x03 << RTC_TR_HOUR10_Pos)
+#define RTC_TR_PM_Pos         		22		//0 AM   1 PM
+#define RTC_TR_PM_Msk           	(0x01 << RTC_TR_PM_Pos)
 
-#define RTC_MINSEC_SEC_Pos			0       // second, can be 0--59
-#define RTC_MINSEC_SEC_Msk		    (0x3F << RTC_MINSEC_SEC_Pos)
-#define RTC_MINSEC_MIN_Pos			6       // minute, can be 0--59
-#define RTC_MINSEC_MIN_Msk		    (0x3F << RTC_MINSEC_MIN_Pos)
+#define RTC_DR_DATE_Pos            	0       //日期的个位
+#define RTC_DR_DATE_Msk           	(0x0F << RTC_DR_DATE_Pos)
+#define RTC_DR_DATE10_Pos           4       //日期的十位
+#define RTC_DR_DATE10_Msk           (0x03 << RTC_DR_DATE10_Pos)
+#define RTC_DR_MON_Pos              8       //月份的个位
+#define RTC_DR_MON_Msk              (0x0F << RTC_DR_MON_Pos)
+#define RTC_DR_MON10_Pos            12      //月份的十位
+#define RTC_DR_MON10_Msk            (0x01 << RTC_DR_MON10_Pos)
+#define RTC_DR_DAY_Pos              13      //1 周一 ... 7 周日
+#define RTC_DR_DAY_Msk              (0x07 << RTC_DR_DAY_Pos)
+#define RTC_DR_YEAR_Pos             16      //年份的个位
+#define RTC_DR_YEAR_Msk             (0x0F << RTC_DR_YEAR_Pos)
+#define RTC_DR_YEAR10_Pos           20      //年份的十位
+#define RTC_DR_YEAR10_Msk           (0x0F << RTC_DR_YEAR10_Pos)
 
-#define RTC_DATHUR_HOUR_Pos			0       // hour, can be 0--23
-#define RTC_DATHUR_HOUR_Msk		    (0x1F << RTC_DATHUR_HOUR_Pos)
-#define RTC_DATHUR_DATE_Pos			5       // date of month, can be 1--31
-#define RTC_DATHUR_DATE_Msk		    (0x1F << RTC_DATHUR_DATE_Pos)
+#define RTC_CR_WKCLK_Pos            0       //wakeup clock source, 0 RTC_CLK/16   1 RTC_CLK/8   2 RTC_CLK/4   3 RTC_CLK/2   4 CK_SDIV
+#define RTC_CR_WKCLK_Msk            (0x07 << RTC_CR_WKCLK_Pos)
+#define RTC_CR_TSEDGE_Pos           3       //timestamp edge, 0 rise edge   1 fall edge
+#define RTC_CR_TSEDGE_Msk           (0x01 << RTC_CR_TSEDGE_Pos)
+#define RTC_CR_REFCLK_Pos           4       //reference clock
+#define RTC_CR_REFCLK_Msk           (0x01 << RTC_CR_REFCLK_Pos)
+#define RTC_CR_BYPSHAD_Pos          5       //bypass shadow register for DR/TR/SUBSEC
+#define RTC_CR_BYPSHAD_Msk          (0x01 << RTC_CR_BYPSHAD_Pos)
+#define RTC_CR_FMT12_Pos            6       //0 24小时制   1 12小时制（AM/PM）
+#define RTC_CR_FMT12_Msk            (0x01 << RTC_CR_FMT12_Pos)
+#define RTC_CR_DCEN_Pos             7       //digial calibration enable
+#define RTC_CR_DCEN_Msk             (0x01 << RTC_CR_DCEN_Pos)
+#define RTC_CR_ALRAEN_Pos           8       //alarm A enable
+#define RTC_CR_ALRAEN_Msk           (0x01 << RTC_CR_ALRAEN_Pos)
+#define RTC_CR_ALRBEN_Pos           9       //alarm B enable
+#define RTC_CR_ALRBEN_Msk           (0x01 << RTC_CR_ALRBEN_Pos)
+#define RTC_CR_WKUPEN_Pos           10      //wakeup enable
+#define RTC_CR_WKUPEN_Msk           (0x01 << RTC_CR_WKUPEN_Pos)
+#define RTC_CR_TSEN_Pos             11      //timestamp enable
+#define RTC_CR_TSEN_Msk             (0x01 << RTC_CR_TSEN_Pos)
+#define RTC_CR_ALRAIE_Pos           12      //alarm A interrupt enable
+#define RTC_CR_ALRAIE_Msk           (0x01 << RTC_CR_ALRAIE_Pos)
+#define RTC_CR_ALRBIE_Pos           13      //alarm B interrupt enable
+#define RTC_CR_ALRBIE_Msk           (0x01 << RTC_CR_ALRBIE_Pos)
+#define RTC_CR_WKUPIE_Pos           14      //wakeup interrupt enable
+#define RTC_CR_WKUPIE_Msk           (0x01 << RTC_CR_WKUPIE_Pos)
+#define RTC_CR_TSIE_Pos             15      //timestamp interrupt enable
+#define RTC_CR_TSIE_Msk             (0x01 << RTC_CR_TSIE_Pos)
+#define RTC_CR_ADD1H_Pos            16      //add 1 hour (夏季时间更改)
+#define RTC_CR_ADD1H_Msk            (0x01 << RTC_CR_ADD1H_Pos)
+#define RTC_CR_SUB1H_Pos            17      //sub 1 hour (冬季时间更改)
+#define RTC_CR_SUB1H_Msk            (0x01 << RTC_CR_SUB1H_Pos)
+#define RTC_CR_BKP1H_Pos            18      //写 1 以记录已对夏令时更改
+#define RTC_CR_BKP1H_Msk            (0x01 << RTC_CR_BKP1H_Pos)
+#define RTC_CR_COSEL_Pos            19      //calibration output select
+#define RTC_CR_COSEL_Msk            (0x01 << RTC_CR_COSEL_Pos)
+#define RTC_CR_AOPOL_Pos            20      //alarm output polarity
+#define RTC_CR_AOPOL_Msk            (0x01 << RTC_CR_AOPOL_Pos)
+#define RTC_CR_AOSEL_Pos            21      //alarm output select
+#define RTC_CR_AOSEL_Msk            (0x03 << RTC_CR_AOSEL_Pos)
+#define RTC_CR_COEN_Pos             23      //calibration output enable
+#define RTC_CR_COEN_Msk             (0x01 << RTC_CR_COEN_Pos)
 
-#define RTC_MONDAY_DAY_Pos			0       // day of week, can be 0--6
-#define RTC_MONDAY_DAY_Msk		    (0x07 << RTC_MONDAY_DAY_Pos)
-#define RTC_MONDAY_MON_Pos			3       // month, can be 1--12
-#define RTC_MONDAY_MON_Msk		    (0x0F << RTC_MONDAY_MON_Pos)
+#define RTC_SR_ALRAWEN_Pos          0       //alarm A write enable
+#define RTC_SR_ALRAWEN_Msk          (0x01 << RTC_SR_ALRAWEN_Pos)
+#define RTC_SR_ALRBWEN_Pos          1       //alarm B write enable
+#define RTC_SR_ALRBWEN_Msk          (0x01 << RTC_SR_ALRBWEN_Pos)
+#define RTC_SR_WKUPWEN_Pos          2       //wakeup write enable
+#define RTC_SR_WKUPWEN_Msk          (0x01 << RTC_SR_WKUPWEN_Pos)
+#define RTC_SR_SHIFTING_Pos         3       //shift in progress
+#define RTC_SR_SHIFTING_Msk         (0x01 << RTC_SR_SHIFTING_Pos)
+#define RTC_SR_INITRDY_Pos          4       //init ready/done
+#define RTC_SR_INITRDY_Msk          (0x01 << RTC_SR_INITRDY_Pos)
+#define RTC_SR_SYNCRDY_Pos          5       //sync ready, can read DR/TR/SUBSEC
+#define RTC_SR_SYNCRDY_Msk          (0x01 << RTC_SR_SYNCRDY_Pos)
+#define RTC_SR_INITWEN_Pos          6       //init write enable
+#define RTC_SR_INITWEN_Msk          (0x01 << RTC_SR_INITWEN_Pos)
+#define RTC_SR_INIT_Pos             7       //
+#define RTC_SR_INIT_Msk             (0x01 << RTC_SR_INIT_Pos)
+#define RTC_SR_ALRAF_Pos            8       //alarm A flag
+#define RTC_SR_ALRAF_Msk            (0x01 << RTC_SR_ALRAF_Pos)
+#define RTC_SR_ALRBF_Pos            9       //alarm B flag
+#define RTC_SR_ALRBF_Msk            (0x01 << RTC_SR_ALRBF_Pos)
+#define RTC_SR_WKUPF_Pos            10      //wakeup flag
+#define RTC_SR_WKUPF_Msk            (0x01 << RTC_SR_WKUPF_Pos)
+#define RTC_SR_TSF_Pos              11      //tiemstamp flag
+#define RTC_SR_TSF_Msk              (0x01 << RTC_SR_TSF_Pos)
+#define RTC_SR_TSOVF_Pos            12      //timestamp overflow flag
+#define RTC_SR_TSOVF_Msk            (0x01 << RTC_SR_TSOVF_Pos)
+#define RTC_SR_TAMPERF_Pos          13      //tamper flag
+#define RTC_SR_TAMPERF_Msk          (0x01 << RTC_SR_TAMPERF_Pos)
+#define RTC_SR_CALBING_Pos          16      //calibration in progress
+#define RTC_SR_CALBING_Msk          (0x01 << RTC_SR_CALBING_Pos)
 
-#define RTC_MINSECAL_SEC_Pos		0
-#define RTC_MINSECAL_SEC_Msk		(0x3F << RTC_MINSECAL_SEC_Pos)
-#define RTC_MINSECAL_MIN_Pos	    6
-#define RTC_MINSECAL_MIN_Msk		(0x3F << RTC_MINSECAL_MIN_Pos)
+#define RTC_CKDIV_SDIV_Pos           0       //sync div, ck_sdiv = ck_adiv / (SDIV + 1)
+#define RTC_CKDIV_SDIV_Msk           (0x7FFF<< RTC_CKDIV_SDIV_Pos)
+#define RTC_CKDIV_ADIV_Pos           16      //async div, ck_adiv = RTC_CLK / (ADIV + 1)
+#define RTC_CKDIV_ADIV_Msk           (0x7F << RTC_CKDIV_ADIV_Pos)
 
-#define RTC_DAYHURAL_HOUR_Pos		0
-#define RTC_DAYHURAL_HOUR_Msk		(0x1F << RTC_DAYHURAL_HOUR_Pos)
-#define RTC_DAYHURAL_SUN_Pos		5
-#define RTC_DAYHURAL_SUN_Msk		(0x01 << RTC_DAYHURAL_SUN_Pos)
-#define RTC_DAYHURAL_MON_Pos		6
-#define RTC_DAYHURAL_MON_Msk		(0x01 << RTC_DAYHURAL_MON_Pos)
-#define RTC_DAYHURAL_TUE_Pos		7
-#define RTC_DAYHURAL_TUE_Msk		(0x01 << RTC_DAYHURAL_TUE_Pos)
-#define RTC_DAYHURAL_WED_Pos		8
-#define RTC_DAYHURAL_WED_Msk		(0x01 << RTC_DAYHURAL_WED_Pos)
-#define RTC_DAYHURAL_THU_Pos		9
-#define RTC_DAYHURAL_THU_Msk		(0x01 << RTC_DAYHURAL_THU_Pos)
-#define RTC_DAYHURAL_FRI_Pos		10
-#define RTC_DAYHURAL_FRI_Msk		(0x01 << RTC_DAYHURAL_FRI_Pos)
-#define RTC_DAYHURAL_SAT_Pos		11
-#define RTC_DAYHURAL_SAT_Msk		(0x01 << RTC_DAYHURAL_SAT_Pos)
+#define RTC_CALIBH_VALUE_Pos         0       //MINUS = 0, VALUE: 0 +0ppm   1 +4ppm ... 31 +126ppm
+#define RTC_CALIBH_VALUE_Msk         (0x1F << RTC_CALIBH_VALUE_Pos)
+#define RTC_CALIBH_MINUS_Pos         7       //MINUS = 1, VALUE: 0 -0ppm   1 -2ppm ... 31 -63ppm
+#define RTC_CALIBH_MINUS_Msk         (0x01 << RTC_CALIBH_MINUS_Pos)
 
-#define RTC_IE_SEC_Pos		        0       // second interrupt enable
-#define RTC_IE_SEC_Msk		        (0x01 << RTC_IE_SEC_Pos)
-#define RTC_IE_MIN_Pos		        1
-#define RTC_IE_MIN_Msk		        (0x01 << RTC_IE_MIN_Pos)
-#define RTC_IE_HOUR_Pos		        2
-#define RTC_IE_HOUR_Msk		        (0x01 << RTC_IE_HOUR_Pos)
-#define RTC_IE_DATE_Pos		        3
-#define RTC_IE_DATE_Msk		        (0x01 << RTC_IE_DATE_Pos)
-#define RTC_IE_ALARM_Pos		    4
-#define RTC_IE_ALARM_Msk		    (0x01 << RTC_IE_ALARM_Pos)
-#define RTC_IE_TRIM_Pos				5
-#define RTC_IE_TRIM_Msk				(0x01 << RTC_IE_TRIM_Pos)
-#define RTC_IE_HSEC_Pos				6		// half-second interrupt enable
-#define RTC_IE_HSEC_Msk				(0x01 << RTC_IE_HSEC_Pos)
-#define RTC_IE_QSEC_Pos				7		// quad-second interrupt enable
-#define RTC_IE_QSEC_Msk				(0x01 << RTC_IE_QSEC_Pos)
+#define RTC_ALRMA_SEC_Pos           0       //秒的个位
+#define RTC_ALRMA_SEC_Msk           (0x0F << RTC_ALRMA_SEC_Pos)
+#define RTC_ALRMA_SEC10_Pos         4       //秒的十位
+#define RTC_ALRMA_SEC10_Msk         (0x07 << RTC_ALRMA_SEC10_Pos)
+#define RTC_ALRMA_SECMSK_Pos        7       //秒的屏蔽，1 闹钟无需秒匹配
+#define RTC_ALRMA_SECMSK_Msk        (0x01 << RTC_ALRMA_SECMSK_Pos)
+#define RTC_ALRMA_MIN_Pos           8       //分的个位
+#define RTC_ALRMA_MIN_Msk           (0x0F << RTC_ALRMA_MIN_Pos)
+#define RTC_ALRMA_MIN10_Pos         12      //分的十位
+#define RTC_ALRMA_MIN10_Msk         (0x07 << RTC_ALRMA_MIN10_Pos)
+#define RTC_ALRMA_MINMSK_Pos        15      //分的屏蔽，1 闹钟无需分匹配
+#define RTC_ALRMA_MINMSK_Msk        (0x01 << RTC_ALRMA_MINMSK_Pos)
+#define RTC_ALRMA_HOUR_Pos          16      //时的个位
+#define RTC_ALRMA_HOUR_Msk          (0x0F << RTC_ALRMA_HOUR_Pos)
+#define RTC_ALRMA_HOUR10_Pos        20      //时的十位
+#define RTC_ALRMA_HOUR10_Msk        (0x03 << RTC_ALRMA_HOUR10_Pos)
+#define RTC_ALRMA_PM_Pos            22      //0 AM   1 PM
+#define RTC_ALRMA_PM_Msk            (0x01 << RTC_ALRMA_PM_Pos)
+#define RTC_ALRMA_HOURMSK_Pos       23      //时的屏蔽，1 闹钟无需时匹配
+#define RTC_ALRMA_HOURMSK_Msk       (0x01 << RTC_ALRMA_HOURMSK_Pos)
+#define RTC_ALRMA_DATE_Pos          24      //日期的个位
+#define RTC_ALRMA_DATE_Msk          (0x0F << RTC_ALRMA_DATE_Pos)
+#define RTC_ALRMA_DATE10_Pos        28      //日期的十位
+#define RTC_ALRMA_DATE10_Msk        (0x03 << RTC_ALRMA_DATE10_Pos)
+#define RTC_ALRMA_DAY_Pos           30      //0 DATE、DATE10 表示日期   1 DATE 表示周几、DATE10 无用
+#define RTC_ALRMA_DAY_Msk           (0x01 << RTC_ALRMA_DAY_Pos)
+#define RTC_ALRMA_DATEMSK_Pos       31      //日期的屏蔽，1 闹钟无需日期/周几匹配
+#define RTC_ALRMA_DATEMSK_Msk       (0x01 << RTC_ALRMA_DATEMSK_Pos)
 
-#define RTC_IF_SEC_Pos		        0       // write 1 to clear
-#define RTC_IF_SEC_Msk		        (0x01 << RTC_IF_SEC_Pos)
-#define RTC_IF_MIN_Pos		        1
-#define RTC_IF_MIN_Msk		        (0x01 << RTC_IF_MIN_Pos)
-#define RTC_IF_HOUR_Pos		        2
-#define RTC_IF_HOUR_Msk		        (0x01 << RTC_IF_HOUR_Pos)
-#define RTC_IF_DATE_Pos		        3
-#define RTC_IF_DATE_Msk		        (0x01 << RTC_IF_DATE_Pos)
-#define RTC_IF_ALARM_Pos		    4
-#define RTC_IF_ALARM_Msk		    (0x01 << RTC_IF_ALARM_Pos)
-#define RTC_IF_TRIM_Pos				5
-#define RTC_IF_TRIM_Msk				(0x01 << RTC_IF_TRIM_Pos)
-#define RTC_IF_HSEC_Pos				6
-#define RTC_IF_HSEC_Msk				(0x01 << RTC_IF_HSEC_Pos)
-#define RTC_IF_QSEC_Pos				7
-#define RTC_IF_QSEC_Msk				(0x01 << RTC_IF_QSEC_Pos)
+#define RTC_ALRMB_SEC_Pos           0       //秒的个位
+#define RTC_ALRMB_SEC_Msk           (0x0F << RTC_ALRMB_SEC_Pos)
+#define RTC_ALRMB_SEC10_Pos         4       //秒的十位
+#define RTC_ALRMB_SEC10_Msk         (0x07 << RTC_ALRMB_SEC10_Pos)
+#define RTC_ALRMB_SECMSK_Pos        7       //秒的屏蔽，1 闹钟无需秒匹配
+#define RTC_ALRMB_SECMSK_Msk        (0x01 << RTC_ALRMB_SECMSK_Pos)
+#define RTC_ALRMB_MIN_Pos           8       //分的个位
+#define RTC_ALRMB_MIN_Msk           (0x0F << RTC_ALRMB_MIN_Pos)
+#define RTC_ALRMB_MIN10_Pos         12      //分的十位
+#define RTC_ALRMB_MIN10_Msk         (0x07 << RTC_ALRMB_MIN10_Pos)
+#define RTC_ALRMB_MINMSK_Pos        15      //分的屏蔽，1 闹钟无需分匹配
+#define RTC_ALRMB_MINMSK_Msk        (0x01 << RTC_ALRMB_MINMSK_Pos)
+#define RTC_ALRMB_HOUR_Pos          16      //时的个位
+#define RTC_ALRMB_HOUR_Msk          (0x0F << RTC_ALRMB_HOUR_Pos)
+#define RTC_ALRMB_HOUR10_Pos        20      //时的十位
+#define RTC_ALRMB_HOUR10_Msk        (0x03 << RTC_ALRMB_HOUR10_Pos)
+#define RTC_ALRMB_PM_Pos            22      //0 AM   1 PM
+#define RTC_ALRMB_PM_Msk            (0x01 << RTC_ALRMB_PM_Pos)
+#define RTC_ALRMB_HOURMSK_Pos       23      //时的屏蔽，1 闹钟无需时匹配
+#define RTC_ALRMB_HOURMSK_Msk       (0x01 << RTC_ALRMB_HOURMSK_Pos)
+#define RTC_ALRMB_DATE_Pos          24      //日期的个位
+#define RTC_ALRMB_DATE_Msk          (0x0F << RTC_ALRMB_DATE_Pos)
+#define RTC_ALRMB_DATE10_Pos        28      //日期的十位
+#define RTC_ALRMB_DATE10_Msk        (0x03 << RTC_ALRMB_DATE10_Pos)
+#define RTC_ALRMB_DAY_Pos           30      //0 DATE、DATE10 表示日期   1 DATE 表示周几、DATE10 无用
+#define RTC_ALRMB_DAY_Msk           (0x01 << RTC_ALRMB_DAY_Pos)
+#define RTC_ALRMB_DATEMSK_Pos       31      //日期的屏蔽，1 闹钟无需日期/周几匹配
+#define RTC_ALRMB_DATEMSK_Msk       (0x01 << RTC_ALRMB_DATEMSK_Pos)
 
-#define RTC_TRIM_ADJ_Pos		    0       //Used to adjust the count period of BASECNT, the default is 32768, if DEC is 1, the count period is adjusted to 32768-ADJ, otherwise 32768+ADJ
-#define RTC_TRIM_ADJ_Msk		    (0xFF << RTC_TRIM_ADJ_Pos)
-#define RTC_TRIM_DEC_Pos		    8
-#define RTC_TRIM_DEC_Msk		    (0x01 << RTC_TRIM_DEC_Pos)
+#define RTC_SHIFTR_SUBSS_Pos       	0      //sub-second value to sub
+#define RTC_SHIFTR_SUBSS_Msk       	(0x7FFF<< RTC_SHIFTR_SUBSS_Pos)
+#define RTC_SHIFTR_ADD1S_Pos       	31		//add 1 second
+#define RTC_SHIFTR_ADD1S_Msk       	(0x01u<< RTC_SHIFTR_ADD1S_Pos)
 
-#define RTC_TRIMM_CYCLE_Pos		    0       //For counting period fine-tuning, if INC is 1, the Nth counting period is adjusted to (32768+/-ADJ)+1, otherwise it is adjusted to (32768+/-ADJ)-1
-#define RTC_TRIMM_CYCLE_Msk		    (0x07 << RTC_TRIMM_CYCLE_Pos)
-#define RTC_TRIMM_INC_Pos		    3
-#define RTC_TRIMM_INC_Msk		    (0x01 << RTC_TRIMM_INC_Pos)
+#define RTC_TSTR_SEC_Pos            0
+#define RTC_TSTR_SEC_Msk            (0x0F << RTC_TSTR_SEC_Pos)
+#define RTC_TSTR_SEC10_Pos          4
+#define RTC_TSTR_SEC10_Msk          (0x07 << RTC_TSTR_SEC10_Pos)
+#define RTC_TSTR_MIN_Pos            8
+#define RTC_TSTR_MIN_Msk            (0x0F << RTC_TSTR_MIN_Pos)
+#define RTC_TSTR_MIN10_Pos          12
+#define RTC_TSTR_MIN10_Msk          (0x07 << RTC_TSTR_MIN10_Pos)
+#define RTC_TSTR_HOUR_Pos           16
+#define RTC_TSTR_HOUR_Msk           (0x0F << RTC_TSTR_HOUR_Pos)
+#define RTC_TSTR_HOUR10_Pos         20
+#define RTC_TSTR_HOUR10_Msk         (0x03 << RTC_TSTR_HOUR10_Pos)
+#define RTC_TSTR_PM_Pos             22
+#define RTC_TSTR_PM_Msk             (0x01 << RTC_TSTR_PM_Pos)
+
+#define RTC_TSDR_DATE_Pos           0
+#define RTC_TSDR_DATE_Msk           (0x0F << RTC_TSDR_DATE_Pos)
+#define RTC_TSDR_DATE10_Pos         4
+#define RTC_TSDR_DATE10_Msk         (0x03 << RTC_TSDR_DATE10_Pos)
+#define RTC_TSDR_MON_Pos            8
+#define RTC_TSDR_MON_Msk            (0x0F << RTC_TSDR_MON_Pos)
+#define RTC_TSDR_MON10_Pos          12
+#define RTC_TSDR_MON10_Msk          (0x01 << RTC_TSDR_MON10_Pos)
+#define RTC_TSDR_DAY_Pos            13
+#define RTC_TSDR_DAY_Msk            (0x07 << RTC_TSDR_DAY_Pos)
+
+#define RTC_CALIBL_CALM_Pos         0
+#define RTC_CALIBL_CALM_Msk         (0x1FF<< RTC_CALIBL_CALM_Pos)
+#define RTC_CALIBL_SEC16_Pos        13
+#define RTC_CALIBL_SEC16_Msk        (0x01 << RTC_CALIBL_SEC16_Pos)
+#define RTC_CALIBL_SEC8_Pos         14
+#define RTC_CALIBL_SEC8_Msk         (0x01 << RTC_CALIBL_SEC8_Pos)
+#define RTC_CALIBL_CALP_Pos         15
+#define RTC_CALIBL_CALP_Msk         (0x01 << RTC_CALIBL_CALP_Pos)
+
+#define RTC_TAMPER_ENA_Pos          0       //tamper detect enable
+#define RTC_TAMPER_ENA_Msk          (0x01 << RTC_TAMPER_ENA_Pos)
+#define RTC_TAMPER_POLAR_Pos        1
+#define RTC_TAMPER_POLAR_Msk        (0x01 << RTC_TAMPER_POLAR_Pos)
+#define RTC_TAMPER_IE_Pos           2
+#define RTC_TAMPER_IE_Msk           (0x01 << RTC_TAMPER_IE_Pos)
+#define RTC_TAMPER_TSEN_Pos         7      //tamper gen timestamp enable
+#define RTC_TAMPER_TSEN_Msk         (0x01 << RTC_TAMPER_TSEN_Pos)
+#define RTC_TAMPER_SAMFREQ_Pos      8
+#define RTC_TAMPER_SAMFREQ_Msk      (0x07 << RTC_TAMPER_SAMFREQ_Pos)
+#define RTC_TAMPER_FILTER_Pos       11
+#define RTC_TAMPER_FILTER_Msk       (0x03 << RTC_TAMPER_FILTER_Pos)
+#define RTC_TAMPER_PRECHG_Pos       13
+#define RTC_TAMPER_PRECHG_Msk       (0x03 << RTC_TAMPER_PRECHG_Pos)
+#define RTC_TAMPER_PUPDIS_Pos       15
+#define RTC_TAMPER_PUPDIS_Msk       (0x01 << RTC_TAMPER_PUPDIS_Pos)
+#define RTC_TAMPER_PIN_Pos          16
+#define RTC_TAMPER_PIN_Msk          (0x01 << RTC_TAMPER_PIN_Pos)
+#define RTC_TAMPER_TSPIN_Pos        17
+#define RTC_TAMPER_TSPIN_Msk        (0x01 << RTC_TAMPER_TSPIN_Pos)
+#define RTC_TAMPER_OUTPP_Pos        18
+#define RTC_TAMPER_OUTPP_Msk        (0x01 << RTC_TAMPER_OUTPP_Pos)
+
+#define RTC_ALRMASS_SUBSEC_Pos      0
+#define RTC_ALRMASS_SUBSEC_Msk      (0x7FFF<< RTC_ALRMASS_SUBSEC_Pos)
+#define RTC_ALRMASS_MASK_Pos        24
+#define RTC_ALRMASS_MASK_Msk        (0x0F << RTC_ALRMASS_MASK_Pos)
+
+#define RTC_ALRMBSS_SUBSEC_Pos      0
+#define RTC_ALRMBSS_SUBSEC_Msk      (0x7FFF<< RTC_ALRMBSS_SUBSEC_Pos)
+#define RTC_ALRMBSS_MASK_Pos        24
+#define RTC_ALRMBSS_MASK_Msk        (0x0F << RTC_ALRMBSS_MASK_Pos)
+
+#define RTC_LVRCR_ENA_Pos      		0
+#define RTC_LVRCR_ENA_Msk      		(0x01 << RTC_LVRCR_ENA_Pos)
+#define RTC_LVRCR_LVL_Pos      		1
+#define RTC_LVRCR_LVL_Msk      		(0x03 << RTC_LVRCR_LVL_Pos)
+
+#define RTC_X32KCR_ON_Pos           0
+#define RTC_X32KCR_ON_Msk           (0x01 << RTC_X32KCR_ON_Pos)
+#define RTC_X32KCR_IBST_Pos         1
+#define RTC_X32KCR_IBST_Msk         (0x01 << RTC_X32KCR_IBST_Pos)
+#define RTC_X32KCR_BYPS_Pos         2
+#define RTC_X32KCR_BYPS_Msk         (0x01 << RTC_X32KCR_BYPS_Pos)
+
+#define RTC_PWRCR_SLEEP_Pos         0
+#define RTC_PWRCR_SLEEP_Msk         (0x01 << RTC_PWRCR_SLEEP_Pos)
+#define RTC_PWRCR_STOP_Pos          1
+#define RTC_PWRCR_STOP_Msk          (0x01 << RTC_PWRCR_STOP_Pos)
+#define RTC_PWRCR_DEEPSLP_Pos       2
+#define RTC_PWRCR_DEEPSLP_Msk       (0x01 << RTC_PWRCR_DEEPSLP_Pos)
+#define RTC_PWRCR_CLKSRC_Pos        3
+#define RTC_PWRCR_CLKSRC_Msk        (0x01 << RTC_PWRCR_CLKSRC_Pos)
+#define RTC_PWRCR_BGTRIM_Pos        24
+#define RTC_PWRCR_BGTRIM_Msk        (0x1F << RTC_PWRCR_BGTRIM_Pos)
 
 
 

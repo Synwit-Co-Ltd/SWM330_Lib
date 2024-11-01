@@ -5,13 +5,23 @@
 #define RTC_CLKSRC_LRC32K	0
 #define RTC_CLKSRC_XTAL32K	1
 
-#define RTC_SUN   0x01
-#define RTC_MON   0x02
-#define RTC_TUE   0x04
-#define RTC_WED   0x08
-#define RTC_THU   0x10
-#define RTC_FRI   0x20
-#define RTC_SAT   0x40
+
+#define RTC_ALARM_A		0
+#define RTC_ALARM_B		1
+
+
+#define RTC_ALARM_Day	0	// alarm at day of the week
+#define RTC_ALARM_Date	1	// alarm at specified date
+#define RTC_ALARM_Daily	2	// daily alarm
+
+
+#define RTC_MON     1
+#define RTC_TUE     2
+#define RTC_WED     3
+#define RTC_THU     4
+#define RTC_FRI     5
+#define RTC_SAT     6
+#define RTC_SUN     7
 
 
 typedef struct {
@@ -22,53 +32,69 @@ typedef struct {
 	uint8_t  Hour;			// 0--23
 	uint8_t  Minute;		// 0--59
 	uint8_t  Second;		// 0--59
-	uint8_t  SecondIEn;
-	uint8_t  MinuteIEn;
 } RTC_InitStructure;
 
+
 typedef struct {
-	uint8_t  Days;			// RTC_SUN, RTC_MON, RTC_TUE, RTC_WED, RTC_THU, RTC_FRI, RTC_SAT and their '|' operation
+	union {
+		uint8_t  Day;		// RTC_MON, RTC_TUE, RTC_WED, RTC_THU, RTC_FRI, RTC_SAT, RTC_SUN
+		uint8_t  Date;
+	};
+	uint8_t  Mode;			// RTC_ALARM_Day, RTC_ALARM_Date, RTC_ALARM_Daily
 	uint8_t  Hour;
 	uint8_t  Minute;
 	uint8_t  Second;
 	uint8_t  AlarmIEn;
 } RTC_AlarmStructure;
 
+
 typedef struct {
 	uint16_t Year;
 	uint8_t  Month;
 	uint8_t  Date;
-	uint8_t  Day;			//RTC_SUN, RTC_MON, RTC_TUE, RTC_WED, RTC_THU, RTC_FRI, RTC_SAT
+	uint8_t  Day;			// RTC_MON, RTC_TUE, RTC_WED, RTC_THU, RTC_FRI, RTC_SAT, RTC_SUN
 	uint8_t  Hour;
 	uint8_t  Minute;
 	uint8_t  Second;
+	uint16_t SubSecond;
 } RTC_DateTime;
 
 
 /* Interrupt Type */
-#define RTC_IT_SECOND		(1 << 0)	// Second Interrupt
-#define RTC_IT_MINUTE		(1 << 1)
-#define RTC_IT_HOUR			(1 << 2)
-#define RTC_IT_DATE			(1 << 3)
-#define RTC_IT_ALARM		(1 << 4)
-#define RTC_IT_SECOND_DIV2	(1 << 6)	// 1/2 Second Interrupt
-#define RTC_IT_SECOND_DIV4	(1 << 7)	// 1/4 Second Interrupt
+#define RTC_IT_ALRMA		(1 << 0)
+#define RTC_IT_ALRMB		(1 << 1)
+#define RTC_IT_WKUP			(1 << 2)
+#define RTC_IT_TS			(1 << 3)
 
 
 
 void RTC_Init(RTC_TypeDef * RTCx, RTC_InitStructure * initStruct);
-void RTC_Start(RTC_TypeDef * RTCx);
-void RTC_Stop(RTC_TypeDef * RTCx);
 
 void RTC_GetDateTime(RTC_TypeDef * RTCx, RTC_DateTime * dateTime);
 
-void RTC_AlarmSetup(RTC_TypeDef * RTCx, RTC_AlarmStructure * alarmStruct);
+void RTC_WakeupSetup(RTC_TypeDef * RTCx, uint16_t second, uint32_t int_en);
+
+void RTC_AlarmSetup(RTC_TypeDef * RTCx, uint32_t alarmx, RTC_AlarmStructure * alarmStruct);
 
 
 void RTC_INTEn(RTC_TypeDef * RTCx, uint32_t it);
 void RTC_INTDis(RTC_TypeDef * RTCx, uint32_t it);
 void RTC_INTClr(RTC_TypeDef * RTCx, uint32_t it);
 uint32_t RTC_INTStat(RTC_TypeDef * RTCx, uint32_t it);
+
+
+static inline void RTC_unlock(RTC_TypeDef * RTCx)
+{
+	SYS->RTCWKCR |= SYS_RTCWKCR_WREN_Msk;
+	
+	RTCx->UNLOCK = 0xCA;
+	RTCx->UNLOCK = 0x53;
+}
+
+static inline void RTC_lock(RTC_TypeDef * RTCx)
+{
+	RTCx->UNLOCK = 0x00;
+}
 
 
 #endif

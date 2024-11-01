@@ -22,19 +22,15 @@ int main(void)
 	RTC_initStruct.Hour = 10;
 	RTC_initStruct.Minute = 5;
 	RTC_initStruct.Second = 5;
-	RTC_initStruct.SecondIEn = 0;
-	RTC_initStruct.MinuteIEn = 0;
 	RTC_Init(RTC, &RTC_initStruct);
 	
-	RTC_Start(RTC);
-	
-	alarmStruct.Days = RTC_SUN | RTC_MON | RTC_TUE | RTC_WED | RTC_THU | RTC_FRI | RTC_SAT;
+	alarmStruct.Mode = RTC_ALARM_Daily;
 	alarmStruct.Hour = 10;
 	alarmStruct.Minute = 5;
 	alarmStruct.Second = 8;
 	alarmStruct.AlarmIEn = 1;
 	
-	RTC_AlarmSetup(RTC, &alarmStruct);
+	RTC_AlarmSetup(RTC, RTC_ALARM_A, &alarmStruct);
 		
 	while(1==1)
 	{
@@ -45,25 +41,12 @@ int main(void)
 
 void RTC_Handler(void)
 {
-	if(RTC_INTStat(RTC, RTC_IT_ALARM))
+	if(RTC_INTStat(RTC, RTC_IT_ALRMA))
 	{
-		/* The Alarm interrupt lasts for 1 second. You can turn off the Alarm interrupt or update the time value to resolve the issue */
-		RTC_INTClr(RTC, RTC_IT_ALARM);
+		RTC_INTClr(RTC, RTC_IT_ALRMA);
 		
 		RTC_GetDateTime(RTC, &dateTime);
 		printf("Now Time: %02d : %02d\r\n", dateTime.Minute, dateTime.Second);
-		
-		if(dateTime.Second > 56)
-		{
-			alarmStruct.Second = 0;
-			alarmStruct.Minute = dateTime.Minute + 1;
-		}
-		else
-		{
-			alarmStruct.Second = dateTime.Second + 3;
-			alarmStruct.Minute = dateTime.Minute;
-		}
-		RTC_AlarmSetup(RTC, &alarmStruct);
 	}
 }
 
@@ -72,8 +55,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
-	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;
