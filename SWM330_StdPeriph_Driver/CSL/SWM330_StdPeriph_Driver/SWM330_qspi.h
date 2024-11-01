@@ -186,16 +186,6 @@ static inline void QSPI_DMADisable(QSPI_TypeDef * QSPIx)
 	QSPIx->CR &= ~QSPI_CR_DMAEN_Msk;
 }
 
-static inline void QSPI_BankSwitch(QSPI_TypeDef * QSPIx, uint8_t bank)
-{
-	QSPIx->CR &= ~(QSPI_CR_DUAL_Msk | QSPI_CR_BANK_Msk);
-	QSPIx->CR |=  (bank << QSPI_CR_DUAL_Pos);
-}
-
-static inline void QSPI_CacheClear(QSPI_TypeDef * QSPIx)
-{
-	QSPIx->CACHE = QSPI_CACHE_CLR_Msk;
-}
 
 void QSPI_INTEn(QSPI_TypeDef * QSPIx, uint32_t it);
 void QSPI_INTDis(QSPI_TypeDef * QSPIx, uint32_t it);

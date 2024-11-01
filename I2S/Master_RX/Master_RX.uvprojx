@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\out\</OutputDirectory>
-          <OutputName>MasterRX_SlaveTX</OutputName>
+          <OutputName>Master_RX</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -472,6 +472,11 @@
               <FileName>SWM330_rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWM330_i2s.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_i2s.c</FilePath>
             </File>
           </Files>
         </Group>

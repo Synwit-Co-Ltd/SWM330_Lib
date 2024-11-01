@@ -848,6 +848,81 @@ typedef struct {
 
 
 typedef struct {
+	__IO uint32_t CR1;
+	
+	__IO uint32_t DR;
+	
+	__IO uint32_t IE;
+	
+	__IO uint32_t SR;
+	
+	__IO uint32_t CR2;
+	
+	__IO uint32_t CR3;
+} I2S_TypeDef;
+
+
+#define I2S_CR1_DMATXEN_Pos			0
+#define I2S_CR1_DMATXEN_Msk			(0x01 << I2S_CR1_DMATXEN_Pos)
+#define I2S_CR1_DMARXEN_Pos			1
+#define I2S_CR1_DMARXEN_Msk			(0x01 << I2S_CR1_DMARXEN_Pos)
+#define I2S_CR1_FILTE_Pos			2		// 1 de-bounce input signal
+#define I2S_CR1_FILTE_Msk			(0x01 << I2S_CR1_FILTE_Pos)
+#define I2S_CR1_NSYNC_Pos			11		// 1 not Synchronize input signal
+#define I2S_CR1_NSYNC_Msk			(0x01 << I2S_CR1_NSYNC_Pos)
+
+#define I2S_IE_UDR_Pos				0		// TX Buffer underflow interrupt enable, used for slave mode
+#define I2S_IE_UDR_Msk				(0x01 << I2S_IE_UDR_Pos)
+#define I2S_IE_OVR_Pos				1		// RX Buffer overflow interrupt enable
+#define I2S_IE_OVR_Msk				(0x01 << I2S_IE_OVR_Pos)
+#define I2S_IE_RXNE_Pos				2		// RX Buffer Not Empty
+#define I2S_IE_RXNE_Msk				(0x01 << I2S_IE_RXNE_Pos)
+#define I2S_IE_TXE_Pos				3		// TX Buffer Empty
+#define I2S_IE_TXE_Msk				(0x01 << I2S_IE_TXE_Pos)
+
+#define I2S_SR_UDRIF_Pos			0		// write 1 to clear
+#define I2S_SR_UDRIF_Msk			(0x01 << I2S_SR_UDRIF_Pos)
+#define I2S_SR_OVRIF_Pos			1
+#define I2S_SR_OVRIF_Msk			(0x01 << I2S_SR_OVRIF_Pos)
+#define I2S_SR_RXNEIF_Pos			2
+#define I2S_SR_RXNEIF_Msk			(0x01 << I2S_SR_RXNEIF_Pos)
+#define I2S_SR_TXEIF_Pos			3
+#define I2S_SR_TXEIF_Msk			(0x01 << I2S_SR_TXEIF_Pos)
+#define I2S_SR_TXE_Pos				4
+#define I2S_SR_TXE_Msk				(0x01 << I2S_SR_TXE_Pos)
+#define I2S_SR_RXNE_Pos				5
+#define I2S_SR_RXNE_Msk				(0x01 << I2S_SR_RXNE_Pos)
+#define I2S_SR_BUSY_Pos				6
+#define I2S_SR_BUSY_Msk				(0x01 << I2S_SR_BUSY_Pos)
+
+#define I2S_CR2_MODE_Pos			0		// 0 Slave TX   1 Slave RX   2 Master TX   3 Master RX
+#define I2S_CR2_MODE_Msk			(0x03 << I2S_CR2_MODE_Pos)
+#define I2S_CR2_CKPOL_Pos			2		// 0 low level when idle
+#define I2S_CR2_CKPOL_Msk			(0x01 << I2S_CR2_CKPOL_Pos)
+#define I2S_CR2_EN_Pos				3
+#define I2S_CR2_EN_Msk				(0x01 << I2S_CR2_EN_Pos)
+#define I2S_CR2_FFMT_Pos			4		// I2S Frame Format, 0 I2S philips, 1 MSB justified, 2 LSB justified, 3 PCM
+#define I2S_CR2_FFMT_Msk			(0x03 << I2S_CR2_FFMT_Pos)
+#define I2S_CR2_DLEN_Pos			6		// I2S Data Length,  0 8-bit, 1 16-bit, 2 24-bit, 3 32-bit
+#define I2S_CR2_DLEN_Msk			(0x03 << I2S_CR2_DLEN_Pos)
+#define I2S_CR2_PCMSYNW_Pos			8		// I2S PCM Sync Width, 0 1 SCLK period, 1 1 Data Length
+#define I2S_CR2_PCMSYNW_Msk			(0x01 << I2S_CR2_PCMSYNW_Pos)
+#define I2S_CR2_MCLKOE_Pos			9		// MCLK Output Enable
+#define I2S_CR2_MCLKOE_Msk			(0x01 << I2S_CR2_MCLKOE_Pos)
+#define I2S_CR2_CHLEN_Pos			10		// Channel width, 0 16-bit, 1 32-bit
+#define I2S_CR2_CHLEN_Msk			(0x01 << I2S_CR2_CHLEN_Pos)
+#define I2S_CR2_CHRIGHT_Pos			16		// 1 Right Channel, 0 Left Channel
+#define I2S_CR2_CHRIGHT_Msk			(0x01 << I2S_CR2_CHRIGHT_Pos)
+
+#define I2S_CR3_SCLKDIV_Pos			0
+#define I2S_CR3_SCLKDIV_Msk			(0xFFF<< I2S_CR3_SCLKDIV_Pos)
+#define I2S_CR3_SCLKODD_Pos			12		// 0: Fsclk = Fpclk / (SCLKDIV * 2), 1: Fsclk = Fpclk / (SCLKDIV * 2 + 1)
+#define I2S_CR3_SCLKODD_Msk			(0xFFF << I2S_CR3_SCLKODD_Pos)
+
+
+
+
+typedef struct {
 	__IO uint32_t CR;
 
 	__IO uint32_t SR;
@@ -1575,9 +1650,9 @@ typedef struct {
 
 
 typedef struct {    
-	__IO uint32_t IF;						//Interrupt Flag
+	__IO uint32_t IF;						// Interrupt Flag
     
-	__IO uint32_t IFC;						//Interrupt Flag Clear
+	__IO uint32_t IFC;						// Interrupt Flag Clear
     	
 		 uint32_t RESERVED[2];
 		
@@ -1586,24 +1661,24 @@ typedef struct {
 		
 		__IO uint32_t CR;
 		
-		__IO uint32_t NDT;					//Number of data to transfer
+		__IO uint32_t NDT;					// Number of data to transfer
 		
-		__IO uint32_t PAR;					//Peripheral address register
+		__IO uint32_t PAR;					// Peripheral address register
 		
-		__IO uint32_t MAR;					//Memory address register
+		__IO uint32_t MAR;					// Memory address register
 		
 			 uint32_t RESERVED[3];
 	} CH[2];
 } DMA_TypeDef;
 
 
-#define DMA_IF_GLB0_Pos				0		//Channel 0 global interrupt
+#define DMA_IF_GLB0_Pos				0		// Channel 0 global interrupt
 #define DMA_IF_GLB0_Msk				(0x01 << DMA_IF_GLB0_Pos)
-#define DMA_IF_DONE0_Pos			1		//Channel 0 transfer done
+#define DMA_IF_DONE0_Pos			1		// Channel 0 transfer done
 #define DMA_IF_DONE0_Msk			(0x01 << DMA_IF_DONE0_Pos)
-#define DMA_IF_HALF0_Pos			2		//Channel 0 half transfer
+#define DMA_IF_HALF0_Pos			2		// Channel 0 half transfer
 #define DMA_IF_HALF0_Msk			(0x01 << DMA_IF_HALF0_Pos)
-#define DMA_IF_ERR0_Pos				3		//Channel 0 transfer error
+#define DMA_IF_ERR0_Pos				3		// Channel 0 transfer error
 #define DMA_IF_ERR0_Msk				(0x01 << DMA_IF_ERR0_Pos)
 #define DMA_IF_GLB1_Pos				4
 #define DMA_IF_GLB1_Msk				(0x01 << DMA_IF_GLB1_Pos)
@@ -1631,15 +1706,15 @@ typedef struct {
 #define DMA_IFC_ERR1_Pos			7
 #define DMA_IFC_ERR1_Msk			(0x01 << DMA_IFC_ERR1_Pos)
 
-#define DMA_MUX_MRDHSSIG_Pos		0		//memory read  handshake signal
+#define DMA_MUX_MRDHSSIG_Pos		0		// memory read  handshake signal
 #define DMA_MUX_MRDHSSIG_Msk		(0x03 << DMA_MUX_MRDHSSIG_Pos)
-#define DMA_MUX_MRDHSEN_Pos			3		//memory read  handshake enable
+#define DMA_MUX_MRDHSEN_Pos			3		// memory read  handshake enable
 #define DMA_MUX_MRDHSEN_Msk			(0x01 << DMA_MUX_MRDHSEN_Pos)
-#define DMA_MUX_MWRHSSIG_Pos		4		//memory write handshake signal
+#define DMA_MUX_MWRHSSIG_Pos		4		// memory write handshake signal
 #define DMA_MUX_MWRHSSIG_Msk		(0x03 << DMA_MUX_MWRHSSIG_Pos)
-#define DMA_MUX_MWRHSEN_Pos			7		//memory write handshake enable
+#define DMA_MUX_MWRHSEN_Pos			7		// memory write handshake enable
 #define DMA_MUX_MWRHSEN_Msk			(0x01 << DMA_MUX_MWRHSEN_Pos)
-#define DMA_MUX_EXTHSSIG_Pos		8		//外部握手信号，0 TIMR0   1 TIMR1   2 TIMR2   3 TIMR3   4 TIMR4   5 DMA_TRIG0   6 DMA_TRIG1
+#define DMA_MUX_EXTHSSIG_Pos		8		// external handshake signal
 #define DMA_MUX_EXTHSSIG_Msk		(0x07 << DMA_MUX_EXTHSSIG_Pos)
 #define DMA_MUX_EXTHSEN_Pos			11
 #define DMA_MUX_EXTHSEN_Msk			(0x01 << DMA_MUX_EXTHSEN_Pos)
@@ -1669,9 +1744,10 @@ typedef struct {
 #define DMA_CR_MEM2MEM_Pos			16
 #define DMA_CR_MEM2MEM_Msk			(0x01 << DMA_CR_MEM2MEM_Pos)
 
-#define DMA_NDT_LEN_Pos				0		//通道关闭时，写入要传输的数据个数；通道使能后，指示剩余的待传输数据数目
+#define DMA_NDT_LEN_Pos				0		// When the channel is closed, write the number of data to be transferred; 
+											// After the channel is enabled, indicates the number of data remaining to be transferred
 #define DMA_NDT_LEN_Msk				(0xFFFF << DMA_NDT_LEN_Pos)
-#define DMA_NDT_HALF_Pos			16		//传输 HALF 指定个数数据后，置位 DMA->IF.HALF 中断标志位
+#define DMA_NDT_HALF_Pos			16		// After the specified number of data is transmitted by HALF, set the DMA->IF.HALF interrupt flag bit
 #define DMA_NDT_HALF_Msk			(0xFFFF << DMA_NDT_HALF_Pos)
 
 
@@ -1834,19 +1910,19 @@ typedef struct {
 typedef struct {
 	__IO uint32_t CR;
 	
-	__IO uint32_t DCR;						//Device Configuration Register
+	__IO uint32_t DCR;						// Device Configuration Register
 	
 	__IO uint32_t SR;
 	
-	__IO uint32_t FCR;						//Flag Clear Register
+	__IO uint32_t FCR;						// Flag Clear Register
 	
-	__IO uint32_t DLR;						//Data Length Register
-											//Number of data to be retrieved in indirect and status-polling modes
-	__IO uint32_t CCR;						//Communication Configuration Register
+	__IO uint32_t DLR;						// Data Length Register
+											// Number of data to be retrieved in indirect and status-polling modes
+	__IO uint32_t CCR;						// Communication Configuration Register
 	
 	__IO uint32_t AR;
 	
-	__IO uint32_t ABR;						//Alternate Bytes Registers
+	__IO uint32_t ABR;						// Alternate Bytes Registers
 	
 	union {
 		__IO uint32_t DRW;
@@ -1856,24 +1932,17 @@ typedef struct {
 		__IO uint8_t  DRB;
 	};
 	
-	__IO uint32_t PSMSK;					//Polling Status Mask
+	__IO uint32_t PSMSK;					// Polling Status Mask
 	
-	__IO uint32_t PSMAT;					//Polling Status Match
+	__IO uint32_t PSMAT;					// Polling Status Match
 	
-	__IO uint32_t PSITV;					//Polling Status Interval
+	__IO uint32_t PSITV;					// Polling Status Interval
 	
-	__IO uint32_t CS0TO;					//CS stay low timeout time after FIFO full
+	__IO uint32_t CS0TO;					// CS stay low timeout time after FIFO full
 	
 		 uint32_t RESERVED[3];
 	
-	__IO uint32_t SSHIFT;					//Sample Shift in System clock cycles, 实际的采样延迟时间是此寄存器与 CR.SSHIFT 设定延迟的累加
-	
-	__IO uint32_t CACHE;
-	
-	struct {
-		__I  uint32_t SADDR;				//Start Address
-		__I  uint32_t WCOUNT;				//Word Count
-	} CLINE[16];							//Cache Line
+	__IO uint32_t SSHIFT;					// Sample Shift in System clock cycles, actual sampling delay is the sum of this register and the delay set by CR.SSHIFT
 } QSPI_TypeDef;
 
 
@@ -1883,57 +1952,57 @@ typedef struct {
 #define QSPI_CR_ABORT_Msk			(0x01 << QSPI_CR_ABORT_Pos)
 #define QSPI_CR_DMAEN_Pos			2
 #define QSPI_CR_DMAEN_Msk			(0x01 << QSPI_CR_DMAEN_Pos)
-#define QSPI_CR_TOEN_Pos			3		//Time-Out Enable, 0：通过内存映射读后，nCS 一直保持为低
-											//				   1：通过内存映射读后，TIMEOUT[15:0] 个周期未访问 Flash，nCS 自动拉高
+#define QSPI_CR_TOEN_Pos			3		// Time-Out Enable, After reading through memory mapping, 0: the nCS is always kept low
+											//		1: If the Flash is not accessed for TIMEOUT[15:0] period, the nCS automatically go high
 #define QSPI_CR_TOEN_Msk			(0x01 << QSPI_CR_TOEN_Pos)
-#define QSPI_CR_SSHIFT_Pos			4		//Sample Shift in QSPI clock cycle, 0 No shift   1 1/2 cycle shift
+#define QSPI_CR_SSHIFT_Pos			4		// Sample Shift in QSPI clock cycle, 0 No shift, 1 1/2 cycle shift
 #define QSPI_CR_SSHIFT_Msk			(0x01 << QSPI_CR_SSHIFT_Pos)
-#define QSPI_CR_BIDI_Pos			5		//单线双向工模式：0 IO0输出，IO1输入    1 IO0负责输入输出
+#define QSPI_CR_BIDI_Pos			5		// Single line bidirectional mode: 0 IO0 as output, IO1 as input; 1 IO0 as input and output
 #define QSPI_CR_BIDI_Msk			(0x01 << QSPI_CR_BIDI_Pos)
-#define QSPI_CR_DUAL_Pos			6		//Dual Flash mode
+#define QSPI_CR_DUAL_Pos			6		// Dual Flash mode
 #define QSPI_CR_DUAL_Msk			(0x01 << QSPI_CR_DUAL_Pos)
-#define QSPI_CR_BANK_Pos			7		//QSPI Bank Select
+#define QSPI_CR_BANK_Pos			7		// QSPI Bank Select
 #define QSPI_CR_BANK_Msk			(0x01 << QSPI_CR_BANK_Pos)
-#define QSPI_CR_FFTHR_Pos			8		//FIFO Threshold，indirect read  模式下，FIFO 中数据个数 ≥ CR.FFTHR+1 时，SR.FFTHR 置位
-											//				  indirect write 模式下，FIFO 中空位个数 ≥ CR.FFTHR+1 时，SR.FFTHR 置位
+#define QSPI_CR_FFTHR_Pos			8		// FIFO Threshold, in indirect read  mode, when the number of data  in FIFO >= CR.FFTHR+1, SR.FFTHR set
+											//				   in indirect write mode, when the number of space in FIFO >= CR.FFTHR+1, SR.FFTHR set
 #define QSPI_CR_FFTHR_Msk			(0x1F << QSPI_CR_FFTHR_Pos)
-#define QSPI_CR_ERRIE_Pos			16		//Transfer Error Interrupt Enable
+#define QSPI_CR_ERRIE_Pos			16		// Transfer Error Interrupt Enable
 #define QSPI_CR_ERRIE_Msk			(0x01 << QSPI_CR_ERRIE_Pos)
-#define QSPI_CR_DONEIE_Pos			17		//Transfer Done/Complete Interrupt Enable
+#define QSPI_CR_DONEIE_Pos			17		// Transfer Done/Complete Interrupt Enable
 #define QSPI_CR_DONEIE_Msk			(0x01 << QSPI_CR_DONEIE_Pos)
-#define QSPI_CR_FFTHRIE_Pos			18		//FIFO Threshold Interrupt Enable
+#define QSPI_CR_FFTHRIE_Pos			18		// FIFO Threshold Interrupt Enable
 #define QSPI_CR_FFTHRIE_Msk			(0x01 << QSPI_CR_FFTHRIE_Pos)
-#define QSPI_CR_PSMATIE_Pos			19		//Polling Status Match Interrupt Enable
+#define QSPI_CR_PSMATIE_Pos			19		// Polling Status Match Interrupt Enable
 #define QSPI_CR_PSMATIE_Msk			(0x01 << QSPI_CR_PSMATIE_Pos)
-#define QSPI_CR_TOIE_Pos			20		//Time-Out Interrupt Enable
+#define QSPI_CR_TOIE_Pos			20		// Time-Out Interrupt Enable
 #define QSPI_CR_TOIE_Msk			(0x01 << QSPI_CR_TOIE_Pos)
-#define QSPI_CR_PSSTPMOD_Pos		22		//Polling Status Stop Mode，0 always polling until abort or QSPI disabled   1 stop polling as soon as match
+#define QSPI_CR_PSSTPMOD_Pos		22		// Polling Status Stop Mode, 0 always polling until abort or QSPI disabled, 1 stop polling as soon as match
 #define QSPI_CR_PSSTPMOD_Msk		(0x01 << QSPI_CR_PSSTPMOD_Pos)
-#define QSPI_CR_PSMATMOD_Pos		23		//Polling Status Match Mode，0 AND，match when all unmasked bits received from Flash match PSMAT register   1 OR
+#define QSPI_CR_PSMATMOD_Pos		23		// Polling Status Match Mode, 0 AND, match when all unmasked bits received from Flash match PSMAT register; 1 OR
 #define QSPI_CR_PSMATMOD_Msk		(0x01 << QSPI_CR_PSMATMOD_Pos)
-#define QSPI_CR_CLKDIV_Pos			24		//QSPI_SCLK = HCLK / (CR.CLKDIV + 1)
+#define QSPI_CR_CLKDIV_Pos			24		// QSPI_SCLK = HCLK / (CR.CLKDIV + 1)
 #define QSPI_CR_CLKDIV_Msk			(0xFFu<< QSPI_CR_CLKDIV_Pos)
 
-#define QSPI_DCR_CLKMOD_Pos			0		//0 Mode 0   1 Mode 3
+#define QSPI_DCR_CLKMOD_Pos			0		// 0 Mode 0, 1 Mode 3
 #define QSPI_DCR_CLKMOD_Msk			(0x01 << QSPI_DCR_CLKMOD_Pos)
-#define QSPI_DCR_CSHIGH_Pos			8		//nCS stay high for at least DCR.CSHIGH+1 cycles between Flash memory commands
+#define QSPI_DCR_CSHIGH_Pos			8		// nCS stay high for at least DCR.CSHIGH+1 cycles between Flash memory commands
 #define QSPI_DCR_CSHIGH_Msk			(0x07 << QSPI_DCR_CSHIGH_Pos)
-#define QSPI_DCR_FLSIZE_Pos			16		//Flash Size = pow(2, DCR.FLSIZE+1)
+#define QSPI_DCR_FLSIZE_Pos			16		// Flash Size = pow(2, DCR.FLSIZE+1)
 #define QSPI_DCR_FLSIZE_Msk			(0x1F << QSPI_DCR_FLSIZE_Pos)
 
-#define QSPI_SR_ERR_Pos				0		//Transfer Error Flag
+#define QSPI_SR_ERR_Pos				0		// Transfer Error Flag
 #define QSPI_SR_ERR_Msk				(0x01 << QSPI_SR_ERR_Pos)
-#define QSPI_SR_DONE_Pos			1		//Transfer Done/Complete Flag
+#define QSPI_SR_DONE_Pos			1		// Transfer Done/Complete Flag
 #define QSPI_SR_DONE_Msk			(0x01 << QSPI_SR_DONE_Pos)
-#define QSPI_SR_FFTHR_Pos			2		//FIFO Threshold reached Flag
+#define QSPI_SR_FFTHR_Pos			2		// FIFO Threshold reached Flag
 #define QSPI_SR_FFTHR_Msk			(0x01 << QSPI_SR_FFTHR_Pos)
-#define QSPI_SR_PSMAT_Pos			3		//Polling Status Match Flag
+#define QSPI_SR_PSMAT_Pos			3		// Polling Status Match Flag
 #define QSPI_SR_PSMAT_Msk			(0x01 << QSPI_SR_PSMAT_Pos)
-#define QSPI_SR_TO_Pos				4		//Time-Out
+#define QSPI_SR_TO_Pos				4		// Time-Out
 #define QSPI_SR_TO_Msk				(0x01 << QSPI_SR_TO_Pos)
-#define QSPI_SR_BUSY_Pos			5		//Set when operation is on going, Clear when operation done and FIFO emtpy
+#define QSPI_SR_BUSY_Pos			5		// Set when operation is on going, Clear when operation done and FIFO emtpy
 #define QSPI_SR_BUSY_Msk			(0x01 << QSPI_SR_BUSY_Pos)
-#define QSPI_SR_FFLVL_Pos			8		//FIFO Level
+#define QSPI_SR_FFLVL_Pos			8		// FIFO Level
 #define QSPI_SR_FFLVL_Msk			(0x3F << QSPI_SR_FFLVL_Pos)
 
 #define QSPI_FCR_ERR_Pos			0
@@ -1945,31 +2014,26 @@ typedef struct {
 #define QSPI_FCR_TO_Pos				4
 #define QSPI_FCR_TO_Msk				(0x01 << QSPI_FCR_TO_Pos)
 
-#define QSPI_CCR_CODE_Pos			0		//Insruction Code
+#define QSPI_CCR_CODE_Pos			0		// Insruction Code
 #define QSPI_CCR_CODE_Msk			(0xFF << QSPI_CCR_CODE_Pos)
-#define QSPI_CCR_IMODE_Pos			8		//0 No instruction   1 Instruction on D0   2 on D0-1   3 on D0-3
+#define QSPI_CCR_IMODE_Pos			8		// 0 No instruction, 1 Instruction on D0, 2 on D0-1, 3 on D0-3
 #define QSPI_CCR_IMODE_Msk			(0x03 << QSPI_CCR_IMODE_Pos)
-#define QSPI_CCR_AMODE_Pos			10		//0 No address   1 Address on D0   2 on D0-1   3 on D0-3
+#define QSPI_CCR_AMODE_Pos			10		// 0 No address, 1 Address on D0, 2 on D0-1, 3 on D0-3
 #define QSPI_CCR_AMODE_Msk			(0x03 << QSPI_CCR_AMODE_Pos)
-#define QSPI_CCR_ASIZE_Pos			12		//Address size, 0 8-bit   1 16-bit   2 24-bit   3 32-bit
+#define QSPI_CCR_ASIZE_Pos			12		// Address size, 0 8-bit, 1 16-bit, 2 24-bit, 3 32-bit
 #define QSPI_CCR_ASIZE_Msk			(0x03 << QSPI_CCR_ASIZE_Pos)
-#define QSPI_CCR_ABMODE_Pos			14		//0 No alternate bytes   1 Alternate bytes on D0   2 on D0-1   3 on D0-3
+#define QSPI_CCR_ABMODE_Pos			14		// 0 No alternate bytes, 1 Alternate bytes on D0, 2 on D0-1, 3 on D0-3
 #define QSPI_CCR_ABMODE_Msk			(0x03 << QSPI_CCR_ABMODE_Pos)
-#define QSPI_CCR_ABSIZE_Pos			16		//Alternate bytes size, 0 8-bit   1 16-bit   2 24-bit   3 32-bit
+#define QSPI_CCR_ABSIZE_Pos			16		// Alternate bytes size, 0 8-bit, 1 16-bit, 2 24-bit, 3 32-bit
 #define QSPI_CCR_ABSIZE_Msk			(0x03 << QSPI_CCR_ABSIZE_Pos)
-#define QSPI_CCR_DUMMY_Pos			18		//Number of dummy cycles
+#define QSPI_CCR_DUMMY_Pos			18		// Number of dummy cycles
 #define QSPI_CCR_DUMMY_Msk			(0x1F << QSPI_CCR_DUMMY_Pos)
-#define QSPI_CCR_DMODE_Pos			24		//0 No Data   1 Data on D0   2 on D0-1   3 on D0-3
+#define QSPI_CCR_DMODE_Pos			24		// 0 No Data, 1 Data on D0, 2 on D0-1, 3 on D0-3
 #define QSPI_CCR_DMODE_Msk			(0x03 << QSPI_CCR_DMODE_Pos)
-#define QSPI_CCR_MODE_Pos			26		//0 Indirect write mode   1 Indirect read mode   2 Automatic polling mode   3 Memory-mapped mode
+#define QSPI_CCR_MODE_Pos			26		// 0 Indirect write mode, 1 Indirect read mode, 2 Automatic polling mode, 3 Memory-mapped mode
 #define QSPI_CCR_MODE_Msk			(0x03 << QSPI_CCR_MODE_Pos)
-#define QSPI_CCR_SIOO_Pos			28		//Send Instruction Only Once
+#define QSPI_CCR_SIOO_Pos			28		// Send Instruction Only Once
 #define QSPI_CCR_SIOO_Msk			(0x01 << QSPI_CCR_SIOO_Pos)
-
-#define QSPI_CACHE_CLR_Pos			0		//Cache Clear, 完成后自动清零
-#define QSPI_CACHE_CLR_Msk			(0x01 << QSPI_CACHE_CLR_Pos)
-#define QSPI_CACHE_BLKSZ_Pos		1		//Cache Block Size, 0 64-byte   1 128-byte   2 256-byte   3 512-byte
-#define QSPI_CACHE_BLKSZ_Msk		(0x01 << QSPI_CACHE_BLKSZ_Pos)
 
 
 
@@ -2553,19 +2617,19 @@ typedef struct {
 	union {
 		__IO uint32_t IDIS;
 	
-		__IO uint32_t IFE;					//Interrupt Flag Enable
+		__IO uint32_t IFE;					// Interrupt Flag Enable
 	};
 	
 	__IO uint32_t IF;
 	
 	__IO uint32_t CFG;
 	
-	__IO uint32_t SINP;						//Scaling & Sin parameter
-	__IO uint32_t COSP;						//Scaling & Cos parameter
+	__IO uint32_t SINP;						// Scaling & Sin parameter
+	__IO uint32_t COSP;						// Scaling & Cos parameter
 	
 	__IO uint32_t SRC_TILE_POSX;
 	__IO uint32_t SRC_TILE_POSY;
-	__IO uint32_t DST_TILE_OFFX;			//Offset
+	__IO uint32_t DST_TILE_OFFX;			// Offset
 	__IO uint32_t DST_TILE_OFFY;
 	
 	__IO uint32_t BGCOLOR;
@@ -2587,7 +2651,7 @@ typedef struct {
 
 #define SRA_SR_BUSY_Pos				0
 #define SRA_SR_BUSY_Msk				(0x01 << SRA_SR_BUSY_Pos)
-#define SRA_SR_ABORT_Pos			1		//1 Abort pending
+#define SRA_SR_ABORT_Pos			1		// 1 Abort pending
 #define SRA_SR_ABORT_Msk			(0x01 << SRA_SR_ABORT_Pos)
 
 #define SRA_IFE_FRAME_Pos			0
@@ -2617,37 +2681,37 @@ typedef struct {
 #define SRA_IF_BUSERR_Pos			3
 #define SRA_IF_BUSERR_Msk			(0x01 << SRA_IF_BUSERR_Pos)
 
-#define SRA_CFG_SRCFMT_Pos			0		//Source Format, 0 Monochrome 8-bit   1 RGB565   2 RGB888   3 XRGB8888   5 XARGB88565   6 ARGB8565   7 ARGB8888
+#define SRA_CFG_SRCFMT_Pos			0		// Source Format, 0 Monochrome 8-bit, 1 RGB565, 2 RGB888, 3 XRGB8888, 5 XARGB88565, 6 ARGB8565, 7 ARGB8888
 #define SRA_CFG_SRCFMT_Msk			(0x07 << SRA_CFG_SRCFMT_Pos)
-#define SRA_CFG_SRCRBSWAP_Pos		3		//Source R/B swap, 0 RGB   1 BGR
+#define SRA_CFG_SRCRBSWAP_Pos		3		// Source R/B swap, 0 RGB, 1 BGR
 #define SRA_CFG_SRCRBSWAP_Msk		(0x01 << SRA_CFG_SRCRBSWAP_Pos)
-#define SRA_CFG_SRCXSWAP_Pos		4		//Source X swap, 0 XRGB   1 RGBX
+#define SRA_CFG_SRCXSWAP_Pos		4		// Source X swap, 0 XRGB, 1 RGBX
 #define SRA_CFG_SRCXSWAP_Msk		(0x01 << SRA_CFG_SRCXSWAP_Pos)
-#define SRA_CFG_DSTFMT_Pos			8		//Destination Format, 0 Monochrome 8-bit   1 RGB565   2 RGB888   3 XRGB8888   5 XARGB88565   6 ARGB8565   7 ARGB8888
+#define SRA_CFG_DSTFMT_Pos			8		// Destination Format, 0 Monochrome 8-bit, 1 RGB565, 2 RGB888, 3 XRGB8888, 5 XARGB88565, 6 ARGB8565, 7 ARGB8888
 #define SRA_CFG_DSTFMT_Msk			(0x07 << SRA_CFG_DSTFMT_Pos)
-#define SRA_CFG_DSTRBSWAP_Pos		11		//Destination R/B swap, 0 RGB   1 BGR
+#define SRA_CFG_DSTRBSWAP_Pos		11		// Destination R/B swap, 0 RGB, 1 BGR
 #define SRA_CFG_DSTRBSWAP_Msk		(0x01 << SRA_CFG_DSTRBSWAP_Pos)
-#define SRA_CFG_DSTXSWAP_Pos		12		//Destination X swap, 0 XRGB   1 RGBX
+#define SRA_CFG_DSTXSWAP_Pos		12		// Destination X swap, 0 XRGB, 1 RGBX
 #define SRA_CFG_DSTXSWAP_Msk		(0x01 << SRA_CFG_DSTXSWAP_Pos)
-#define SRA_CFG_ROTTYP_Pos			16		//Rotation Type, 0 normal rotation   1 x-mirror   2 y-mirror   3 x-mirror + y-mirror
+#define SRA_CFG_ROTTYP_Pos			16		// Rotation Type, 0 normal rotation, 1 x-mirror, 2 y-mirror, 3 x-mirror + y-mirror
 #define SRA_CFG_ROTTYP_Msk			(0x03 << SRA_CFG_ROTTYP_Pos)
-#define SRA_CFG_ROTAAEN_Pos			18		//Rotation Anti-aliasing enable
+#define SRA_CFG_ROTAAEN_Pos			18		// Rotation Anti-aliasing enable
 #define SRA_CFG_ROTAAEN_Msk			(0x01 << SRA_CFG_ROTAAEN_Pos)
-#define SRA_CFG_ALPHADIS_Pos		19		//Pixel alpha disable for ARGB format, fixed to 0xFF
+#define SRA_CFG_ALPHADIS_Pos		19		// Pixel alpha disable for ARGB format, fixed to 0xFF
 #define SRA_CFG_ALPHADIS_Msk		(0x01 << SRA_CFG_ALPHADIS_Pos)
-#define SRA_CFG_BLENDBG_Pos			20		//0 blend source and destination   1 blend source and background color
+#define SRA_CFG_BLENDBG_Pos			20		// 0 blend source and destination, 1 blend source and background color
 #define SRA_CFG_BLENDBG_Msk			(0x01 << SRA_CFG_BLENDBG_Pos)
-#define SRA_CFG_DUMMYWB_Pos			21		//background color write-back enable for dummy tile
+#define SRA_CFG_DUMMYWB_Pos			21		// background color write-back enable for dummy tile
 #define SRA_CFG_DUMMYWB_Msk			(0x01 << SRA_CFG_DUMMYWB_Pos)
 
-#define SRA_SINP_SINX_Pos			0		//sin(θ) * X scaling factor
+#define SRA_SINP_SINX_Pos			0		// sin(theta) * X scaling factor
 #define SRA_SINP_SINX_Msk			(0xFFFF << SRA_SINP_SINX_Pos)
-#define SRA_SINP_SINY_Pos			16		//sin(θ) * Y scaling factor
+#define SRA_SINP_SINY_Pos			16		// sin(theta) * Y scaling factor
 #define SRA_SINP_SINY_Msk			(0xFFFFu<< SRA_SINP_SINY_Pos)
 
-#define SRA_COSP_COSX_Pos			0		//cos(θ) * X scaling factor
+#define SRA_COSP_COSX_Pos			0		// cos(theta) * X scaling factor
 #define SRA_COSP_COSX_Msk			(0xFFFF << SRA_COSP_COSX_Pos)
-#define SRA_COSP_COSY_Pos			16		//cos(θ) * Y scaling factor
+#define SRA_COSP_COSY_Pos			16		// cos(theta) * Y scaling factor
 #define SRA_COSP_COSY_Msk			(0xFFFFu<< SRA_COSP_COSY_Pos)
 
 #define SRA_SRCSIZE_WIDTH_Pos		0
@@ -2770,43 +2834,43 @@ typedef struct {
 
 
 typedef struct {
-    __IO uint32_t TR;                   	//time register
+    __IO uint32_t TR;                   	// time register
     
-    __IO uint32_t DR;                   	//date register
+    __IO uint32_t DR;                   	// date register
     
-    __IO uint32_t CR;                   	//control register
+    __IO uint32_t CR;                   	// control register
     
-    __IO uint32_t SR;                     	//status register
+    __IO uint32_t SR;                     	// status register
     
-    __IO uint32_t CKDIV;                 	//clock divide
+    __IO uint32_t CKDIV;                 	// clock divide
     
-    __IO uint32_t WKTIM;                 	//wakeup time
+    __IO uint32_t WKTIM;                 	// wakeup time
     
-    __IO uint32_t CALIBH;                   //calibration, 粗略
+    __IO uint32_t CALIBH;                   // rough calibration
     
-    __IO uint32_t ALRMA;					//alarm A
+    __IO uint32_t ALRMA;					// alarm A
     
-    __IO uint32_t ALRMB;                	//alarm B
+    __IO uint32_t ALRMB;                	// alarm B
     
-    __IO uint32_t UNLOCK;                  	//unlock register，依次写 0xCA、0x53 解除寄存器写保护
+    __IO uint32_t UNLOCK;                  	// unlock register, write 0xCA and 0x53 to remove register write protection
     
-    __I  uint32_t SUBSEC;                  	//sub second
+    __I  uint32_t SUBSEC;                  	// sub second
     
-    __IO uint32_t SHIFTR;                 	//shift control register
+    __IO uint32_t SHIFTR;                 	// shift control register
     
-    __I  uint32_t TSTR;                    	//timestamp time register
+    __I  uint32_t TSTR;                    	// timestamp time register
 	
-	__I  uint32_t TSDR;						//timestamp date register
+	__I  uint32_t TSDR;						// timestamp date register
 	
-	__I  uint32_t TSSS;						//timestamp sub second
+	__I  uint32_t TSSS;						// timestamp sub second
 	
-	__IO uint32_t CALIBL;					//calibration, 精密
+	__IO uint32_t CALIBL;					// precise calibration
 	
-	__IO uint32_t TAMPER;					//tamper configuration
+	__IO uint32_t TAMPER;					// tamper configuration
 	
-	__IO uint32_t ALRMASS;					//alarm A sub second
+	__IO uint32_t ALRMASS;					// alarm A sub second
 	
-	__IO uint32_t ALRMBSS;					//alram B sub second
+	__IO uint32_t ALRMBSS;					// alram B sub second
 	
 	__I  uint32_t RESERVED;
 	
@@ -2816,187 +2880,187 @@ typedef struct {
 	
 	__IO uint32_t LVRCR;
 	
-	__IO uint32_t X32KCR;					//32.768 KHz crystal control
+	__IO uint32_t X32KCR;					// 32.768 KHz crystal control
 	
 	__IO uint32_t PWRCR;
 } RTC_TypeDef;
 
 
-#define RTC_TR_SEC_Pos             	0		//秒的个位
+#define RTC_TR_SEC_Pos             	0		// Second units in BCD format
 #define RTC_TR_SEC_Msk             	(0x0F << RTC_TR_SEC_Pos)
-#define RTC_TR_SEC10_Pos            4		//秒的十位
+#define RTC_TR_SEC10_Pos            4		// Second tens in BCD format
 #define RTC_TR_SEC10_Msk            (0x07 << RTC_TR_SEC10_Pos)
-#define RTC_TR_MIN_Pos             	8		//分的个位
+#define RTC_TR_MIN_Pos             	8
 #define RTC_TR_MIN_Msk             	(0x0F << RTC_TR_MIN_Pos)
-#define RTC_TR_MIN10_Pos            12		//分的十位
+#define RTC_TR_MIN10_Pos            12
 #define RTC_TR_MIN10_Msk            (0x07 << RTC_TR_MIN10_Pos)
-#define RTC_TR_HOUR_Pos             16		//小时
+#define RTC_TR_HOUR_Pos             16
 #define RTC_TR_HOUR_Msk             (0x0F << RTC_TR_HOUR_Pos)
 #define RTC_TR_HOUR10_Pos         	20
 #define RTC_TR_HOUR10_Msk           (0x03 << RTC_TR_HOUR10_Pos)
-#define RTC_TR_PM_Pos         		22		//0 AM   1 PM
+#define RTC_TR_PM_Pos         		22		// 0 AM, 1 PM
 #define RTC_TR_PM_Msk           	(0x01 << RTC_TR_PM_Pos)
 
-#define RTC_DR_DATE_Pos            	0       //日期的个位
+#define RTC_DR_DATE_Pos            	0
 #define RTC_DR_DATE_Msk           	(0x0F << RTC_DR_DATE_Pos)
-#define RTC_DR_DATE10_Pos           4       //日期的十位
+#define RTC_DR_DATE10_Pos           4
 #define RTC_DR_DATE10_Msk           (0x03 << RTC_DR_DATE10_Pos)
-#define RTC_DR_MON_Pos              8       //月份的个位
+#define RTC_DR_MON_Pos              8
 #define RTC_DR_MON_Msk              (0x0F << RTC_DR_MON_Pos)
-#define RTC_DR_MON10_Pos            12      //月份的十位
+#define RTC_DR_MON10_Pos            12
 #define RTC_DR_MON10_Msk            (0x01 << RTC_DR_MON10_Pos)
-#define RTC_DR_DAY_Pos              13      //1 周一 ... 7 周日
+#define RTC_DR_DAY_Pos              13      // 1 Monday, ..., 7 Sunday
 #define RTC_DR_DAY_Msk              (0x07 << RTC_DR_DAY_Pos)
-#define RTC_DR_YEAR_Pos             16      //年份的个位
+#define RTC_DR_YEAR_Pos             16
 #define RTC_DR_YEAR_Msk             (0x0F << RTC_DR_YEAR_Pos)
-#define RTC_DR_YEAR10_Pos           20      //年份的十位
+#define RTC_DR_YEAR10_Pos           20
 #define RTC_DR_YEAR10_Msk           (0x0F << RTC_DR_YEAR10_Pos)
 
-#define RTC_CR_WKCLK_Pos            0       //wakeup clock source, 0 RTC_CLK/16   1 RTC_CLK/8   2 RTC_CLK/4   3 RTC_CLK/2   4 CK_SDIV
+#define RTC_CR_WKCLK_Pos            0       // wakeup clock source, 0 RTC_CLK/16, 1 RTC_CLK/8, 2 RTC_CLK/4, 3 RTC_CLK/2, 4 CK_SDIV
 #define RTC_CR_WKCLK_Msk            (0x07 << RTC_CR_WKCLK_Pos)
-#define RTC_CR_TSEDGE_Pos           3       //timestamp edge, 0 rise edge   1 fall edge
+#define RTC_CR_TSEDGE_Pos           3       // timestamp edge, 0 rise edge, 1 fall edge
 #define RTC_CR_TSEDGE_Msk           (0x01 << RTC_CR_TSEDGE_Pos)
-#define RTC_CR_REFCLK_Pos           4       //reference clock
+#define RTC_CR_REFCLK_Pos           4       // reference clock
 #define RTC_CR_REFCLK_Msk           (0x01 << RTC_CR_REFCLK_Pos)
-#define RTC_CR_BYPSHAD_Pos          5       //bypass shadow register for DR/TR/SUBSEC
+#define RTC_CR_BYPSHAD_Pos          5       // bypass shadow register for DR/TR/SUBSEC
 #define RTC_CR_BYPSHAD_Msk          (0x01 << RTC_CR_BYPSHAD_Pos)
-#define RTC_CR_FMT12_Pos            6       //0 24小时制   1 12小时制（AM/PM）
+#define RTC_CR_FMT12_Pos            6       // 0 24 hour/day format, 1 AM/PM hour format
 #define RTC_CR_FMT12_Msk            (0x01 << RTC_CR_FMT12_Pos)
-#define RTC_CR_DCEN_Pos             7       //digial calibration enable
+#define RTC_CR_DCEN_Pos             7       // digial calibration enable
 #define RTC_CR_DCEN_Msk             (0x01 << RTC_CR_DCEN_Pos)
-#define RTC_CR_ALRAEN_Pos           8       //alarm A enable
+#define RTC_CR_ALRAEN_Pos           8       // alarm A enable
 #define RTC_CR_ALRAEN_Msk           (0x01 << RTC_CR_ALRAEN_Pos)
-#define RTC_CR_ALRBEN_Pos           9       //alarm B enable
+#define RTC_CR_ALRBEN_Pos           9       // alarm B enable
 #define RTC_CR_ALRBEN_Msk           (0x01 << RTC_CR_ALRBEN_Pos)
-#define RTC_CR_WKUPEN_Pos           10      //wakeup enable
+#define RTC_CR_WKUPEN_Pos           10      // wakeup enable
 #define RTC_CR_WKUPEN_Msk           (0x01 << RTC_CR_WKUPEN_Pos)
-#define RTC_CR_TSEN_Pos             11      //timestamp enable
+#define RTC_CR_TSEN_Pos             11      // timestamp enable
 #define RTC_CR_TSEN_Msk             (0x01 << RTC_CR_TSEN_Pos)
-#define RTC_CR_ALRAIE_Pos           12      //alarm A interrupt enable
+#define RTC_CR_ALRAIE_Pos           12      // alarm A interrupt enable
 #define RTC_CR_ALRAIE_Msk           (0x01 << RTC_CR_ALRAIE_Pos)
-#define RTC_CR_ALRBIE_Pos           13      //alarm B interrupt enable
+#define RTC_CR_ALRBIE_Pos           13      // alarm B interrupt enable
 #define RTC_CR_ALRBIE_Msk           (0x01 << RTC_CR_ALRBIE_Pos)
-#define RTC_CR_WKUPIE_Pos           14      //wakeup interrupt enable
+#define RTC_CR_WKUPIE_Pos           14      // wakeup interrupt enable
 #define RTC_CR_WKUPIE_Msk           (0x01 << RTC_CR_WKUPIE_Pos)
-#define RTC_CR_TSIE_Pos             15      //timestamp interrupt enable
+#define RTC_CR_TSIE_Pos             15      // timestamp interrupt enable
 #define RTC_CR_TSIE_Msk             (0x01 << RTC_CR_TSIE_Pos)
-#define RTC_CR_ADD1H_Pos            16      //add 1 hour (夏季时间更改)
+#define RTC_CR_ADD1H_Pos            16      // add 1 hour (summer time change)
 #define RTC_CR_ADD1H_Msk            (0x01 << RTC_CR_ADD1H_Pos)
-#define RTC_CR_SUB1H_Pos            17      //sub 1 hour (冬季时间更改)
+#define RTC_CR_SUB1H_Pos            17      // sub 1 hour (winter time change)
 #define RTC_CR_SUB1H_Msk            (0x01 << RTC_CR_SUB1H_Pos)
-#define RTC_CR_BKP1H_Pos            18      //写 1 以记录已对夏令时更改
+#define RTC_CR_BKP1H_Pos            18      // can be written by the user to memorize whether the daylight saving time change has been performed or not.
 #define RTC_CR_BKP1H_Msk            (0x01 << RTC_CR_BKP1H_Pos)
-#define RTC_CR_COSEL_Pos            19      //calibration output select
+#define RTC_CR_COSEL_Pos            19      // calibration output select
 #define RTC_CR_COSEL_Msk            (0x01 << RTC_CR_COSEL_Pos)
-#define RTC_CR_AOPOL_Pos            20      //alarm output polarity
+#define RTC_CR_AOPOL_Pos            20      // alarm output polarity
 #define RTC_CR_AOPOL_Msk            (0x01 << RTC_CR_AOPOL_Pos)
-#define RTC_CR_AOSEL_Pos            21      //alarm output select
+#define RTC_CR_AOSEL_Pos            21      // alarm output select
 #define RTC_CR_AOSEL_Msk            (0x03 << RTC_CR_AOSEL_Pos)
-#define RTC_CR_COEN_Pos             23      //calibration output enable
+#define RTC_CR_COEN_Pos             23      // calibration output enable
 #define RTC_CR_COEN_Msk             (0x01 << RTC_CR_COEN_Pos)
 
-#define RTC_SR_ALRAWEN_Pos          0       //alarm A write enable
+#define RTC_SR_ALRAWEN_Pos          0       // alarm A write enable
 #define RTC_SR_ALRAWEN_Msk          (0x01 << RTC_SR_ALRAWEN_Pos)
-#define RTC_SR_ALRBWEN_Pos          1       //alarm B write enable
+#define RTC_SR_ALRBWEN_Pos          1       // alarm B write enable
 #define RTC_SR_ALRBWEN_Msk          (0x01 << RTC_SR_ALRBWEN_Pos)
-#define RTC_SR_WKUPWEN_Pos          2       //wakeup write enable
+#define RTC_SR_WKUPWEN_Pos          2       // wakeup write enable
 #define RTC_SR_WKUPWEN_Msk          (0x01 << RTC_SR_WKUPWEN_Pos)
-#define RTC_SR_SHIFTING_Pos         3       //shift in progress
+#define RTC_SR_SHIFTING_Pos         3       // shift in progress
 #define RTC_SR_SHIFTING_Msk         (0x01 << RTC_SR_SHIFTING_Pos)
-#define RTC_SR_INITRDY_Pos          4       //init ready/done
+#define RTC_SR_INITRDY_Pos          4       // init ready/done
 #define RTC_SR_INITRDY_Msk          (0x01 << RTC_SR_INITRDY_Pos)
-#define RTC_SR_SYNCRDY_Pos          5       //sync ready, can read DR/TR/SUBSEC
+#define RTC_SR_SYNCRDY_Pos          5       // sync ready, can read DR/TR/SUBSEC
 #define RTC_SR_SYNCRDY_Msk          (0x01 << RTC_SR_SYNCRDY_Pos)
-#define RTC_SR_INITWEN_Pos          6       //init write enable
+#define RTC_SR_INITWEN_Pos          6       // init write enable
 #define RTC_SR_INITWEN_Msk          (0x01 << RTC_SR_INITWEN_Pos)
-#define RTC_SR_INIT_Pos             7       //
+#define RTC_SR_INIT_Pos             7
 #define RTC_SR_INIT_Msk             (0x01 << RTC_SR_INIT_Pos)
-#define RTC_SR_ALRAF_Pos            8       //alarm A flag
+#define RTC_SR_ALRAF_Pos            8       // alarm A flag
 #define RTC_SR_ALRAF_Msk            (0x01 << RTC_SR_ALRAF_Pos)
-#define RTC_SR_ALRBF_Pos            9       //alarm B flag
+#define RTC_SR_ALRBF_Pos            9       // alarm B flag
 #define RTC_SR_ALRBF_Msk            (0x01 << RTC_SR_ALRBF_Pos)
-#define RTC_SR_WKUPF_Pos            10      //wakeup flag
+#define RTC_SR_WKUPF_Pos            10      // wakeup flag
 #define RTC_SR_WKUPF_Msk            (0x01 << RTC_SR_WKUPF_Pos)
-#define RTC_SR_TSF_Pos              11      //tiemstamp flag
+#define RTC_SR_TSF_Pos              11      // tiemstamp flag
 #define RTC_SR_TSF_Msk              (0x01 << RTC_SR_TSF_Pos)
-#define RTC_SR_TSOVF_Pos            12      //timestamp overflow flag
+#define RTC_SR_TSOVF_Pos            12      // timestamp overflow flag
 #define RTC_SR_TSOVF_Msk            (0x01 << RTC_SR_TSOVF_Pos)
-#define RTC_SR_TAMPERF_Pos          13      //tamper flag
+#define RTC_SR_TAMPERF_Pos          13      // tamper flag
 #define RTC_SR_TAMPERF_Msk          (0x01 << RTC_SR_TAMPERF_Pos)
-#define RTC_SR_CALBING_Pos          16      //calibration in progress
+#define RTC_SR_CALBING_Pos          16      // calibration in progress
 #define RTC_SR_CALBING_Msk          (0x01 << RTC_SR_CALBING_Pos)
 
-#define RTC_CKDIV_SDIV_Pos           0       //sync div, ck_sdiv = ck_adiv / (SDIV + 1)
+#define RTC_CKDIV_SDIV_Pos           0       // sync div, ck_sdiv = ck_adiv / (SDIV + 1)
 #define RTC_CKDIV_SDIV_Msk           (0x7FFF<< RTC_CKDIV_SDIV_Pos)
-#define RTC_CKDIV_ADIV_Pos           16      //async div, ck_adiv = RTC_CLK / (ADIV + 1)
+#define RTC_CKDIV_ADIV_Pos           16      // async div, ck_adiv = RTC_CLK / (ADIV + 1)
 #define RTC_CKDIV_ADIV_Msk           (0x7F << RTC_CKDIV_ADIV_Pos)
 
-#define RTC_CALIBH_VALUE_Pos         0       //MINUS = 0, VALUE: 0 +0ppm   1 +4ppm ... 31 +126ppm
+#define RTC_CALIBH_VALUE_Pos         0       // MINUS = 0, VALUE: 0 +0ppm, 1 +4ppm, ..., 31 +126ppm
 #define RTC_CALIBH_VALUE_Msk         (0x1F << RTC_CALIBH_VALUE_Pos)
-#define RTC_CALIBH_MINUS_Pos         7       //MINUS = 1, VALUE: 0 -0ppm   1 -2ppm ... 31 -63ppm
+#define RTC_CALIBH_MINUS_Pos         7       // MINUS = 1, VALUE: 0 -0ppm, 1 -2ppm, ..., 31 -63ppm
 #define RTC_CALIBH_MINUS_Msk         (0x01 << RTC_CALIBH_MINUS_Pos)
 
-#define RTC_ALRMA_SEC_Pos           0       //秒的个位
+#define RTC_ALRMA_SEC_Pos           0
 #define RTC_ALRMA_SEC_Msk           (0x0F << RTC_ALRMA_SEC_Pos)
-#define RTC_ALRMA_SEC10_Pos         4       //秒的十位
+#define RTC_ALRMA_SEC10_Pos         4
 #define RTC_ALRMA_SEC10_Msk         (0x07 << RTC_ALRMA_SEC10_Pos)
-#define RTC_ALRMA_SECMSK_Pos        7       //秒的屏蔽，1 闹钟无需秒匹配
+#define RTC_ALRMA_SECMSK_Pos        7       //seconds mask, 1 Seconds don??t care in Alarm comparison
 #define RTC_ALRMA_SECMSK_Msk        (0x01 << RTC_ALRMA_SECMSK_Pos)
-#define RTC_ALRMA_MIN_Pos           8       //分的个位
+#define RTC_ALRMA_MIN_Pos           8
 #define RTC_ALRMA_MIN_Msk           (0x0F << RTC_ALRMA_MIN_Pos)
-#define RTC_ALRMA_MIN10_Pos         12      //分的十位
+#define RTC_ALRMA_MIN10_Pos         12
 #define RTC_ALRMA_MIN10_Msk         (0x07 << RTC_ALRMA_MIN10_Pos)
-#define RTC_ALRMA_MINMSK_Pos        15      //分的屏蔽，1 闹钟无需分匹配
+#define RTC_ALRMA_MINMSK_Pos        15
 #define RTC_ALRMA_MINMSK_Msk        (0x01 << RTC_ALRMA_MINMSK_Pos)
-#define RTC_ALRMA_HOUR_Pos          16      //时的个位
+#define RTC_ALRMA_HOUR_Pos          16
 #define RTC_ALRMA_HOUR_Msk          (0x0F << RTC_ALRMA_HOUR_Pos)
-#define RTC_ALRMA_HOUR10_Pos        20      //时的十位
+#define RTC_ALRMA_HOUR10_Pos        20
 #define RTC_ALRMA_HOUR10_Msk        (0x03 << RTC_ALRMA_HOUR10_Pos)
-#define RTC_ALRMA_PM_Pos            22      //0 AM   1 PM
+#define RTC_ALRMA_PM_Pos            22      // 0 AM, 1 PM
 #define RTC_ALRMA_PM_Msk            (0x01 << RTC_ALRMA_PM_Pos)
-#define RTC_ALRMA_HOURMSK_Pos       23      //时的屏蔽，1 闹钟无需时匹配
+#define RTC_ALRMA_HOURMSK_Pos       23
 #define RTC_ALRMA_HOURMSK_Msk       (0x01 << RTC_ALRMA_HOURMSK_Pos)
-#define RTC_ALRMA_DATE_Pos          24      //日期的个位
+#define RTC_ALRMA_DATE_Pos          24
 #define RTC_ALRMA_DATE_Msk          (0x0F << RTC_ALRMA_DATE_Pos)
-#define RTC_ALRMA_DATE10_Pos        28      //日期的十位
+#define RTC_ALRMA_DATE10_Pos        28
 #define RTC_ALRMA_DATE10_Msk        (0x03 << RTC_ALRMA_DATE10_Pos)
-#define RTC_ALRMA_DAY_Pos           30      //0 DATE、DATE10 表示日期   1 DATE 表示周几、DATE10 无用
+#define RTC_ALRMA_DAY_Pos           30      // 0 ALRMA.DATE represents the date units, 1 ALRMA.DATE represents the week day
 #define RTC_ALRMA_DAY_Msk           (0x01 << RTC_ALRMA_DAY_Pos)
-#define RTC_ALRMA_DATEMSK_Pos       31      //日期的屏蔽，1 闹钟无需日期/周几匹配
+#define RTC_ALRMA_DATEMSK_Pos       31
 #define RTC_ALRMA_DATEMSK_Msk       (0x01 << RTC_ALRMA_DATEMSK_Pos)
 
-#define RTC_ALRMB_SEC_Pos           0       //秒的个位
+#define RTC_ALRMB_SEC_Pos           0
 #define RTC_ALRMB_SEC_Msk           (0x0F << RTC_ALRMB_SEC_Pos)
-#define RTC_ALRMB_SEC10_Pos         4       //秒的十位
+#define RTC_ALRMB_SEC10_Pos         4
 #define RTC_ALRMB_SEC10_Msk         (0x07 << RTC_ALRMB_SEC10_Pos)
-#define RTC_ALRMB_SECMSK_Pos        7       //秒的屏蔽，1 闹钟无需秒匹配
+#define RTC_ALRMB_SECMSK_Pos        7
 #define RTC_ALRMB_SECMSK_Msk        (0x01 << RTC_ALRMB_SECMSK_Pos)
-#define RTC_ALRMB_MIN_Pos           8       //分的个位
+#define RTC_ALRMB_MIN_Pos           8
 #define RTC_ALRMB_MIN_Msk           (0x0F << RTC_ALRMB_MIN_Pos)
-#define RTC_ALRMB_MIN10_Pos         12      //分的十位
+#define RTC_ALRMB_MIN10_Pos         12
 #define RTC_ALRMB_MIN10_Msk         (0x07 << RTC_ALRMB_MIN10_Pos)
-#define RTC_ALRMB_MINMSK_Pos        15      //分的屏蔽，1 闹钟无需分匹配
+#define RTC_ALRMB_MINMSK_Pos        15
 #define RTC_ALRMB_MINMSK_Msk        (0x01 << RTC_ALRMB_MINMSK_Pos)
-#define RTC_ALRMB_HOUR_Pos          16      //时的个位
+#define RTC_ALRMB_HOUR_Pos          16
 #define RTC_ALRMB_HOUR_Msk          (0x0F << RTC_ALRMB_HOUR_Pos)
-#define RTC_ALRMB_HOUR10_Pos        20      //时的十位
+#define RTC_ALRMB_HOUR10_Pos        20
 #define RTC_ALRMB_HOUR10_Msk        (0x03 << RTC_ALRMB_HOUR10_Pos)
-#define RTC_ALRMB_PM_Pos            22      //0 AM   1 PM
+#define RTC_ALRMB_PM_Pos            22
 #define RTC_ALRMB_PM_Msk            (0x01 << RTC_ALRMB_PM_Pos)
-#define RTC_ALRMB_HOURMSK_Pos       23      //时的屏蔽，1 闹钟无需时匹配
+#define RTC_ALRMB_HOURMSK_Pos       23
 #define RTC_ALRMB_HOURMSK_Msk       (0x01 << RTC_ALRMB_HOURMSK_Pos)
-#define RTC_ALRMB_DATE_Pos          24      //日期的个位
+#define RTC_ALRMB_DATE_Pos          24
 #define RTC_ALRMB_DATE_Msk          (0x0F << RTC_ALRMB_DATE_Pos)
-#define RTC_ALRMB_DATE10_Pos        28      //日期的十位
+#define RTC_ALRMB_DATE10_Pos        28
 #define RTC_ALRMB_DATE10_Msk        (0x03 << RTC_ALRMB_DATE10_Pos)
-#define RTC_ALRMB_DAY_Pos           30      //0 DATE、DATE10 表示日期   1 DATE 表示周几、DATE10 无用
+#define RTC_ALRMB_DAY_Pos           30
 #define RTC_ALRMB_DAY_Msk           (0x01 << RTC_ALRMB_DAY_Pos)
-#define RTC_ALRMB_DATEMSK_Pos       31      //日期的屏蔽，1 闹钟无需日期/周几匹配
+#define RTC_ALRMB_DATEMSK_Pos       31
 #define RTC_ALRMB_DATEMSK_Msk       (0x01 << RTC_ALRMB_DATEMSK_Pos)
 
-#define RTC_SHIFTR_SUBSS_Pos       	0      //sub-second value to sub
+#define RTC_SHIFTR_SUBSS_Pos       	0      // sub-second value to sub
 #define RTC_SHIFTR_SUBSS_Msk       	(0x7FFF<< RTC_SHIFTR_SUBSS_Pos)
-#define RTC_SHIFTR_ADD1S_Pos       	31		//add 1 second
+#define RTC_SHIFTR_ADD1S_Pos       	31		// add 1 second
 #define RTC_SHIFTR_ADD1S_Msk       	(0x01u<< RTC_SHIFTR_ADD1S_Pos)
 
 #define RTC_TSTR_SEC_Pos            0
@@ -3034,13 +3098,13 @@ typedef struct {
 #define RTC_CALIBL_CALP_Pos         15
 #define RTC_CALIBL_CALP_Msk         (0x01 << RTC_CALIBL_CALP_Pos)
 
-#define RTC_TAMPER_ENA_Pos          0       //tamper detect enable
+#define RTC_TAMPER_ENA_Pos          0       // tamper detect enable
 #define RTC_TAMPER_ENA_Msk          (0x01 << RTC_TAMPER_ENA_Pos)
 #define RTC_TAMPER_POLAR_Pos        1
 #define RTC_TAMPER_POLAR_Msk        (0x01 << RTC_TAMPER_POLAR_Pos)
 #define RTC_TAMPER_IE_Pos           2
 #define RTC_TAMPER_IE_Msk           (0x01 << RTC_TAMPER_IE_Pos)
-#define RTC_TAMPER_TSEN_Pos         7      //tamper gen timestamp enable
+#define RTC_TAMPER_TSEN_Pos         7      // tamper gen timestamp enable
 #define RTC_TAMPER_TSEN_Msk         (0x01 << RTC_TAMPER_TSEN_Pos)
 #define RTC_TAMPER_SAMFREQ_Pos      8
 #define RTC_TAMPER_SAMFREQ_Msk      (0x07 << RTC_TAMPER_SAMFREQ_Pos)
@@ -3247,6 +3311,8 @@ typedef struct {
 
 #define SPI0				((SPI_TypeDef  *) SPI0_BASE)
 
+#define I2S0				((I2S_TypeDef  *) I2S0_BASE)
+
 #define I2C0				((I2C_TypeDef  *) I2C0_BASE)
 #define I2C1				((I2C_TypeDef  *) I2C1_BASE)
 
@@ -3293,6 +3359,7 @@ typedef struct {
 #include "SWM330_timr.h"
 #include "SWM330_uart.h"
 #include "SWM330_spi.h"
+#include "SWM330_i2s.h"
 #include "SWM330_i2c.h"
 #include "SWM330_adc.h"
 #include "SWM330_pwm.h"

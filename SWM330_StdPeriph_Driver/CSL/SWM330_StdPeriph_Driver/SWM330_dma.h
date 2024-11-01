@@ -27,6 +27,8 @@ typedef struct {
 
 #define DMA_CH0		0
 #define DMA_CH1		1
+#define DMA_CH2		2
+#define DMA_CH3		3
 
 #define DMA_MODE_SINGLE			0		// single mode, stop after the transmission is complete
 #define DMA_MODE_CIRCLE			1		// circle mode, the next round of transmission is executed after the transmission is complete
