@@ -2252,6 +2252,275 @@ typedef struct {
 
 
 typedef struct {
+	__IO uint32_t CFG;						// JPEG DEC configure register
+	
+	__IO uint32_t CR;						// JPEG DEC control register
+	
+	__IO uint32_t IR;						// JPEG DEC interrupt register
+	
+	__IO uint32_t SR;						// JPEG DEC status register
+	
+	__IO uint32_t IMGSIZ;					// JPEG image size
+	
+	__IO uint32_t IMGSTR;					// JPEG image size virtual stride
+	
+	__IO uint32_t CSBASE;					// JPEG code-stream base address
+	
+	union {
+		__IO uint32_t YBASE;				// YUV image Y base address
+		
+		__IO uint32_t RGBASE;				// RGB image base address
+	};
+	
+	__IO uint32_t UBASE;					// YUV image U base address
+	
+	__IO uint32_t VBASE;					// YUV image V base address
+	
+	__IO uint32_t QTBASE;					// JPEG quantization table base address
+	
+	__IO uint32_t HTBASE;					// JPEG huffman table base address
+	
+	__IO uint32_t CODLEN;					// JPEG code stream total length in byte
+	
+		 uint32_t RESERVED[51];
+	
+	__O  uint32_t QTABLE[3][16];			// Quantization table
+	
+		 uint32_t RESERVED2[16];
+	
+	struct {
+		__O  uint32_t DC_CODEWORD[6];
+		__O  uint32_t DC_CODELEN[2];
+		__O  uint32_t DC_CODEVAL[2];
+		
+		__O  uint32_t AC_CODEWORD[8];
+		__O  uint32_t AC_CODEADDR[4];
+		__O  uint32_t AC_CODEVAL[41];
+		
+			 uint32_t RESERVED;
+	} HTABLE[2];							// Huffman table
+} JPEG_TypeDef;
+
+
+#define JPEG_CFG_SRCFMT_Pos			0		// JPEG Source Format, 0 YUV420(H2V2), 1 YUV422(H2V1), 2 YUV444(H1V1)
+#define JPEG_CFG_SRCFMT_Msk			(0x03 << JPEG_CFG_SRCFMT_Pos)
+#define JPEG_CFG_SCANMOD_Pos		2		// JPEG scan mode, 0 interleaved (three components), 1 non-interleaved (single component)
+#define JPEG_CFG_SCANMOD_Msk		(0x01 << JPEG_CFG_SCANMOD_Pos)
+#define JPEG_CFG_NISCOMP_Pos		3		// Non-Interleaved Scanning Component, 0 component 1, 1 component 2, 2 component 3
+#define JPEG_CFG_NISCOMP_Msk		(0x03 << JPEG_CFG_NISCOMP_Pos)
+#define JPEG_CFG_HT1COMP_Pos		5		// Huffman Table for Component 1, 0 table 0, 1 table 1
+#define JPEG_CFG_HT1COMP_Msk		(0x01 << JPEG_CFG_HT1COMP_Pos)
+#define JPEG_CFG_HT2COMP_Pos		6
+#define JPEG_CFG_HT2COMP_Msk		(0x01 << JPEG_CFG_HT2COMP_Pos)
+#define JPEG_CFG_HT3COMP_Pos		7
+#define JPEG_CFG_HT3COMP_Msk		(0x01 << JPEG_CFG_HT3COMP_Pos)
+#define JPEG_CFG_QT1COMP_Pos		8		// Quantization Table for Component 1, 0 table 0, 1 table 1, 2 table 2
+#define JPEG_CFG_QT1COMP_Msk		(0x03 << JPEG_CFG_QT1COMP_Pos)
+#define JPEG_CFG_QT2COMP_Pos		10
+#define JPEG_CFG_QT2COMP_Msk		(0x03 << JPEG_CFG_QT2COMP_Pos)
+#define JPEG_CFG_QT3COMP_Pos		12
+#define JPEG_CFG_QT3COMP_Msk		(0x03 << JPEG_CFG_QT3COMP_Pos)
+#define JPEG_CFG_OUTFMT_Pos			14		// Image data output format, 0 YUV planar, 1 YUV semi-planar, 2 XRGB888, 3 RGB888, 4 RGB565
+#define JPEG_CFG_OUTFMT_Msk			(0x07 << JPEG_CFG_OUTFMT_Pos)
+#define JPEG_CFG_YUV2RGB_Pos		17		// YUV2RGB translation, 0 Disable, 1 Enable
+#define JPEG_CFG_YUV2RGB_Msk		(0x01 << JPEG_CFG_YUV2RGB_Pos)
+#define JPEG_CFG_UVSWAP_Pos			18		// UV output swap, 0 YUV, 1 YVU
+#define JPEG_CFG_UVSWAP_Msk			(0x01 << JPEG_CFG_UVSWAP_Pos)
+#define JPEG_CFG_RBSWAP_Pos			19		// RB output swap, 0 RGB, 1 BGR
+#define JPEG_CFG_RBSWAP_Msk			(0x01 << JPEG_CFG_RBSWAP_Pos)
+#define JPEG_CFG_EDSWAP_Pos			20		// endian swap, 0 XRGB, 1 BGRX
+#define JPEG_CFG_EDSWAP_Msk			(0x01 << JPEG_CFG_EDSWAP_Pos)
+#define JPEG_CFG_565DITH_Pos		21		// RGB565 dithering, 0 Disable, 1 Enable
+#define JPEG_CFG_565DITH_Msk		(0x01 << JPEG_CFG_565DITH_Pos)
+
+#define JPEG_CR_START_Pos			0		// JPEG DEC frame start, automatically clear when done
+#define JPEG_CR_START_Msk			(0x01 << JPEG_CR_START_Pos)
+#define JPEG_CR_RESTART_Pos			1		// Decoder stream buffering restart
+#define JPEG_CR_RESTART_Msk			(0x01 << JPEG_CR_RESTART_Pos)
+#define JPEG_CR_RESET_Pos			3		// JPEG DEC core reset, automatically clear
+#define JPEG_CR_RESET_Msk			(0x01 << JPEG_CR_RESET_Pos)
+#define JPEG_CR_REINTRV_Pos			4		// Restart interval marker enable
+#define JPEG_CR_REINTRV_Msk			(0x01 << JPEG_CR_REINTRV_Pos)
+#define JPEG_CR_LASTBUF_Pos			5		// Decoder last stream buffering
+#define JPEG_CR_LASTBUF_Msk			(0x01 << JPEG_CR_LASTBUF_Pos)
+#define JPEG_CR_QTAUTO_Pos			7		// JPEG quantization tables auto refresh enable
+#define JPEG_CR_QTAUTO_Msk			(0x01 << JPEG_CR_QTAUTO_Pos)
+#define JPEG_CR_HTAUTO_Pos			8		// JPEG huffman tables auto refresh enable
+#define JPEG_CR_HTAUTO_Msk			(0x01 << JPEG_CR_HTAUTO_Pos)
+#define JPEG_CR_QTCNT_Pos			9		// Number of quantization tables
+#define JPEG_CR_QTCNT_Msk			(0x03 << JPEG_CR_QTCNT_Pos)
+#define JPEG_CR_HTCNT_Pos			11		// Number of huffman tables
+#define JPEG_CR_HTCNT_Msk			(0x01 << JPEG_CR_HTCNT_Pos)
+#define JPEG_CR_CUCNT_Pos			12		// The number of CU in the restart interval
+#define JPEG_CR_CUCNT_Msk			(0xFFFF<<JPEG_CR_CUCNT_Pos)
+
+#define JPEG_IR_IEDONE_Pos			0		// Frame processing finish interrupt enable
+#define JPEG_IR_IEDONE_Msk			(0x01 << JPEG_IR_IEDONE_Pos)
+#define JPEG_IR_IEEMPTY_Pos			2		// JPEG decoder stream buffering empty interrupt enable
+#define JPEG_IR_IEEMPTY_Msk			(0x01 << JPEG_IR_IEEMPTY_Pos)
+#define JPEG_IR_IEERROR_Pos			3		// JPEG error interrupt enable
+#define JPEG_IR_IEERROR_Msk			(0x01 << JPEG_IR_IEERROR_Pos)
+#define JPEG_IR_ICDONE_Pos			5		// Interrupt Clear, write-ongly
+#define JPEG_IR_ICDONE_Msk			(0x01 << JPEG_IR_ICDONE_Pos)
+#define JPEG_IR_ICEMPTY_Pos			7
+#define JPEG_IR_ICEMPTY_Msk			(0x01 << JPEG_IR_ICEMPTY_Pos)
+#define JPEG_IR_ICERROR_Pos			8
+#define JPEG_IR_ICERROR_Msk			(0x01 << JPEG_IR_ICERROR_Pos)
+#define JPEG_IR_IFDONE_Pos			10		// Interrupt Flag, read-only
+#define JPEG_IR_IFDONE_Msk			(0x01 << JPEG_IR_IFDONE_Pos)
+#define JPEG_IR_IFEMPTY_Pos			12
+#define JPEG_IR_IFEMPTY_Msk			(0x01 << JPEG_IR_IFEMPTY_Pos)
+#define JPEG_IR_IFERROR_Pos			13
+#define JPEG_IR_IFERROR_Msk			(0x01 << JPEG_IR_IFERROR_Pos)
+
+#define JPEG_SR_BUSY_Pos			0
+#define JPEG_SR_BUSY_Msk			(0x01 << JPEG_SR_BUSY_Pos)
+#define JPEG_SR_CUOVR_Pos			1		// JPEG CU run length overflow error
+#define JPEG_SR_CUOVR_Msk			(0x01 << JPEG_SR_CUOVR_Pos)
+#define JPEG_SR_REIMERR_Pos			2		// JPEG Restart interval marker error
+#define JPEG_SR_REIMERR_Msk			(0x01 << JPEG_SR_REIMERR_Pos)
+#define JPEG_SR_BUFBUSY_Pos			4		// JPEG decoder stream buffering status
+#define JPEG_SR_BUFBUSY_Msk			(0x01 << JPEG_SR_BUFBUSY_Pos)
+#define JPEG_SR_DMARDBUSY_Pos		5
+#define JPEG_SR_DMARDBUSY_Msk		(0x01 << JPEG_SR_DMARDBUSY_Pos)
+#define JPEG_SR_DMAWRBUSY_Pos		6
+#define JPEG_SR_DMAWRBUSY_Msk		(0x01 << JPEG_SR_DMAWRBUSY_Pos)
+
+#define JPEG_IMGSIZ_HPIX_Pos		0		// JPEG image width (minus 1)
+#define JPEG_IMGSIZ_HPIX_Msk		(0x7FF<< JPEG_IMGSIZ_HPIX_Pos)
+#define JPEG_IMGSIZ_VPIX_Pos		16		// JPEG image height (minus 1)
+#define JPEG_IMGSIZ_VPIX_Msk		(0x7FF<< JPEG_IMGSIZ_VPIX_Pos)
+
+#define JPEG_IMGSTR_RGBLINE_Pos		0		// number of words of RGB line width, XRGB888: img_width, RGB888: ceil(img_width*3/4), RGB565: ceil(img_width/2)
+#define JPEG_IMGSTR_RGBLINE_Msk		(0xFFF<< JPEG_IMGSTR_RGBLINE_Pos)
+#define JPEG_IMGSTR_YLINE_Pos		0		// number of words of Y line width, ceil(img_width/4)
+#define JPEG_IMGSTR_YLINE_Msk		(0xFFF<< JPEG_IMGSTR_YLINE_Pos)
+#define JPEG_IMGSTR_UVLINE_Pos		16		// number of words of UV line width, UV-planer 444: ceil(img_width/4)   UV-planar 420/422: ceil(img_width/8)
+											//									 UV-semi planer 444: ceil(img_width/2)   UV-semi planer 420/422: ceil(img_width/4)
+#define JPEG_IMGSTR_UVLINE_Msk		(0xFFF<< JPEG_IMGSTR_UVLINE_Pos)
+
+
+
+
+typedef struct {
+	__O  uint32_t CR;
+	
+	__I  uint32_t SR;
+	
+	union {
+		__IO uint32_t IDIS;
+	
+		__IO uint32_t IFE;					//Interrupt Flag Enable
+	};
+	
+	__IO uint32_t IF;
+	
+	__IO uint32_t CFG;
+	
+	__IO uint32_t SINP;						//Scaling & Sin parameter
+	__IO uint32_t COSP;						//Scaling & Cos parameter
+	
+	__IO uint32_t SRC_TILE_POSX;
+	__IO uint32_t SRC_TILE_POSY;
+	__IO uint32_t DST_TILE_OFFX;			//Offset
+	__IO uint32_t DST_TILE_OFFY;
+	
+	__IO uint32_t BGCOLOR;
+	
+	__IO uint32_t SRCBASE;
+	__IO uint32_t SRCSIZE;
+	__IO uint32_t SRCSTRIDE;
+	
+	__IO uint32_t DSTBASE;
+	__IO uint32_t DSTSIZE;
+	__IO uint32_t DSTSTRIDE;
+} SRA_TypeDef;
+
+
+#define SRA_CR_START_Pos			0
+#define SRA_CR_START_Msk			(0x01 << SRA_CR_START_Pos)
+#define SRA_CR_ABORT_Pos			1
+#define SRA_CR_ABORT_Msk			(0x01 << SRA_CR_ABORT_Pos)
+
+#define SRA_SR_BUSY_Pos				0
+#define SRA_SR_BUSY_Msk				(0x01 << SRA_SR_BUSY_Pos)
+#define SRA_SR_ABORT_Pos			1		//1 Abort pending
+#define SRA_SR_ABORT_Msk			(0x01 << SRA_SR_ABORT_Pos)
+
+#define SRA_IFE_FRAME_Pos			0
+#define SRA_IFE_FRAME_Msk			(0x01 << SRA_IFE_FRAME_Pos)
+#define SRA_IFE_8LINE_Pos			1
+#define SRA_IFE_8LINE_Msk			(0x01 << SRA_IFE_8LINE_Pos)
+#define SRA_IFE_ROTERR_Pos			2
+#define SRA_IFE_ROTERR_Msk			(0x01 << SRA_IFE_ROTERR_Pos)
+#define SRA_IFE_BUSERR_Pos			3
+#define SRA_IFE_BUSERR_Msk			(0x01 << SRA_IFE_BUSERR_Pos)
+
+#define SRA_IDIS_FRAME_Pos			4
+#define SRA_IDIS_FRAME_Msk			(0x01 << SRA_IDIS_FRAME_Pos)
+#define SRA_IDIS_8LINE_Pos			5
+#define SRA_IDIS_8LINE_Msk			(0x01 << SRA_IDIS_8LINE_Pos)
+#define SRA_IDIS_ROTERR_Pos			6
+#define SRA_IDIS_ROTERR_Msk			(0x01 << SRA_IDIS_ROTERR_Pos)
+#define SRA_IDIS_BUSERR_Pos			7
+#define SRA_IDIS_BUSERR_Msk			(0x01 << SRA_IDIS_BUSERR_Pos)
+
+#define SRA_IF_FRAME_Pos			0
+#define SRA_IF_FRAME_Msk			(0x01 << SRA_IF_FRAME_Pos)
+#define SRA_IF_8LINE_Pos			1
+#define SRA_IF_8LINE_Msk			(0x01 << SRA_IF_8LINE_Pos)
+#define SRA_IF_ROTERR_Pos			2
+#define SRA_IF_ROTERR_Msk			(0x01 << SRA_IF_ROTERR_Pos)
+#define SRA_IF_BUSERR_Pos			3
+#define SRA_IF_BUSERR_Msk			(0x01 << SRA_IF_BUSERR_Pos)
+
+#define SRA_CFG_SRCFMT_Pos			0		//Source Format, 0 Monochrome 8-bit   1 RGB565   2 RGB888   3 XRGB8888   5 XARGB88565   6 ARGB8565   7 ARGB8888
+#define SRA_CFG_SRCFMT_Msk			(0x07 << SRA_CFG_SRCFMT_Pos)
+#define SRA_CFG_SRCRBSWAP_Pos		3		//Source R/B swap, 0 RGB   1 BGR
+#define SRA_CFG_SRCRBSWAP_Msk		(0x01 << SRA_CFG_SRCRBSWAP_Pos)
+#define SRA_CFG_SRCXSWAP_Pos		4		//Source X swap, 0 XRGB   1 RGBX
+#define SRA_CFG_SRCXSWAP_Msk		(0x01 << SRA_CFG_SRCXSWAP_Pos)
+#define SRA_CFG_DSTFMT_Pos			8		//Destination Format, 0 Monochrome 8-bit   1 RGB565   2 RGB888   3 XRGB8888   5 XARGB88565   6 ARGB8565   7 ARGB8888
+#define SRA_CFG_DSTFMT_Msk			(0x07 << SRA_CFG_DSTFMT_Pos)
+#define SRA_CFG_DSTRBSWAP_Pos		11		//Destination R/B swap, 0 RGB   1 BGR
+#define SRA_CFG_DSTRBSWAP_Msk		(0x01 << SRA_CFG_DSTRBSWAP_Pos)
+#define SRA_CFG_DSTXSWAP_Pos		12		//Destination X swap, 0 XRGB   1 RGBX
+#define SRA_CFG_DSTXSWAP_Msk		(0x01 << SRA_CFG_DSTXSWAP_Pos)
+#define SRA_CFG_ROTTYP_Pos			16		//Rotation Type, 0 normal rotation   1 x-mirror   2 y-mirror   3 x-mirror + y-mirror
+#define SRA_CFG_ROTTYP_Msk			(0x03 << SRA_CFG_ROTTYP_Pos)
+#define SRA_CFG_ROTAAEN_Pos			18		//Rotation Anti-aliasing enable
+#define SRA_CFG_ROTAAEN_Msk			(0x01 << SRA_CFG_ROTAAEN_Pos)
+#define SRA_CFG_ALPHADIS_Pos		19		//Pixel alpha disable for ARGB format, fixed to 0xFF
+#define SRA_CFG_ALPHADIS_Msk		(0x01 << SRA_CFG_ALPHADIS_Pos)
+#define SRA_CFG_BLENDBG_Pos			20		//0 blend source and destination   1 blend source and background color
+#define SRA_CFG_BLENDBG_Msk			(0x01 << SRA_CFG_BLENDBG_Pos)
+#define SRA_CFG_DUMMYWB_Pos			21		//background color write-back enable for dummy tile
+#define SRA_CFG_DUMMYWB_Msk			(0x01 << SRA_CFG_DUMMYWB_Pos)
+
+#define SRA_SINP_SINX_Pos			0		//sin(¦È) * X scaling factor
+#define SRA_SINP_SINX_Msk			(0xFFFF << SRA_SINP_SINX_Pos)
+#define SRA_SINP_SINY_Pos			16		//sin(¦È) * Y scaling factor
+#define SRA_SINP_SINY_Msk			(0xFFFFu<< SRA_SINP_SINY_Pos)
+
+#define SRA_COSP_COSX_Pos			0		//cos(¦È) * X scaling factor
+#define SRA_COSP_COSX_Msk			(0xFFFF << SRA_COSP_COSX_Pos)
+#define SRA_COSP_COSY_Pos			16		//cos(¦È) * Y scaling factor
+#define SRA_COSP_COSY_Msk			(0xFFFFu<< SRA_COSP_COSY_Pos)
+
+#define SRA_SRCSIZE_WIDTH_Pos		0
+#define SRA_SRCSIZE_WIDTH_Msk		(0x7FFF << SRA_SRCSIZE_WIDTH_Pos)
+#define SRA_SRCSIZE_HEIGHT_Pos		16
+#define SRA_SRCSIZE_HEIGHT_Msk		(0x7FFF << SRA_SRCSIZE_HEIGHT_Pos)
+
+#define SRA_DSTSIZE_WIDTH_Pos		0
+#define SRA_DSTSIZE_WIDTH_Msk		(0x7FFF << SRA_DSTSIZE_WIDTH_Pos)
+#define SRA_DSTSIZE_HEIGHT_Pos		16
+#define SRA_DSTSIZE_HEIGHT_Msk		(0x7FFF << SRA_DSTSIZE_HEIGHT_Pos)
+
+
+
+
+typedef struct {
 	__IO uint32_t DATA;
 	
 	__IO uint32_t ADDR;
@@ -2708,157 +2977,6 @@ typedef struct {
 
 
 
-typedef struct {
-	__IO uint32_t CFG;						// JPEG DEC configure register
-	
-	__IO uint32_t CR;						// JPEG DEC control register
-	
-	__IO uint32_t IR;						// JPEG DEC interrupt register
-	
-	__IO uint32_t SR;						// JPEG DEC status register
-	
-	__IO uint32_t IMGSIZ;					// JPEG image size
-	
-	__IO uint32_t IMGSTR;					// JPEG image size virtual stride
-	
-	__IO uint32_t CSBASE;					// JPEG code-stream base address
-	
-	union {
-		__IO uint32_t YBASE;				// YUV image Y base address
-		
-		__IO uint32_t RGBASE;				// RGB image base address
-	};
-	
-	__IO uint32_t UBASE;					// YUV image U base address
-	
-	__IO uint32_t VBASE;					// YUV image V base address
-	
-	__IO uint32_t QTBASE;					// JPEG quantization table base address
-	
-	__IO uint32_t HTBASE;					// JPEG huffman table base address
-	
-	__IO uint32_t CODLEN;					// JPEG code stream total length in byte
-	
-		 uint32_t RESERVED[51];
-	
-	__O  uint32_t QTABLE[3][16];			// Quantization table
-	
-		 uint32_t RESERVED2[16];
-	
-	struct {
-		__O  uint32_t DC_CODEWORD[6];
-		__O  uint32_t DC_CODELEN[2];
-		__O  uint32_t DC_CODEVAL[2];
-		
-		__O  uint32_t AC_CODEWORD[8];
-		__O  uint32_t AC_CODEADDR[4];
-		__O  uint32_t AC_CODEVAL[41];
-		
-			 uint32_t RESERVED;
-	} HTABLE[2];							// Huffman table
-} JPEG_TypeDef;
-
-
-#define JPEG_CFG_SRCFMT_Pos			0		// JPEG Source Format, 0 YUV420(H2V2), 1 YUV422(H2V1), 2 YUV444(H1V1)
-#define JPEG_CFG_SRCFMT_Msk			(0x03 << JPEG_CFG_SRCFMT_Pos)
-#define JPEG_CFG_SCANMOD_Pos		2		// JPEG scan mode, 0 interleaved (three components), 1 non-interleaved (single component)
-#define JPEG_CFG_SCANMOD_Msk		(0x01 << JPEG_CFG_SCANMOD_Pos)
-#define JPEG_CFG_NISCOMP_Pos		3		// Non-Interleaved Scanning Component, 0 component 1, 1 component 2, 2 component 3
-#define JPEG_CFG_NISCOMP_Msk		(0x03 << JPEG_CFG_NISCOMP_Pos)
-#define JPEG_CFG_HT1COMP_Pos		5		// Huffman Table for Component 1, 0 table 0, 1 table 1
-#define JPEG_CFG_HT1COMP_Msk		(0x01 << JPEG_CFG_HT1COMP_Pos)
-#define JPEG_CFG_HT2COMP_Pos		6
-#define JPEG_CFG_HT2COMP_Msk		(0x01 << JPEG_CFG_HT2COMP_Pos)
-#define JPEG_CFG_HT3COMP_Pos		7
-#define JPEG_CFG_HT3COMP_Msk		(0x01 << JPEG_CFG_HT3COMP_Pos)
-#define JPEG_CFG_QT1COMP_Pos		8		// Quantization Table for Component 1, 0 table 0, 1 table 1, 2 table 2
-#define JPEG_CFG_QT1COMP_Msk		(0x03 << JPEG_CFG_QT1COMP_Pos)
-#define JPEG_CFG_QT2COMP_Pos		10
-#define JPEG_CFG_QT2COMP_Msk		(0x03 << JPEG_CFG_QT2COMP_Pos)
-#define JPEG_CFG_QT3COMP_Pos		12
-#define JPEG_CFG_QT3COMP_Msk		(0x03 << JPEG_CFG_QT3COMP_Pos)
-#define JPEG_CFG_OUTFMT_Pos			14		// Image data output format, 0 YUV planar, 1 YUV semi-planar, 2 XRGB888, 3 RGB888, 4 RGB565
-#define JPEG_CFG_OUTFMT_Msk			(0x07 << JPEG_CFG_OUTFMT_Pos)
-#define JPEG_CFG_YUV2RGB_Pos		17		// YUV2RGB translation, 0 Disable, 1 Enable
-#define JPEG_CFG_YUV2RGB_Msk		(0x01 << JPEG_CFG_YUV2RGB_Pos)
-#define JPEG_CFG_UVSWAP_Pos			18		// UV output swap, 0 YUV, 1 YVU
-#define JPEG_CFG_UVSWAP_Msk			(0x01 << JPEG_CFG_UVSWAP_Pos)
-#define JPEG_CFG_RBSWAP_Pos			19		// RB output swap, 0 RGB, 1 BGR
-#define JPEG_CFG_RBSWAP_Msk			(0x01 << JPEG_CFG_RBSWAP_Pos)
-#define JPEG_CFG_EDSWAP_Pos			20		// endian swap, 0 XRGB, 1 BGRX
-#define JPEG_CFG_EDSWAP_Msk			(0x01 << JPEG_CFG_EDSWAP_Pos)
-#define JPEG_CFG_565DITH_Pos		21		// RGB565 dithering, 0 Disable, 1 Enable
-#define JPEG_CFG_565DITH_Msk		(0x01 << JPEG_CFG_565DITH_Pos)
-
-#define JPEG_CR_START_Pos			0		// JPEG DEC frame start, automatically clear when done
-#define JPEG_CR_START_Msk			(0x01 << JPEG_CR_START_Pos)
-#define JPEG_CR_RESTART_Pos			1		// Decoder stream buffering restart
-#define JPEG_CR_RESTART_Msk			(0x01 << JPEG_CR_RESTART_Pos)
-#define JPEG_CR_RESET_Pos			3		// JPEG DEC core reset, automatically clear
-#define JPEG_CR_RESET_Msk			(0x01 << JPEG_CR_RESET_Pos)
-#define JPEG_CR_REINTRV_Pos			4		// Restart interval marker enable
-#define JPEG_CR_REINTRV_Msk			(0x01 << JPEG_CR_REINTRV_Pos)
-#define JPEG_CR_LASTBUF_Pos			5		// Decoder last stream buffering
-#define JPEG_CR_LASTBUF_Msk			(0x01 << JPEG_CR_LASTBUF_Pos)
-#define JPEG_CR_QTAUTO_Pos			7		// JPEG quantization tables auto refresh enable
-#define JPEG_CR_QTAUTO_Msk			(0x01 << JPEG_CR_QTAUTO_Pos)
-#define JPEG_CR_HTAUTO_Pos			8		// JPEG huffman tables auto refresh enable
-#define JPEG_CR_HTAUTO_Msk			(0x01 << JPEG_CR_HTAUTO_Pos)
-#define JPEG_CR_QTCNT_Pos			9		// Number of quantization tables
-#define JPEG_CR_QTCNT_Msk			(0x03 << JPEG_CR_QTCNT_Pos)
-#define JPEG_CR_HTCNT_Pos			11		// Number of huffman tables
-#define JPEG_CR_HTCNT_Msk			(0x01 << JPEG_CR_HTCNT_Pos)
-#define JPEG_CR_CUCNT_Pos			12		// The number of CU in the restart interval
-#define JPEG_CR_CUCNT_Msk			(0xFFFF<<JPEG_CR_CUCNT_Pos)
-
-#define JPEG_IR_IEDONE_Pos			0		// Frame processing finish interrupt enable
-#define JPEG_IR_IEDONE_Msk			(0x01 << JPEG_IR_IEDONE_Pos)
-#define JPEG_IR_IEEMPTY_Pos			2		// JPEG decoder stream buffering empty interrupt enable
-#define JPEG_IR_IEEMPTY_Msk			(0x01 << JPEG_IR_IEEMPTY_Pos)
-#define JPEG_IR_IEERROR_Pos			3		// JPEG error interrupt enable
-#define JPEG_IR_IEERROR_Msk			(0x01 << JPEG_IR_IEERROR_Pos)
-#define JPEG_IR_ICDONE_Pos			5		// Interrupt Clear, write-ongly
-#define JPEG_IR_ICDONE_Msk			(0x01 << JPEG_IR_ICDONE_Pos)
-#define JPEG_IR_ICEMPTY_Pos			7
-#define JPEG_IR_ICEMPTY_Msk			(0x01 << JPEG_IR_ICEMPTY_Pos)
-#define JPEG_IR_ICERROR_Pos			8
-#define JPEG_IR_ICERROR_Msk			(0x01 << JPEG_IR_ICERROR_Pos)
-#define JPEG_IR_IFDONE_Pos			10		// Interrupt Flag, read-only
-#define JPEG_IR_IFDONE_Msk			(0x01 << JPEG_IR_IFDONE_Pos)
-#define JPEG_IR_IFEMPTY_Pos			12
-#define JPEG_IR_IFEMPTY_Msk			(0x01 << JPEG_IR_IFEMPTY_Pos)
-#define JPEG_IR_IFERROR_Pos			13
-#define JPEG_IR_IFERROR_Msk			(0x01 << JPEG_IR_IFERROR_Pos)
-
-#define JPEG_SR_BUSY_Pos			0
-#define JPEG_SR_BUSY_Msk			(0x01 << JPEG_SR_BUSY_Pos)
-#define JPEG_SR_CUOVR_Pos			1		// JPEG CU run length overflow error
-#define JPEG_SR_CUOVR_Msk			(0x01 << JPEG_SR_CUOVR_Pos)
-#define JPEG_SR_REIMERR_Pos			2		// JPEG Restart interval marker error
-#define JPEG_SR_REIMERR_Msk			(0x01 << JPEG_SR_REIMERR_Pos)
-#define JPEG_SR_BUFBUSY_Pos			4		// JPEG decoder stream buffering status
-#define JPEG_SR_BUFBUSY_Msk			(0x01 << JPEG_SR_BUFBUSY_Pos)
-#define JPEG_SR_DMARDBUSY_Pos		5
-#define JPEG_SR_DMARDBUSY_Msk		(0x01 << JPEG_SR_DMARDBUSY_Pos)
-#define JPEG_SR_DMAWRBUSY_Pos		6
-#define JPEG_SR_DMAWRBUSY_Msk		(0x01 << JPEG_SR_DMAWRBUSY_Pos)
-
-#define JPEG_IMGSIZ_HPIX_Pos		0		// JPEG image width (minus 1)
-#define JPEG_IMGSIZ_HPIX_Msk		(0x3FF<< JPEG_IMGSIZ_HPIX_Pos)
-#define JPEG_IMGSIZ_VPIX_Pos		16		// JPEG image height (minus 1)
-#define JPEG_IMGSIZ_VPIX_Msk		(0x3FF<< JPEG_IMGSIZ_VPIX_Pos)
-
-#define JPEG_IMGSTR_RGBLINE_Pos		0		// number of words of RGB line width, XRGB888: img_width, RGB888: ceil(img_width*3/4), RGB565: ceil(img_width/2)
-#define JPEG_IMGSTR_RGBLINE_Msk		(0x7FF<< JPEG_IMGSTR_RGBLINE_Pos)
-#define JPEG_IMGSTR_YLINE_Pos		0		// number of words of Y line width, ceil(img_width/4)
-#define JPEG_IMGSTR_YLINE_Msk		(0x7FF<< JPEG_IMGSTR_YLINE_Pos)
-#define JPEG_IMGSTR_UVLINE_Pos		16		// number of words of UV line width, UV-planer 444: ceil(img_width/4)   UV-planar 420/422: ceil(img_width/8)
-											//									 UV-semi planer 444: ceil(img_width/2)   UV-semi planer 420/422: ceil(img_width/4)
-#define JPEG_IMGSTR_UVLINE_Msk		(0x7FF<< JPEG_IMGSTR_UVLINE_Pos)
-
-
-
-
 /******************************************************************************/
 /*						 Peripheral memory map							  */
 /******************************************************************************/
@@ -3037,12 +3155,15 @@ typedef struct {
 #include "SWM330_sdio.h"
 #include "SWM330_flash.h"
 #include "SWM330_lcd.h"
+#include "SWM330_dma2d.h"
+#include "SWM330_jpeg.h"
+#include "SWM330_sra.h"
 #include "SWM330_dac.h"
 #include "SWM330_crc.h"
 #include "SWM330_rtc.h"
 #include "SWM330_wdt.h"
-#include "SWM330_jpeg.h"
-#include "SWM330_dma2d.h"
+
+
 
 
 #ifdef  SW_LOG_RTT
