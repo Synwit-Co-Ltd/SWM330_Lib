@@ -1832,6 +1832,149 @@ typedef struct {
 
 
 typedef struct {
+	__IO uint32_t CR;
+	
+	__IO uint32_t DCR;						//Device Configuration Register
+	
+	__IO uint32_t SR;
+	
+	__IO uint32_t FCR;						//Flag Clear Register
+	
+	__IO uint32_t DLR;						//Data Length Register
+											//Number of data to be retrieved in indirect and status-polling modes
+	__IO uint32_t CCR;						//Communication Configuration Register
+	
+	__IO uint32_t AR;
+	
+	__IO uint32_t ABR;						//Alternate Bytes Registers
+	
+	union {
+		__IO uint32_t DRW;
+		
+		__IO uint16_t DRH;
+		
+		__IO uint8_t  DRB;
+	};
+	
+	__IO uint32_t PSMSK;					//Polling Status Mask
+	
+	__IO uint32_t PSMAT;					//Polling Status Match
+	
+	__IO uint32_t PSITV;					//Polling Status Interval
+	
+	__IO uint32_t CS0TO;					//CS stay low timeout time after FIFO full
+	
+		 uint32_t RESERVED[3];
+	
+	__IO uint32_t SSHIFT;					//Sample Shift in System clock cycles, 实际的采样延迟时间是此寄存器与 CR.SSHIFT 设定延迟的累加
+	
+	__IO uint32_t CACHE;
+	
+	struct {
+		__I  uint32_t SADDR;				//Start Address
+		__I  uint32_t WCOUNT;				//Word Count
+	} CLINE[16];							//Cache Line
+} QSPI_TypeDef;
+
+
+#define QSPI_CR_EN_Pos				0
+#define QSPI_CR_EN_Msk				(0x01 << QSPI_CR_EN_Pos)
+#define QSPI_CR_ABORT_Pos			1
+#define QSPI_CR_ABORT_Msk			(0x01 << QSPI_CR_ABORT_Pos)
+#define QSPI_CR_DMAEN_Pos			2
+#define QSPI_CR_DMAEN_Msk			(0x01 << QSPI_CR_DMAEN_Pos)
+#define QSPI_CR_TOEN_Pos			3		//Time-Out Enable, 0：通过内存映射读后，nCS 一直保持为低
+											//				   1：通过内存映射读后，TIMEOUT[15:0] 个周期未访问 Flash，nCS 自动拉高
+#define QSPI_CR_TOEN_Msk			(0x01 << QSPI_CR_TOEN_Pos)
+#define QSPI_CR_SSHIFT_Pos			4		//Sample Shift in QSPI clock cycle, 0 No shift   1 1/2 cycle shift
+#define QSPI_CR_SSHIFT_Msk			(0x01 << QSPI_CR_SSHIFT_Pos)
+#define QSPI_CR_BIDI_Pos			5		//单线双向工模式：0 IO0输出，IO1输入    1 IO0负责输入输出
+#define QSPI_CR_BIDI_Msk			(0x01 << QSPI_CR_BIDI_Pos)
+#define QSPI_CR_DUAL_Pos			6		//Dual Flash mode
+#define QSPI_CR_DUAL_Msk			(0x01 << QSPI_CR_DUAL_Pos)
+#define QSPI_CR_BANK_Pos			7		//QSPI Bank Select
+#define QSPI_CR_BANK_Msk			(0x01 << QSPI_CR_BANK_Pos)
+#define QSPI_CR_FFTHR_Pos			8		//FIFO Threshold，indirect read  模式下，FIFO 中数据个数 ≥ CR.FFTHR+1 时，SR.FFTHR 置位
+											//				  indirect write 模式下，FIFO 中空位个数 ≥ CR.FFTHR+1 时，SR.FFTHR 置位
+#define QSPI_CR_FFTHR_Msk			(0x1F << QSPI_CR_FFTHR_Pos)
+#define QSPI_CR_ERRIE_Pos			16		//Transfer Error Interrupt Enable
+#define QSPI_CR_ERRIE_Msk			(0x01 << QSPI_CR_ERRIE_Pos)
+#define QSPI_CR_DONEIE_Pos			17		//Transfer Done/Complete Interrupt Enable
+#define QSPI_CR_DONEIE_Msk			(0x01 << QSPI_CR_DONEIE_Pos)
+#define QSPI_CR_FFTHRIE_Pos			18		//FIFO Threshold Interrupt Enable
+#define QSPI_CR_FFTHRIE_Msk			(0x01 << QSPI_CR_FFTHRIE_Pos)
+#define QSPI_CR_PSMATIE_Pos			19		//Polling Status Match Interrupt Enable
+#define QSPI_CR_PSMATIE_Msk			(0x01 << QSPI_CR_PSMATIE_Pos)
+#define QSPI_CR_TOIE_Pos			20		//Time-Out Interrupt Enable
+#define QSPI_CR_TOIE_Msk			(0x01 << QSPI_CR_TOIE_Pos)
+#define QSPI_CR_PSSTPMOD_Pos		22		//Polling Status Stop Mode，0 always polling until abort or QSPI disabled   1 stop polling as soon as match
+#define QSPI_CR_PSSTPMOD_Msk		(0x01 << QSPI_CR_PSSTPMOD_Pos)
+#define QSPI_CR_PSMATMOD_Pos		23		//Polling Status Match Mode，0 AND，match when all unmasked bits received from Flash match PSMAT register   1 OR
+#define QSPI_CR_PSMATMOD_Msk		(0x01 << QSPI_CR_PSMATMOD_Pos)
+#define QSPI_CR_CLKDIV_Pos			24		//QSPI_SCLK = HCLK / (CR.CLKDIV + 1)
+#define QSPI_CR_CLKDIV_Msk			(0xFFu<< QSPI_CR_CLKDIV_Pos)
+
+#define QSPI_DCR_CLKMOD_Pos			0		//0 Mode 0   1 Mode 3
+#define QSPI_DCR_CLKMOD_Msk			(0x01 << QSPI_DCR_CLKMOD_Pos)
+#define QSPI_DCR_CSHIGH_Pos			8		//nCS stay high for at least DCR.CSHIGH+1 cycles between Flash memory commands
+#define QSPI_DCR_CSHIGH_Msk			(0x07 << QSPI_DCR_CSHIGH_Pos)
+#define QSPI_DCR_FLSIZE_Pos			16		//Flash Size = pow(2, DCR.FLSIZE+1)
+#define QSPI_DCR_FLSIZE_Msk			(0x1F << QSPI_DCR_FLSIZE_Pos)
+
+#define QSPI_SR_ERR_Pos				0		//Transfer Error Flag
+#define QSPI_SR_ERR_Msk				(0x01 << QSPI_SR_ERR_Pos)
+#define QSPI_SR_DONE_Pos			1		//Transfer Done/Complete Flag
+#define QSPI_SR_DONE_Msk			(0x01 << QSPI_SR_DONE_Pos)
+#define QSPI_SR_FFTHR_Pos			2		//FIFO Threshold reached Flag
+#define QSPI_SR_FFTHR_Msk			(0x01 << QSPI_SR_FFTHR_Pos)
+#define QSPI_SR_PSMAT_Pos			3		//Polling Status Match Flag
+#define QSPI_SR_PSMAT_Msk			(0x01 << QSPI_SR_PSMAT_Pos)
+#define QSPI_SR_TO_Pos				4		//Time-Out
+#define QSPI_SR_TO_Msk				(0x01 << QSPI_SR_TO_Pos)
+#define QSPI_SR_BUSY_Pos			5		//Set when operation is on going, Clear when operation done and FIFO emtpy
+#define QSPI_SR_BUSY_Msk			(0x01 << QSPI_SR_BUSY_Pos)
+#define QSPI_SR_FFLVL_Pos			8		//FIFO Level
+#define QSPI_SR_FFLVL_Msk			(0x3F << QSPI_SR_FFLVL_Pos)
+
+#define QSPI_FCR_ERR_Pos			0
+#define QSPI_FCR_ERR_Msk			(0x01 << QSPI_FCR_ERR_Pos)
+#define QSPI_FCR_DONE_Pos			1
+#define QSPI_FCR_DONE_Msk			(0x01 << QSPI_FCR_DONE_Pos)
+#define QSPI_FCR_PSMAT_Pos			3
+#define QSPI_FCR_PSMAT_Msk			(0x01 << QSPI_FCR_PSMAT_Pos)
+#define QSPI_FCR_TO_Pos				4
+#define QSPI_FCR_TO_Msk				(0x01 << QSPI_FCR_TO_Pos)
+
+#define QSPI_CCR_CODE_Pos			0		//Insruction Code
+#define QSPI_CCR_CODE_Msk			(0xFF << QSPI_CCR_CODE_Pos)
+#define QSPI_CCR_IMODE_Pos			8		//0 No instruction   1 Instruction on D0   2 on D0-1   3 on D0-3
+#define QSPI_CCR_IMODE_Msk			(0x03 << QSPI_CCR_IMODE_Pos)
+#define QSPI_CCR_AMODE_Pos			10		//0 No address   1 Address on D0   2 on D0-1   3 on D0-3
+#define QSPI_CCR_AMODE_Msk			(0x03 << QSPI_CCR_AMODE_Pos)
+#define QSPI_CCR_ASIZE_Pos			12		//Address size, 0 8-bit   1 16-bit   2 24-bit   3 32-bit
+#define QSPI_CCR_ASIZE_Msk			(0x03 << QSPI_CCR_ASIZE_Pos)
+#define QSPI_CCR_ABMODE_Pos			14		//0 No alternate bytes   1 Alternate bytes on D0   2 on D0-1   3 on D0-3
+#define QSPI_CCR_ABMODE_Msk			(0x03 << QSPI_CCR_ABMODE_Pos)
+#define QSPI_CCR_ABSIZE_Pos			16		//Alternate bytes size, 0 8-bit   1 16-bit   2 24-bit   3 32-bit
+#define QSPI_CCR_ABSIZE_Msk			(0x03 << QSPI_CCR_ABSIZE_Pos)
+#define QSPI_CCR_DUMMY_Pos			18		//Number of dummy cycles
+#define QSPI_CCR_DUMMY_Msk			(0x1F << QSPI_CCR_DUMMY_Pos)
+#define QSPI_CCR_DMODE_Pos			24		//0 No Data   1 Data on D0   2 on D0-1   3 on D0-3
+#define QSPI_CCR_DMODE_Msk			(0x03 << QSPI_CCR_DMODE_Pos)
+#define QSPI_CCR_MODE_Pos			26		//0 Indirect write mode   1 Indirect read mode   2 Automatic polling mode   3 Memory-mapped mode
+#define QSPI_CCR_MODE_Msk			(0x03 << QSPI_CCR_MODE_Pos)
+#define QSPI_CCR_SIOO_Pos			28		//Send Instruction Only Once
+#define QSPI_CCR_SIOO_Msk			(0x01 << QSPI_CCR_SIOO_Pos)
+
+#define QSPI_CACHE_CLR_Pos			0		//Cache Clear, 完成后自动清零
+#define QSPI_CACHE_CLR_Msk			(0x01 << QSPI_CACHE_CLR_Pos)
+#define QSPI_CACHE_BLKSZ_Pos		1		//Cache Block Size, 0 64-byte   1 128-byte   2 256-byte   3 512-byte
+#define QSPI_CACHE_BLKSZ_Msk		(0x01 << QSPI_CACHE_BLKSZ_Pos)
+
+
+
+
+typedef struct {
     __IO uint32_t DMA_MEM_ADDR;
     
     __IO uint32_t BLK;                      // Block Size and Count
@@ -3120,6 +3263,9 @@ typedef struct {
 
 #define CAN0 				((CAN_TypeDef  *) CAN0_BASE)
 
+#define QSPI0				((QSPI_TypeDef *) QSPI0_BASE)
+#define QSPI1				((QSPI_TypeDef *) QSPI1_BASE)
+
 #define SDIO				((SDIO_TypeDef *) SDIO_BASE)
 
 #define LCD					((LCD_TypeDef  *) LCD_BASE)
@@ -3152,6 +3298,7 @@ typedef struct {
 #include "SWM330_pwm.h"
 #include "SWM330_dma.h"
 #include "SWM330_can.h"
+#include "SWM330_qspi.h"
 #include "SWM330_sdio.h"
 #include "SWM330_flash.h"
 #include "SWM330_lcd.h"
