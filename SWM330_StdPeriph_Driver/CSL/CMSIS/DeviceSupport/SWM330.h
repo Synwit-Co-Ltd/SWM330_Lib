@@ -2266,6 +2266,86 @@ typedef struct {
 
 
 typedef struct {
+	__IO uint32_t CSR;
+	
+	__IO uint32_t TR;
+	
+	__I  uint32_t IR;						// ID Register read from HyperRAM
+	
+	__IO uint32_t CR0;						// Configuration Register 0 what will be written to HyperRAM
+	
+	__IO uint32_t CR1;						// Configuration Register 1 what will be written to HyperRAM
+	
+	__IO uint32_t INITTR;
+	
+	__IO uint32_t RSTTR;
+	
+	__IO uint32_t SLPTR;
+	
+	__IO uint32_t PWDNTR;
+	
+	__IO uint32_t TR1US;
+} PSRAMC_TypeDef;
+
+
+#define PSRAMC_CSR_ROWSZ_Pos		0		// row size, 0 1kbyte, 1 2kbyte, 2 4kbyte, 3 8kbyte
+#define PSRAMC_CSR_ROWSZ_Msk		(0x03 << PSRAMC_CSR_ROWSZ_Pos)
+#define PSRAMC_CSR_BUS16b_Pos		2		// 0 8-bit bus, 1 16-bit bus
+#define PSRAMC_CSR_BUS16b_Msk		(0x01 << PSRAMC_CSR_BUS16b_Pos)
+#define PSRAMC_CSR_CLRBUF_Pos		16		// clear read buffer
+#define PSRAMC_CSR_CLRBUF_Msk		(0x01 << PSRAMC_CSR_CLRBUF_Pos)
+#define PSRAMC_CSR_PREFEN_Pos		21		// prefetch enable
+#define PSRAMC_CSR_PREFEN_Msk		(0x01 << PSRAMC_CSR_PREFEN_Pos)
+#define PSRAMC_CSR_WRBUSY_Pos		24		// write busy
+#define PSRAMC_CSR_WRBUSY_Msk		(0x01 << PSRAMC_CSR_WRBUSY_Pos)
+#define PSRAMC_CSR_RDBUSY_Pos		25		// read busy
+#define PSRAMC_CSR_RDBUSY_Msk		(0x01 << PSRAMC_CSR_RDBUSY_Pos)
+#define PSRAMC_CSR_ISPWDN_Pos		26		// is in power-down?
+#define PSRAMC_CSR_ISPWDN_Msk		(0x01 << PSRAMC_CSR_ISPWDN_Pos)
+#define PSRAMC_CSR_ISSLEEP_Pos		27		// is in sleep?
+#define PSRAMC_CSR_ISSLEEP_Msk		(0x01 << PSRAMC_CSR_ISSLEEP_Pos)
+#define PSRAMC_CSR_INITDONE_Pos		28		// init done?
+#define PSRAMC_CSR_INITDONE_Msk		(0x01 << PSRAMC_CSR_INITDONE_Pos)
+
+#define PSRAMC_TR_CSM_Pos			0		// tCSM, Chip Select Maximum Low Time in us
+#define PSRAMC_TR_CSM_Msk			(0xFF << PSRAMC_TR_CSM_Pos)
+#define PSRAMC_TR_RWR_Pos			8		// tRWR, HyperRAM Read-Write Recovery Time in tAHB
+#define PSRAMC_TR_RWR_Msk			(0xFF << PSRAMC_TR_RWR_Pos)
+#define PSRAMC_TR_ACC_Pos			16		// tACC, HyperRAM Read Initial Access Time in tAHB
+#define PSRAMC_TR_ACC_Msk			(0xFF << PSRAMC_TR_ACC_Pos)
+
+#define PSRAMC_IR_ID0_Pos			0		// Device ID0
+#define PSRAMC_IR_ID0_Msk			(0xFFFF<< PSRAMC_IR_ID0_Pos)
+#define PSRAMC_IR_ID1_Pos			16		// Device ID1
+#define PSRAMC_IR_ID1_Msk			(0xFFFF<< PSRAMC_IR_ID1_Pos)
+
+#define PSRAMC_CR0_BurstLen_Pos		0		// Burst Length, 3 32byte
+#define PSRAMC_CR0_BurstLen_Msk		(0x03 << PSRAMC_CR0_BurstLen_Pos)
+#define PSRAMC_CR0_HybridBurst_Pos	2		// Hybrid Burst Enable, can only be 1
+#define PSRAMC_CR0_HybridBurst_Msk	(0x01 << PSRAMC_CR0_HybridBurst_Pos)
+#define PSRAMC_CR0_FixLatency_Pos	3		// Fixed Latency Enable, 0 Variable Latency depending on RWDS during CA cycles, 1 Fixed 2 times Initial Latency
+#define PSRAMC_CR0_FixLatency_Msk	(0x01 << PSRAMC_CR0_FixLatency_Pos)
+#define PSRAMC_CR0_InitLatency_Pos	4		// Initial Latency
+#define PSRAMC_CR0_InitLatency_Msk	(0x0F << PSRAMC_CR0_InitLatency_Pos)
+#define PSRAMC_CR0_MustBe1_Pos		8
+#define PSRAMC_CR0_MustBe1_Msk		(0x0F << PSRAMC_CR0_MustBe1_Pos)
+#define PSRAMC_CR0_PowerDown_Pos	15		// 1 Normal operation, 0 Writing 0 causes the device to enter Deep Power Down
+#define PSRAMC_CR0_PowerDown_Msk	(0x01 << PSRAMC_CR0_PowerDown_Pos)
+
+#define PSRAMC_CR1_RefInterval_Pos	0		// Refresh Interval, 1 4us
+#define PSRAMC_CR1_RefInterval_Msk	(0x03 << PSRAMC_CR1_RefInterval_Pos)
+#define PSRAMC_CR1_PartialRef_Pos	2		// Partial Array Refresh, 0 Full Array
+#define PSRAMC_CR1_PartialRef_Msk	(0x07 << PSRAMC_CR1_PartialRef_Pos)
+#define PSRAMC_CR1_Sleep_Pos		5		// 0 Normal operation, 1 Writing 1 to causes the device to enter Sleep State
+#define PSRAMC_CR1_Sleep_Msk		(0x01 << PSRAMC_CR1_Sleep_Pos)
+#define PSRAMC_CR1_ClockType_Pos	6		// 0 Differential - CK#, CK, 1 Single Ended - CK
+#define PSRAMC_CR1_ClockType_Msk	(0x01 << PSRAMC_CR1_ClockType_Pos)
+#define PSRAMC_CR1_MustAllBe1_Pos	7		// All bits must be 1
+#define PSRAMC_CR1_MustAllBe1_Msk	(0x1FF<< PSRAMC_CR1_MustAllBe1_Pos)
+
+
+
+typedef struct {
 	__IO uint32_t IF;
 	
 	__IO uint32_t IE;
