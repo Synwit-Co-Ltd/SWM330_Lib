@@ -202,7 +202,7 @@ void RGBLCDInit(void)
 
 void LCD_Handler(void)
 {
-	LCD_INTClr(LCD);
+	LCD_INTClr(LCD, LCD_IT_DONE);
 	
 	LCD_Start(LCD);
 }

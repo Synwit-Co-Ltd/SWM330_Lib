@@ -44,9 +44,6 @@ typedef struct {
 
 #define PWM0_MSK	(1 << 0)
 #define PWM1_MSK	(1 << 1)
-#define PWM2_MSK	(1 << 2)
-#define PWM3_MSK	(1 << 3)
-#define PWM4_MSK	(1 << 4)
 
 #define PWM_BRK0	(1 << 0)
 #define PWM_BRK1	(1 << 1)

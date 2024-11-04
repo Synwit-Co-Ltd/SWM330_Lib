@@ -23,18 +23,18 @@ int main(void)
 	printf("BACKUP[0]: %08X\r\n", SYS->BACKUP[0]);	// Note: do not have data retention function
 	SYS->BACKUP[0] += 1;
 	
-	GPIO_Init(GPIOA, PIN9, 1, 0, 0, 0);				// output, connect a LED
+	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);				// output, connect a LED
 	
-	PORT_Init(PORTD, PIN6, PORTD_PIN6_WAKEUP, 1);
-	PORTD->PULLU |= (1 << PIN6);
+//	PORT_Init(PORTD, PIN6, PORTD_PIN6_WAKEUP, 1);
+//	PORTD->PULLU |= (1 << PIN6);
 	
 	while(1==1)
 	{
-		GPIO_SetBit(GPIOA, PIN9);					// turn on the LED
+		GPIO_SetBit(GPIOA, PIN5);					// turn on the LED
 		for(i = 0; i < SystemCoreClock/4; i++) __NOP();
-		GPIO_ClrBit(GPIOA, PIN9);					// turn off the LED
+		GPIO_ClrBit(GPIOA, PIN5);					// turn off the LED
 		
-		SYS->SLEEP |= (1 << SYS_SLEEP_STOP_Pos);	// enter STOP mode
+		RTC->PWRCR |= (1 << RTC_PWRCR_STOP_Pos);	// enter STOP mode
 	
 		for(i = 0; i < 5000; i++);
 	}
@@ -45,8 +45,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
-	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

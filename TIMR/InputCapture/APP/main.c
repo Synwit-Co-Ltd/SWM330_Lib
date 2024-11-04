@@ -4,14 +4,14 @@ void SerialInit(void);
 void TestSignal(void);
 
 int main(void)
-{	
+{
 	SystemInit();
 	
 	SerialInit();
 	
 	TestSignal();	// Generate test signals for Input Capture functional
 	
-	PORT_Init(PORTB, PIN15, PORTB_PIN15_TIMR0_IN, 1);
+	PORT_Init(PORTA, PIN8, FUNMUX0_TIMR0_IN, 1);
 	
 	TIMR_Init(TIMR0, TIMR_MODE_IC, CyclesPerUs, 0xFFFFFF, 0);
 	
@@ -44,13 +44,13 @@ void TIMR0_Handler(void)
 
 void TestSignal(void)
 {
-	PORT_Init(PORTB, PIN13, PORTB_PIN13_TIMR2_OUT, 0);
+	PORT_Init(PORTA, PIN9, FUNMUX1_TIMR1_OUT, 0);
 	
-	TIMR_Init(TIMR2, TIMR_MODE_OC, CyclesPerUs, 100000, 0);		// period is 100ms
+	TIMR_Init(TIMR1, TIMR_MODE_OC, CyclesPerUs, 100000, 0);		// period is 100ms
 	
-	TIMR_OC_Init(TIMR2, 75000, 0, 1);							// duty ratio is 75%
+	TIMR_OC_Init(TIMR1, 75000, 0, 1);							// duty ratio is 75%
 	
-	TIMR_Start(TIMR2);
+	TIMR_Start(TIMR1);
 }
 
 
@@ -58,8 +58,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
- 	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

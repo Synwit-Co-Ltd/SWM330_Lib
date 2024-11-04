@@ -61,6 +61,7 @@ typedef enum IRQn
   EXTI7_IRQn              = 39,
   EXTI8_11_IRQn           = 40,
   EXTI12_15_IRQn          = 41,
+  XTALSTOP_IRQn			  = 42,
 } IRQn_Type;
 
 /*

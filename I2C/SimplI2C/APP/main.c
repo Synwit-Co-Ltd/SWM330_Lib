@@ -98,12 +98,12 @@ void I2CMstInit(void)
 {
 	I2C_InitStructure I2C_initStruct;
 	
-	PORT_Init(PORTN, PIN5, PORTN_PIN5_I2C0_SCL, 1);
-	PORTN->OPEND |= (1 << PIN5);	// open-drain
-	PORTN->PULLU |= (1 << PIN5);	// pull-up
-	PORT_Init(PORTN, PIN4, PORTN_PIN4_I2C0_SDA, 1);
-	PORTN->OPEND |= (1 << PIN4);
-	PORTN->PULLU |= (1 << PIN4);
+	PORT_Init(PORTA, PIN12, FUNMUX0_I2C0_SCL, 1);
+	PORTA->OPEND |= (1 << PIN12);	// open-drain
+	PORTA->PULLU |= (1 << PIN12);	// pull-up
+	PORT_Init(PORTA, PIN13, FUNMUX1_I2C0_SDA, 1);
+	PORTA->OPEND |= (1 << PIN13);
+	PORTA->PULLU |= (1 << PIN13);
 	
 	I2C_initStruct.Master = 1;
 	I2C_initStruct.MstClk = 100000;
@@ -120,12 +120,12 @@ void I2CSlvInit(void)
 {
 	I2C_InitStructure I2C_initStruct;
 	
-	PORT_Init(PORTC, PIN5, PORTC_PIN5_I2C1_SCL, 1);
-	PORTC->OPEND |= (1 << PIN5);	// open-drain
-	PORTC->PULLU |= (1 << PIN5);	// pull-up
-	PORT_Init(PORTC, PIN4, PORTC_PIN4_I2C1_SDA, 1);
-	PORTC->OPEND |= (1 << PIN4);
-	PORTC->PULLU |= (1 << PIN4);
+	PORT_Init(PORTA, PIN14, FUNMUX0_I2C1_SCL, 1);
+	PORTA->OPEND |= (1 << PIN14);	// open-drain
+	PORTA->PULLU |= (1 << PIN14);	// pull-up
+	PORT_Init(PORTA, PIN15, FUNMUX1_I2C1_SDA, 1);
+	PORTA->OPEND |= (1 << PIN15);
+	PORTA->PULLU |= (1 << PIN15);
 	
 	I2C_initStruct.Master = 0;
 	I2C_initStruct.MstClk = 0;
@@ -177,8 +177,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
-	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

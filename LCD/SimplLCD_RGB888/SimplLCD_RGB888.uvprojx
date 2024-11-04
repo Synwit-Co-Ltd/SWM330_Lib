@@ -479,34 +479,14 @@
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_rtc.c</FilePath>
             </File>
             <File>
-              <FileName>SWM330_cordic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_cordic.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_div.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_div.c</FilePath>
-            </File>
-            <File>
               <FileName>SWM330_sdio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_sdio.c</FilePath>
             </File>
             <File>
-              <FileName>SWM330_sdram.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_sdram.c</FilePath>
-            </File>
-            <File>
               <FileName>SWM330_sleep.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_sleep.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_usbd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_usbd.c</FilePath>
             </File>
           </Files>
         </Group>

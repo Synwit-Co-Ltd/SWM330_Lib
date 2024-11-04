@@ -14,14 +14,14 @@ void GD25Q21_Init(void)
 	uint8_t manufacture_id, device_id;
 	SPI_InitStructure SPI_initStruct;
 	
-	GPIO_Init(GPIOM, PIN3, 1, 0, 0, 0);
-#define GD25Q21_Assert()	GPIO_ClrBit(GPIOM, PIN3)
-#define GD25Q21_Deassert()	GPIO_SetBit(GPIOM, PIN3)
+	GPIO_Init(GPIOA, PIN13, 1, 0, 0, 0);
+#define GD25Q21_Assert()	GPIO_ClrBit(GPIOA, PIN13)
+#define GD25Q21_Deassert()	GPIO_SetBit(GPIOA, PIN13)
 	GD25Q21_Deassert();
 	
-	PORT_Init(PORTM, PIN2, PORTM_PIN2_SPI0_SCLK, 0);
-	PORT_Init(PORTM, PIN4, PORTM_PIN4_SPI0_MISO, 1);
-	PORT_Init(PORTM, PIN5, PORTM_PIN5_SPI0_MOSI, 0);
+	PORT_Init(PORTA, PIN12, FUNMUX0_SPI0_SCLK, 0);
+	PORT_Init(PORTA, PIN14, FUNMUX0_SPI0_MOSI, 0);
+	PORT_Init(PORTA, PIN15, FUNMUX1_SPI0_MISO, 1);
 	
 	SPI_initStruct.clkDiv = SPI_CLKDIV_32;
 	SPI_initStruct.FrameFormat = SPI_FORMAT_SPI;

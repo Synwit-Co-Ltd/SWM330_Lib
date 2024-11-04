@@ -109,6 +109,7 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
                 DCD    EXTI7_Handler
                 DCD    EXTI8_11_Handler
                 DCD    EXTI12_15_Handler
+				DCD	   XTALSTOP_Handler
 
 __Vectors_End
 
@@ -380,6 +381,11 @@ EXTI8_11_Handler  PROC
 
 EXTI12_15_Handler  PROC
                 EXPORT  EXTI12_15_Handler  [WEAK]
+                B       .
+                ENDP
+
+XTALSTOP_Handler  PROC
+                EXPORT  XTALSTOP_Handler  [WEAK]
                 B       .
                 ENDP
 

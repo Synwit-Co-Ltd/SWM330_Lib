@@ -21,8 +21,8 @@ int main(void)
 	
 	SerialInit();
 	
-	PORT_Init(PORTB, PIN5, PORTB_PIN5_CAN0_RX, 1);
-	PORT_Init(PORTB, PIN4, PORTB_PIN4_CAN0_TX, 0);
+	PORT_Init(PORTA, PIN12, FUNMUX0_CAN0_TX, 0);
+	PORT_Init(PORTA, PIN13, FUNMUX1_CAN0_RX, 1);
 	
 	CAN_initStruct.Mode = CAN_MODE_NORMAL;
 	CAN_initStruct.CAN_bs1 = CAN_BS1_5tq;
@@ -110,8 +110,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
- 	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

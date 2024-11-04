@@ -479,44 +479,9 @@
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_lcd.c</FilePath>
             </File>
             <File>
-              <FileName>SWM330_rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_dac.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_dac.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_dma2d.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_dma2d.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_jpeg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_jpeg.c</FilePath>
-            </File>
-            <File>
               <FileName>SWM330_qspi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_qspi.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_sdio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_sdio.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_sleep.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_sleep.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_sra.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_sra.c</FilePath>
             </File>
           </Files>
         </Group>

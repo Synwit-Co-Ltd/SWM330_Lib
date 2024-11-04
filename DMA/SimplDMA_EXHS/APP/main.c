@@ -22,14 +22,14 @@ int main(void)
 	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.PeripheralAddr = (uint32_t)&UART0->DATA;
 	DMA_initStruct.PeripheralAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_EXMRD_TIMR0;
+	DMA_initStruct.Handshake = DMA_EXMRD_BTIMR0;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
 	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 	DMA_CH_Open(DMA_CH0);
 	
-	TIMR_Init(TIMR0, TIMR_MODE_TIMER, CyclesPerUs, 500000, 0);	// each time TIMR's counter overflows, DMA transfer a data to UART0->DATA register
-	TIMR_Start(TIMR0);
+	TIMR_Init(BTIMR0, TIMR_MODE_TIMER, CyclesPerUs, 500000, 0);	// each time TIMR's counter overflows, DMA transfer a data to UART0->DATA register
+	TIMR_Start(BTIMR0);
 	
 	while(1==1)
 	{

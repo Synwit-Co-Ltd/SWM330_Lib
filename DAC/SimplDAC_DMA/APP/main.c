@@ -17,7 +17,6 @@ void SerialInit(void);
 
 int main(void)
 {
-	uint32_t i, j;
 	DMA_InitStructure DMA_initStruct;
 	
 	SystemInit();
@@ -26,36 +25,24 @@ int main(void)
 	
 	PORT_Init(PORTD, PIN2, PORTD_PIN2_DAC_OUT, 0);
 	
-	DAC_Init(DAC, DAC_FORMAT_LSB12B);
-	DAC_Open(DAC);
+	DAC_Init(DAC0, DAC_FORMAT_LSB12B);
+	DAC_Open(DAC0);
 	
 	DMA_initStruct.Mode = DMA_MODE_SINGLE;
 	DMA_initStruct.Unit = DMA_UNIT_HALFWORD;
 	DMA_initStruct.Count = sizeof(sin_data)/sizeof(sin_data[0]);
-	DMA_initStruct.SrcAddr = (uint32_t)sin_data;
-	DMA_initStruct.SrcAddrInc = 1;
-	DMA_initStruct.DstAddr = (uint32_t)&DAC->DHR;
-	DMA_initStruct.DstAddrInc = 0;
+	DMA_initStruct.MemoryAddr = (uint32_t)sin_data;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&DAC0->DHR;
+	DMA_initStruct.PeripheralAddrInc = 0;
+	DMA_initStruct.Handshake = DMA_EXMRD_BTIMR0;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
-	
-#if 1
-	DMA_initStruct.Handshake = DMA_EXHS_TIMR0;
-	
-	TIMR_Init(TIMR0, TIMR_MODE_TIMER, CyclesPerUs, 1000, 0);	// each time TIMR's counter overflows, DMA transfers a data to DAC->DHR register
-	TIMR_Start(TIMR0);
-#else
-	DMA_initStruct.Handshake = DMA_EXHS_TRIG0;
-	
-	PORT_Init(PORTN, PIN5, PORTN_PIN5_DMA_TRIG0, 1);	// each time a rising edge appears on PN5 pin, DMA transfers a data to DAC->DHR register
-	PORTN->PULLU |= (1 << PIN5);
-	
-//	PORT_Init(PORTB, PIN0, PORTB_PIN0_DMA_TRIG1, 1);	// each time a rising edge appears on PB0 pin, DMA transfers a data to DAC->DHR register
-//	PORTB->PULLU |= (1 << PIN0);
-#endif
-
 	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 	DMA_CH_Open(DMA_CH0);
+	
+	TIMR_Init(BTIMR0, TIMR_MODE_TIMER, CyclesPerUs, 1000, 0);	// each time TIMR's counter overflows, DMA transfers a data to DAC->DHR register
+	TIMR_Start(BTIMR0);
    	
 	while(1==1)
 	{
@@ -67,8 +54,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
-	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

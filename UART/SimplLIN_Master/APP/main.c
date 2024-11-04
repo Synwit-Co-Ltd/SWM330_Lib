@@ -71,8 +71,8 @@ void LIN_Master_Init(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTD, PIN4, PORTD_PIN4_UART1_RX, 1);
-	PORT_Init(PORTD, PIN3, PORTD_PIN3_UART1_TX, 0);
+	PORT_Init(PORTA, PIN8, FUNMUX0_UART1_TXD, 0);
+	PORT_Init(PORTA, PIN9, FUNMUX1_UART1_RXD, 1);
  	
  	UART_initStruct.Baudrate = 9600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;
@@ -171,8 +171,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
-	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

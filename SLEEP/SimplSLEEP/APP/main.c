@@ -6,15 +6,11 @@
  */
 
 
-void TurnOffUSBPower(void);
-
 int main(void)
 {
 	for(int i = 0; i < SystemCoreClock; i++) __NOP();	// Prevents unable to download programs
 	
 	SystemInit();
-	
-	TurnOffUSBPower();
 	
 	SYS->LRCCR |= (1 << SYS_LRCCR_ON_Pos);			// Turn on 32KHz LRC oscillator
 	
@@ -33,24 +29,10 @@ int main(void)
 		switchTo20MHz();							// Before sleep, switch to 20MHz
 		
 		SYS->PAWKSR = (1 << PIN10);					// clear wakeup flag
-		SYS->SLEEP |= (1 << SYS_SLEEP_SLEEP_Pos);	// enter sleep mode
+		RTC->PWRCR |= (1 << RTC_PWRCR_SLEEP_Pos);	// enter sleep mode
 		while((SYS->PAWKSR & (1 << PIN10)) == 0);	// wait wake-up
 		
 		switchToPLL(1, 3, 60, PLL_OUT_DIV8, 0);		// After waking up, switch to PLL
 		__enable_irq();
 	}
 }
-
-
-void TurnOffUSBPower(void)
-{
-	SYS->USBCR |= 0x07;
-	
-	SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_USB_Pos);
-	USBD->DEVCR = (USBD_SPEED_FS << USBD_DEVCR_SPEED_Pos);
-	
-	SYS->USBPHYCR &= ~SYS_USBPHYCR_PLLEN_Msk;
-	SYS->USBPHYCR &= ~SYS_USBPHYCR_OPMODE_Msk;
-	SYS->USBPHYCR |= ( 2 << SYS_USBPHYCR_OPMODE_Pos);
-}
-

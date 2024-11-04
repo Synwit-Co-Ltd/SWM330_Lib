@@ -18,14 +18,14 @@ int main(void)
 	
 	SerialInit();
 	
-	GPIO_Init(GPIOM, PIN3, 1, 0, 0, 0);
-#define SPI0_CS_Low()	GPIO_ClrBit(GPIOM, PIN3)
-#define SPI0_CS_High()	GPIO_SetBit(GPIOM, PIN3)
+	GPIO_Init(GPIOA, PIN13, 1, 0, 0, 0);
+#define SPI0_CS_Low()	GPIO_ClrBit(GPIOA, PIN13)
+#define SPI0_CS_High()	GPIO_SetBit(GPIOA, PIN13)
 	SPI0_CS_High();
 	
-	PORT_Init(PORTM, PIN2, PORTM_PIN2_SPI0_SCLK, 0);
-	PORT_Init(PORTM, PIN4, PORTM_PIN4_SPI0_MISO, 1);	// connect MOSI to MISO, receive data sent by self
-	PORT_Init(PORTM, PIN5, PORTM_PIN5_SPI0_MOSI, 0);
+	PORT_Init(PORTA, PIN12, FUNMUX0_SPI0_SCLK, 0);
+	PORT_Init(PORTA, PIN14, FUNMUX0_SPI0_MOSI, 0);	// connect MOSI to MISO, receive data sent by self
+	PORT_Init(PORTA, PIN15, FUNMUX1_SPI0_MISO, 1);
 	
 	SPI_initStruct.clkDiv = SPI_CLKDIV_8;
 	SPI_initStruct.FrameFormat = SPI_FORMAT_SPI;
@@ -48,16 +48,15 @@ int main(void)
 	DMA_initStruct.Mode = DMA_MODE_SINGLE;
 	DMA_initStruct.Unit = DMA_UNIT_BYTE;
 	DMA_initStruct.Count = BUF_SIZE;
-	DMA_initStruct.SrcAddr = (uint32_t)&SPI0->DATA;
-	DMA_initStruct.SrcAddrInc = 0;
-	DMA_initStruct.DstAddr = (uint32_t)RX_Buffer;
-	DMA_initStruct.DstAddrInc = 1;
-	DMA_initStruct.Handshake = DMA_CH1_SPI0RX;
+	DMA_initStruct.MemoryAddr = (uint32_t)RX_Buffer;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&SPI0->DATA;
+	DMA_initStruct.PeripheralAddrInc = 0;
+	DMA_initStruct.Handshake = DMA_CH3_SPI0RX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = DMA_IT_DONE;
-	DMA_CH_Init(DMA_CH1, &DMA_initStruct);
-	
-	DMA_CH_Open(DMA_CH1);
+	DMA_CH_Init(DMA_CH3, &DMA_initStruct);
+	DMA_CH_Open(DMA_CH3);
 	
 	
 	// SPI0 TX DMA
@@ -66,15 +65,14 @@ int main(void)
 	DMA_initStruct.Mode = DMA_MODE_SINGLE;
 	DMA_initStruct.Unit = DMA_UNIT_BYTE;
 	DMA_initStruct.Count = strlen(TX_Buffer);
-	DMA_initStruct.SrcAddr = (uint32_t)TX_Buffer;
-	DMA_initStruct.SrcAddrInc = 1;
-	DMA_initStruct.DstAddr = (uint32_t)&SPI0->DATA;
-	DMA_initStruct.DstAddrInc = 0;
+	DMA_initStruct.MemoryAddr = (uint32_t)TX_Buffer;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&SPI0->DATA;
+	DMA_initStruct.PeripheralAddrInc = 0;
 	DMA_initStruct.Handshake = DMA_CH0_SPI0TX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = DMA_IT_DONE;
 	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
-	
 	DMA_CH_Open(DMA_CH0);
 	
 	while(1==1)
@@ -95,14 +93,14 @@ void DMA_Handler(void)
 		
 		DMA_CH_Open(DMA_CH0);	// restart, transfer agian
 	}
-	else if(DMA_CH_INTStat(DMA_CH1, DMA_IT_DONE))
+	else if(DMA_CH_INTStat(DMA_CH3, DMA_IT_DONE))
 	{
-		DMA_CH_INTClr(DMA_CH1, DMA_IT_DONE);
+		DMA_CH_INTClr(DMA_CH3, DMA_IT_DONE);
 		
 		for(i = 0; i < BUF_SIZE; i++)  printf("%c", RX_Buffer[i]);
 		
 		memset(RX_Buffer, 0x00, sizeof(RX_Buffer));
-		DMA_CH_Open(DMA_CH1);	// restart, transfer agian
+		DMA_CH_Open(DMA_CH3);	// restart, transfer agian
 	}
 }
 
@@ -111,8 +109,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
-	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

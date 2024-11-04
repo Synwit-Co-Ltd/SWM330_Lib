@@ -474,11 +474,6 @@
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_rtc.c</FilePath>
             </File>
             <File>
-              <FileName>SWM330_cordic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_cordic.c</FilePath>
-            </File>
-            <File>
               <FileName>SWM330_sleep.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_sleep.c</FilePath>

@@ -25,16 +25,16 @@ int main(void)
 	
 	PORT_Init(PORTD, PIN2, PORTD_PIN2_DAC_OUT, 0);
 	
-	DAC_Init(DAC, DAC_FORMAT_LSB12B);
-	DAC_Open(DAC);
+	DAC_Init(DAC0, DAC_FORMAT_LSB12B);
+	DAC_Open(DAC0);
    	
 	while(1==1)
 	{
 		for(i = 0; i < sizeof(sin_data)/sizeof(sin_data[0]); i++)
 		{
-			DAC->DHR = sin_data[i];
+			DAC0->DHR = sin_data[i];
 			
-			while(DAC->SR & DAC_SR_DHRFULL_Msk) __NOP();
+			while(DAC0->SR & DAC_SR_DHRFULL_Msk) __NOP();
 			
 			for(j = 0; j < CyclesPerUs*100; j++) __NOP();
 		}
@@ -46,8 +46,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTM, PIN0, PORTM_PIN0_UART0_RX, 1);
-	PORT_Init(PORTM, PIN1, PORTM_PIN1_UART0_TX, 0);
+	PORT_Init(PORTA, PIN6, FUNMUX0_UART0_TXD, 0);
+	PORT_Init(PORTA, PIN7, FUNMUX1_UART0_RXD, 1);
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;

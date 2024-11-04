@@ -1,45 +1,32 @@
 #include "SWM330.h"
 
-#define FAST_IRQ	0
 
 int main(void)
 {	
 	SystemInit();
 	
-	GPIO_Init(GPIOA, PIN9, 1, 0, 0, 0);				// output, connect LED
+	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);			// output, connect LED
 	
-	GPIO_Init(GPIOA, PIN10, 0, 1, 0, 0);			// input, pull-up enable, connect key
+	GPIO_Init(GPIOB, PIN6, 0, 1, 0, 0);			// input, pull-up enable, connect key
 	
-	EXTI_Init(GPIOA, PIN10, EXTI_FALL_EDGE);		// falling edge on PA10 pin trigger a EXTI interrupt
-
-#if FAST_IRQ
-	NVIC_EnableIRQ(GPIOA10_IRQn);
-#else
-	NVIC_EnableIRQ(GPIOA_IRQn);
-#endif
+	EXTI_Init(GPIOB, PIN6, EXTI_FALL_EDGE);		// falling edge on PB6 pin trigger a EXTI interrupt
 	
-	EXTI_Open(GPIOA, PIN10);
-
+	NVIC_EnableIRQ(EXTI6_IRQn);
+	
+	EXTI_Open(GPIOB, PIN6);
+	
 	while(1==1)
 	{
 	}
 }
 
-#if FAST_IRQ
-void GPIOA10_Handler(void)
+
+void EXTI6_Handler(void)
 {
-	EXTI_Clear(GPIOA, PIN10);
-	
-	GPIO_InvBit(GPIOA, PIN9);
-}
-#else
-void GPIOA_Handler(void)
-{
-	if(EXTI_State(GPIOA, PIN10))
+	if(EXTI_State(GPIOB, PIN6))
 	{
-		EXTI_Clear(GPIOA, PIN10);
+		EXTI_Clear(GPIOB, PIN6);
 		
-		GPIO_InvBit(GPIOA, PIN9);
+		GPIO_InvBit(GPIOA, PIN5);
 	}
 }
-#endif
