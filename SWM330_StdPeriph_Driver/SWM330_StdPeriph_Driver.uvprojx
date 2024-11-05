@@ -513,6 +513,11 @@
               <FileType>1</FileType>
               <FilePath>.\CSL\SWM330_StdPeriph_Driver\SWM330_i2s.c</FilePath>
             </File>
+            <File>
+              <FileName>SWM330_psram.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CSL\SWM330_StdPeriph_Driver\SWM330_psram.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

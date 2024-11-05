@@ -2268,7 +2268,7 @@ typedef struct {
 typedef struct {
 	__IO uint32_t CSR;
 	
-	__IO uint32_t TR;
+	__IO uint32_t TR;						// timing register
 	
 	__I  uint32_t IR;						// ID Register read from HyperRAM
 	
@@ -2276,16 +2276,16 @@ typedef struct {
 	
 	__IO uint32_t CR1;						// Configuration Register 1 what will be written to HyperRAM
 	
-	__IO uint32_t INITTR;
+	__IO uint32_t INITTR;					// tVCS, VCC > VCCmin and RESET# High to device access allowed time in us
 	
-	__IO uint32_t RSTTR;
+	__IO uint32_t RSTTR;					// reset timing register
 	
-	__IO uint32_t SLPTR;
+	__IO uint32_t SLPTR;					// sleep timing register
 	
-	__IO uint32_t PWDNTR;
+	__IO uint32_t PWDNTR;					// power-down timing register
 	
-	__IO uint32_t TR1US;
-} PSRAMC_TypeDef;
+	__IO uint32_t TR1US;					// the number of clock cycles in 1uS at the current frequency
+} PSRAMC_TypeDef;							// PSRAM Controller
 
 
 #define PSRAMC_CSR_ROWSZ_Pos		0		// row size, 0 1kbyte, 1 2kbyte, 2 4kbyte, 3 8kbyte
@@ -2309,9 +2309,9 @@ typedef struct {
 
 #define PSRAMC_TR_CSM_Pos			0		// tCSM, Chip Select Maximum Low Time in us
 #define PSRAMC_TR_CSM_Msk			(0xFF << PSRAMC_TR_CSM_Pos)
-#define PSRAMC_TR_RWR_Pos			8		// tRWR, HyperRAM Read-Write Recovery Time in tAHB
+#define PSRAMC_TR_RWR_Pos			8		// tRWR, HyperRAM Read-Write Recovery Time in tHCLK
 #define PSRAMC_TR_RWR_Msk			(0xFF << PSRAMC_TR_RWR_Pos)
-#define PSRAMC_TR_ACC_Pos			16		// tACC, HyperRAM Read Initial Access Time in tAHB
+#define PSRAMC_TR_ACC_Pos			16		// tACC, HyperRAM Read Initial Access Time in tHCLK
 #define PSRAMC_TR_ACC_Msk			(0xFF << PSRAMC_TR_ACC_Pos)
 
 #define PSRAMC_IR_ID0_Pos			0		// Device ID0
@@ -2342,6 +2342,28 @@ typedef struct {
 #define PSRAMC_CR1_ClockType_Msk	(0x01 << PSRAMC_CR1_ClockType_Pos)
 #define PSRAMC_CR1_MustAllBe1_Pos	7		// All bits must be 1
 #define PSRAMC_CR1_MustAllBe1_Msk	(0x1FF<< PSRAMC_CR1_MustAllBe1_Pos)
+
+#define PSRAMC_RSTTR_RPH_Pos		0		// tRPH, RESET# Low to CS# Low time in tHCLK
+#define PSRAMC_RSTTR_RPH_Msk		(0xFFFF<< PSRAMC_RSTTR_RPH_Pos)
+#define PSRAMC_RSTTR_RH_Pos			16		// tRH, RESET# High to CS# Low time in tHCLK
+#define PSRAMC_RSTTR_RH_Msk			(0xFF << PSRAMC_RSTTR_RH_Pos)
+#define PSRAMC_RSTTR_RP_Pos			24		// tRP, RESET# Pulse Width in tHCLK
+#define PSRAMC_RSTTR_RP_Msk			(0xFF << PSRAMC_RSTTR_RP_Pos)
+
+#define PSRAMC_SLPTR_EXTHS_Pos		0		// tEXTHS, CS# Exit Hybrid Sleep to Standby wakeup time in us
+#define PSRAMC_SLPTR_EXTHS_Msk		(0xFFFF<< PSRAMC_SLPTR_EXTHS_Pos)
+#define PSRAMC_SLPTR_CSHS_Pos		16		// tCSHS, CS# Pulse Width to Exit Hybrid Sleep in tHCLK
+#define PSRAMC_SLPTR_CSHS_Msk		(0xFF << PSRAMC_SLPTR_CSHS_Pos)
+#define PSRAMC_SLPTR_HSIN_Pos		24		// tHSIN, Hybrid Sleep CR1[5]=1 register write to Hybrid Sleep power level time in us
+#define PSRAMC_SLPTR_HSIN_Msk		(0xFF << PSRAMC_SLPTR_HSIN_Pos)
+
+#define PSRAMC_PWDNTR_EXTDPD_Pos	0		// tEXTDPD, CS# Exit Deep Power Down to Standby wakeup time in us
+#define PSRAMC_PWDNTR_EXTDPD_Msk	(0xFFFF<< PSRAMC_PWDNTR_EXTDPD_Pos)
+#define PSRAMC_PWDNTR_CSDPD_Pos		16		// tCSDPD, CS# Pulse Width to Exit Deep Power Down in tHCLK
+#define PSRAMC_PWDNTR_CSDPD_Msk		(0xFF << PSRAMC_PWDNTR_CSDPD_Pos)
+#define PSRAMC_PWDNTR_DPDIN_Pos		24		// tDPDIN, Deep Power Down CR0[15]=0 register write to DPD power level in us
+#define PSRAMC_PWDNTR_DPDIN_Msk		(0xFF << PSRAMC_PWDNTR_DPDIN_Pos)
+
 
 
 
@@ -3456,6 +3478,8 @@ typedef struct {
 
 #define SDIO				((SDIO_TypeDef *) SDIO_BASE)
 
+#define PSRAMC				((PSRAMC_TypeDef*)PSRAMC_BASE)
+
 #define LCD					((LCD_TypeDef  *) LCD_BASE)
 
 #define DMA2D				((DMA2D_TypeDef*) DMA2D_BASE)
@@ -3490,6 +3514,7 @@ typedef struct {
 #include "SWM330_qspi.h"
 #include "SWM330_sdio.h"
 #include "SWM330_flash.h"
+#include "SWM330_psram.h"
 #include "SWM330_lcd.h"
 #include "SWM330_dma2d.h"
 #include "SWM330_jpeg.h"

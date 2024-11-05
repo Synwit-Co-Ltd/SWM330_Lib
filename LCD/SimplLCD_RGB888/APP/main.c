@@ -139,10 +139,12 @@ void LCD_Handler(void)
 
 void MemoryInit(void)
 {
+	PSRAM_InitStructure PSRAM_initStruct;
+	
 	PORT_Init(PORTE, PIN9,  PORTE_PIN9_PSRAM_RST, 0);
 	PORT_Init(PORTE, PIN10, PORTE_PIN10_PSRAM_CS, 0);
 	PORT_Init(PORTE, PIN11, PORTE_PIN11_PSRAM_CK, 0);
-	PORT_Init(PORTE, PIN8,  PORTE_PIN8_PSRAM_DS,  1);
+	PORT_Init(PORTE, PIN8,  PORTE_PIN8_PSRAM_RWDS,1);
 	PORT_Init(PORTE, PIN0,  PORTE_PIN0_PSRAM_D0,  1);
 	PORT_Init(PORTE, PIN1,  PORTE_PIN1_PSRAM_D1,  1);
 	PORT_Init(PORTE, PIN2,  PORTE_PIN2_PSRAM_D2,  1);
@@ -151,6 +153,12 @@ void MemoryInit(void)
 	PORT_Init(PORTE, PIN5,  PORTE_PIN5_PSRAM_D5,  1);
 	PORT_Init(PORTE, PIN6,  PORTE_PIN6_PSRAM_D6,  1);
 	PORT_Init(PORTE, PIN7,  PORTE_PIN7_PSRAM_D7,  1);
+	
+	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
+	PSRAM_initStruct.tRWR = 50;
+	PSRAM_initStruct.tACC = 50;
+	PSRAM_initStruct.tCSM = 4;
+	PSRAM_Init(&PSRAM_initStruct);
 }
 
 

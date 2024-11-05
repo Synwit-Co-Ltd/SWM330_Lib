@@ -318,7 +318,7 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTE_PIN7_PSRAM_D7		1
 
 #define PORTE_PIN8_GPIO			0
-#define PORTE_PIN8_PSRAM_DS		1
+#define PORTE_PIN8_PSRAM_RWDS	1
 
 #define PORTE_PIN9_GPIO			0
 #define PORTE_PIN9_PSRAM_RST	1

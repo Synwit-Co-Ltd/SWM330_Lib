@@ -33,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>D:\Keil4\ARM\SFD\SWM330.SFR</SFDFile>
+          <SFDFile>$$Device:SWM330xE$SVD\SWM330.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -49,10 +49,10 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\out\</OutputDirectory>
-          <OutputName>DMA2D_RGB565</OutputName>
+          <OutputName>SimplPSRAM</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\out\</ListingPath>
@@ -81,7 +81,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
-            <RunUserProg2>1</RunUserProg2>
+            <RunUserProg2>0</RunUserProg2>
             <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name>fromelf --text -a -c -o "$L@L.asm" "#L"</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -388,11 +388,6 @@
               <FileType>1</FileType>
               <FilePath>.\app\main.c</FilePath>
             </File>
-            <File>
-              <FileName>Synwit128.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\APP\Synwit128.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -477,21 +472,6 @@
               <FileName>SWM330_rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_sdio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_sdio.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_sleep.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_sleep.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_dma2d.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_dma2d.c</FilePath>
             </File>
             <File>
               <FileName>SWM330_psram.c</FileName>
