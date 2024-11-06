@@ -53,45 +53,41 @@ typedef struct {
 
 // memory read handshake signal
 #define DMA_CH0_UART0TX		(0 | DMA_HS_MRD)
-#define DMA_CH0_SPI0TX		(1 | DMA_HS_MRD)
-#define DMA_CH0_UART3TX		(2 | DMA_HS_MRD)
-#define DMA_CH0_QSPI0TX		(3 | DMA_HS_MRD)
+#define DMA_CH0_QSPI0TX		(1 | DMA_HS_MRD)
+#define DMA_CH0_SPI0TX		(2 | DMA_HS_MRD)
 
 #define DMA_CH1_UART1TX		(0 | DMA_HS_MRD)
-#define DMA_CH1_I2S0TX		(1 | DMA_HS_MRD)
-#define DMA_CH1_UART2TX		(2 | DMA_HS_MRD)
-#define DMA_CH1_QSPI1TX		(3 | DMA_HS_MRD)
+#define DMA_CH1_QSPI1TX		(1 | DMA_HS_MRD)
+#define DMA_CH1_I2S0TX		(2 | DMA_HS_MRD)
 
-#define DMA_CH2_UART4TX		(0 | DMA_HS_MRD)
-#define DMA_CH2_ADC0SEQ0	(1 | DMA_HS_MWR)
-#define DMA_CH2_UART1TX		(2 | DMA_HS_MRD)
-#define DMA_CH2_QSPI1TX		(3 | DMA_HS_MRD)
+#define DMA_CH2_UART2TX		(0 | DMA_HS_MRD)
+#define DMA_CH2_QSPI0TX		(1 | DMA_HS_MWR)
+#define DMA_CH2_I2S0TX		(2 | DMA_HS_MRD)
 
 #define DMA_CH3_UART3TX		(0 | DMA_HS_MRD)
-#define DMA_CH3_ADC0SEQ2	(1 | DMA_HS_MWR)
-#define DMA_CH3_UART0TX		(2 | DMA_HS_MRD)
-#define DMA_CH3_QSPI0TX		(3 | DMA_HS_MRD)
+#define DMA_CH3_QSPI1TX		(1 | DMA_HS_MWR)
+#define DMA_CH3_SPI0TX		(2 | DMA_HS_MRD)
 
 // memory write handshake signal
 #define DMA_CH0_UART1RX		(0 | DMA_HS_MWR)
-#define DMA_CH0_ADC0SEQ1	(1 | DMA_HS_MWR)
-#define DMA_CH0_UART2RX		(2 | DMA_HS_MWR)
-#define DMA_CH0_QSPI1RX		(3 | DMA_HS_MWR)
+#define DMA_CH0_QSPI1RX		(1 | DMA_HS_MWR)
+#define DMA_CH0_I2S0RX		(2 | DMA_HS_MWR)
+#define DMA_CH0_ADC0SEQ0	(3 | DMA_HS_MWR)
 
 #define DMA_CH1_UART0RX		(0 | DMA_HS_MWR)
-#define DMA_CH1_ADC0SEQ3	(1 | DMA_HS_MWR)
-#define DMA_CH1_UART3RX		(2 | DMA_HS_MWR)
-#define DMA_CH1_QSPI0RX		(3 | DMA_HS_MWR)
+#define DMA_CH1_QSPI0RX		(1 | DMA_HS_MWR)
+#define DMA_CH1_SPI0RX		(2 | DMA_HS_MWR)
+#define DMA_CH1_ADC0SEQ1	(3 | DMA_HS_MWR)
 
 #define DMA_CH2_UART3RX		(0 | DMA_HS_MWR)
-#define DMA_CH2_I2S0RX		(1 | DMA_HS_MWR)
-#define DMA_CH2_UART0RX		(2 | DMA_HS_MWR)
-#define DMA_CH2_QSPI0RX		(3 | DMA_HS_MWR)
+#define DMA_CH2_QSPI1RX		(1 | DMA_HS_MWR)
+#define DMA_CH2_SPI0RX		(2 | DMA_HS_MWR)
+#define DMA_CH2_DCMIRX		(3 | DMA_HS_MWR)
 
-#define DMA_CH3_UART4RX		(0 | DMA_HS_MWR)
-#define DMA_CH3_SPI0RX		(1 | DMA_HS_MWR)
-#define DMA_CH3_UART1RX		(2 | DMA_HS_MWR)
-#define DMA_CH3_QSPI1RX		(3 | DMA_HS_MWR)
+#define DMA_CH3_UART2RX		(0 | DMA_HS_MWR)
+#define DMA_CH3_QSPI0RX		(1 | DMA_HS_MWR)
+#define DMA_CH3_I2S0RX		(2 | DMA_HS_MWR)
+#define DMA_CH3_DCMIRX		(3 | DMA_HS_MWR)
 
 
 // external handshake signal

@@ -66,28 +66,28 @@ void I2S_Master_Init(void)
 	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.PeripheralAddr = (uint32_t)&I2S0->DR;
 	DMA_initStruct.PeripheralAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_CH2_I2S0RX;
+	DMA_initStruct.Handshake = DMA_CH0_I2S0RX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = DMA_IT_HALF | DMA_IT_DONE;
-	DMA_CH_Init(DMA_CH2, &DMA_initStruct);
-	DMA_CH_Open(DMA_CH2);
+	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
+	DMA_CH_Open(DMA_CH0);
 }
 
 
 void DMA_Handler(void)
 {
 	/* Master RX */
-	if(DMA_CH_INTStat(DMA_CH2, DMA_IT_HALF))
+	if(DMA_CH_INTStat(DMA_CH0, DMA_IT_HALF))
 	{
-		DMA_CH_INTClr(DMA_CH2, DMA_IT_HALF);
+		DMA_CH_INTClr(DMA_CH0, DMA_IT_HALF);
 		
 		RX_DoneIndex = (1 << 1) | 0;
 		
 		GPIO_InvBit(GPIOA, PIN5);
 	}
-	else if(DMA_CH_INTStat(DMA_CH2, DMA_IT_DONE))
+	else if(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE))
 	{
-		DMA_CH_INTClr(DMA_CH2, DMA_IT_DONE);
+		DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
 		
 		RX_DoneIndex = (1 << 1) | 1;
 		

@@ -45,7 +45,7 @@ int main(void)
 	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.PeripheralAddr = (uint32_t)&DCMI->DR;
 	DMA_initStruct.PeripheralAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_CH3_DCMI;
+	DMA_initStruct.Handshake = DMA_CH3_DCMIRX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
 	DMA_CH_Init(DMA_CH3, &DMA_initStruct);

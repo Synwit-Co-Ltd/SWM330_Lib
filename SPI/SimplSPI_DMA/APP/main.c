@@ -52,11 +52,11 @@ int main(void)
 	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.PeripheralAddr = (uint32_t)&SPI0->DATA;
 	DMA_initStruct.PeripheralAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_CH3_SPI0RX;
+	DMA_initStruct.Handshake = DMA_CH1_SPI0RX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = DMA_IT_DONE;
-	DMA_CH_Init(DMA_CH3, &DMA_initStruct);
-	DMA_CH_Open(DMA_CH3);
+	DMA_CH_Init(DMA_CH1, &DMA_initStruct);
+	DMA_CH_Open(DMA_CH1);
 	
 	
 	// SPI0 TX DMA
@@ -93,14 +93,14 @@ void DMA_Handler(void)
 		
 		DMA_CH_Open(DMA_CH0);	// restart, transfer agian
 	}
-	else if(DMA_CH_INTStat(DMA_CH3, DMA_IT_DONE))
+	else if(DMA_CH_INTStat(DMA_CH1, DMA_IT_DONE))
 	{
-		DMA_CH_INTClr(DMA_CH3, DMA_IT_DONE);
+		DMA_CH_INTClr(DMA_CH1, DMA_IT_DONE);
 		
 		for(i = 0; i < BUF_SIZE; i++)  printf("%c", RX_Buffer[i]);
 		
 		memset(RX_Buffer, 0x00, sizeof(RX_Buffer));
-		DMA_CH_Open(DMA_CH3);	// restart, transfer agian
+		DMA_CH_Open(DMA_CH1);	// restart, transfer agian
 	}
 }
 

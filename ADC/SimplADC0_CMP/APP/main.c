@@ -64,12 +64,12 @@ int main(void)
 	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.PeripheralAddr = (uint32_t)&ADC0->SEQ[0].DR;
 	DMA_initStruct.PeripheralAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_CH2_ADC0SEQ0;
+	DMA_initStruct.Handshake = DMA_CH0_ADC0SEQ0;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
-	DMA_CH_Init(DMA_CH2, &DMA_initStruct);
+	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 	
-	DMA_CH_Open(DMA_CH2);
+	DMA_CH_Open(DMA_CH0);
 	
 	TIMR_Init(BTIMR2, TIMR_MODE_TIMER, CyclesPerUs, 1000, 0);
 	TIMR_Start(BTIMR2);

@@ -54,12 +54,12 @@ int main(void)
 	DMA_initStruct.PeripheralAddrInc = 0;
 	DMA_initStruct.MemoryAddr = (uint32_t)ADC_Result;
 	DMA_initStruct.MemoryAddrInc = 1;
-	DMA_initStruct.Handshake = DMA_CH2_ADC0SEQ0;
+	DMA_initStruct.Handshake = DMA_CH0_ADC0SEQ0;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = DMA_IT_DONE;
-	DMA_CH_Init(DMA_CH2, &DMA_initStruct);
+	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 	
-	DMA_CH_Open(DMA_CH2);
+	DMA_CH_Open(DMA_CH0);
 	
 	while(1==1)
 	{
@@ -80,9 +80,9 @@ int main(void)
 
 void DMA_Handler(void)
 {
-	if(DMA_CH_INTStat(DMA_CH2, DMA_IT_DONE))
+	if(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE))
 	{
-		DMA_CH_INTClr(DMA_CH2, DMA_IT_DONE);
+		DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
 		
 		ADC_ConvDone = 1;
 	}
