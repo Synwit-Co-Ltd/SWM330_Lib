@@ -3010,7 +3010,160 @@ typedef struct {
 
 
 typedef struct {
+	__IO uint32_t CR;
+	
+	__IO uint32_t IE;
+	
+	__IO uint32_t IF;
+	
+	__IO uint32_t ICFG;						// Interrupt config register
+	
+	__IO uint32_t INPOL;					// Input signal polarity
+	
+	__I  uint32_t INHSZ;					// Input horizontal size register
+	
+	__I  uint32_t INVSZ;					// Input vertical size register
+	
+	__IO uint32_t OUTHSZ;					// Output horizontal size register
+	
+	__IO uint32_t OUTVSZ;					// Output vertical size register
+	
+	__IO uint32_t OUTCFG;					// Output config register
+	
+	__I  uint32_t CURFRM;					// Output current frame number, 0 1 frame, 1 2 frames, ...
+	
+	__IO uint32_t OUTCR;					// Output control register
+	
+	__IO uint32_t UPDATE;					// write 1 to update BASE_YRAW, BASE_UV, STEP_YRAW, STEP_UV to internal working register
+	
+	__IO uint32_t BASE_YRAW;				// base address of Y/RAW data frame buffer, should be word aligned
+	
+	__IO uint32_t BASE_UV;					// base address of UV data frame buffer, should be word aligned
+	
+	__I  uint32_t ADDR_YRAW;				// current writing address of Y/RAW data frame buffer (for debug)
+	
+	__I  uint32_t ADDR_UV;					// current writing address of UV data frame buffer (for debug)
+	
+	__IO uint32_t STEP_YRAW;				// line stride of Y/RAW data (bytes), should be multiple of 8
+	
+	__IO uint32_t STEP_UV;					// line stride of UV data (bytes), should be multiple of 8
+	
+	__I  uint32_t BASE_YRAW_SHA;			// BASE_YRAW shadow register
+	
+	__I  uint32_t BASE_UV_SHA;				// BASE_UV shadow register
+	
+	__I  uint32_t STEP_SHA;					// bit31..16 is STEP_YRAW shadow, bit15..0 is STEP_UV shadow
 } DVP_TypeDef;
+
+
+#define DVP_CR_ENA_Pos				0		// DVP mode enable
+#define DVP_CR_ENA_Msk				(0x01 << DVP_CR_ENA_Pos)
+#define DVP_CR_CLR_Pos				1		// write 1 to reset buffer address, auto clear
+#define DVP_CR_CLR_Msk				(0x01 << DVP_CR_CLR_Pos)
+#define DVP_CR_DROPEN_Pos			2		// 1 frames could be dropped if no time for data writing back.
+#define DVP_CR_DROPEN_Msk			(0x01 << DVP_CR_DROPEN_Pos)
+#define DVP_CR_CONTEN_Pos			3		// 1 video continuous capture enable
+#define DVP_CR_CONTEN_Msk			(0x01 << DVP_CR_CONTEN_Pos)
+#define DVP_CR_INFMT_Pos			4		// input format, 0 RAW/RGB565, 1 YUV422 8-bit, 2 BT656
+#define DVP_CR_INFMT_Msk			(0x07 << DVP_CR_INFMT_Pos)
+#define DVP_CR_INSEQ_Pos			8		// YUV data input sequence, 0 YUYV, 1 YVYU, 2 UYVY, 3 VYUV
+#define DVP_CR_INSEQ_Msk			(0x03 << DVP_CR_INSEQ_Pos)
+#define DVP_CR_INSWAP_Pos			10		// RAW data input swap, 0 no swap, 1 even/odd byte swap
+#define DVP_CR_INSWAP_Msk			(0x01 << DVP_CR_INSWAP_Pos)
+#define DVP_CR_OUTFMT_Pos			12		// DVP output format, 0 RAW/RGB565, 1 YUV422 NV16, 2 YUV420 NV12
+#define DVP_CR_OUTFMT_Msk			(0x07 << DVP_CR_OUTFMT_Pos)
+#define DVP_CR_RAWBIT_Pos			15		// RAW data bit width, 0 8-bit, 1 10-bit, 2 12-bit, 3 14-bit
+#define DVP_CR_RAWBIT_Msk			(0x03 << DVP_CR_RAWBIT_Pos)
+
+#define DVP_IE_DONE_Pos				0		// all frames captured done interrupt enable
+#define DVP_IE_DONE_Msk				(0x01 << DVP_IE_DONE_Pos)
+#define DVP_IE_FRAME_Pos			1		// one frame captured done interrupt enable
+#define DVP_IE_FRAME_Msk			(0x01 << DVP_IE_FRAME_Pos)
+#define DVP_IE_LINES_Pos			2		// specified number of lines captured done interrupt enable
+#define DVP_IE_LINES_Msk			(0x01 << DVP_IE_LINES_Pos)
+#define DVP_IE_BUFULL_Pos			3		// output buffer full interrupt enable
+#define DVP_IE_BUFULL_Msk			(0x01 << DVP_IE_BUFULL_Pos)
+#define DVP_IE_HSZCHG_Pos			4		// input horizontal size change interrupt enable
+#define DVP_IE_HSZCHG_Msk			(0x01 << DVP_IE_HSZCHG_Pos)
+#define DVP_IE_VSZCHG_Pos			5		// input vertical size change interrupt enable
+#define DVP_IE_VSZCHG_Msk			(0x01 << DVP_IE_VSZCHG_Pos)
+#define DVP_IE_CODERR_Pos			6		// XY code error interrupt enable
+#define DVP_IE_CODERR_Msk			(0x01 << DVP_IE_CODERR_Pos)
+#define DVP_IE_UPDATE_Pos			7		// output address update done interrupt enable
+#define DVP_IE_UPDATE_Msk			(0x01 << DVP_IE_UPDATE_Pos)
+
+#define DVP_IF_DONE_Pos				0		// write 1 to clear
+#define DVP_IF_DONE_Msk				(0x01 << DVP_IF_DONE_Pos)
+#define DVP_IF_FRAME_Pos			1
+#define DVP_IF_FRAME_Msk			(0x01 << DVP_IF_FRAME_Pos)
+#define DVP_IF_LINES_Pos			2
+#define DVP_IF_LINES_Msk			(0x01 << DVP_IF_LINES_Pos)
+#define DVP_IF_BUFULL_Pos			3
+#define DVP_IF_BUFULL_Msk			(0x01 << DVP_IF_BUFULL_Pos)
+#define DVP_IF_HSZCHG_Pos			4
+#define DVP_IF_HSZCHG_Msk			(0x01 << DVP_IF_HSZCHG_Pos)
+#define DVP_IF_VSZCHG_Pos			5
+#define DVP_IF_VSZCHG_Msk			(0x01 << DVP_IF_VSZCHG_Pos)
+#define DVP_IF_CODERR_Pos			6
+#define DVP_IF_CODERR_Msk			(0x01 << DVP_IF_CODERR_Pos)
+#define DVP_IF_UPDATE_Pos			7
+#define DVP_IF_UPDATE_Msk			(0x01 << DVP_IF_UPDATE_Pos)
+
+#define DVP_ICFG_LINES_Pos			16		// input horizontal done (HREF falling edge) number for interrupt
+#define DVP_ICFG_LINES_Msk			(0x7FFF << DVP_ICFG_LINES_Pos)
+
+#define DVP_INPOL_PCLK_Pos			0		// 0 sample on rising edge
+#define DVP_INPOL_PCLK_Msk			(0x01 << DVP_INPOL_PCLK_Pos)
+#define DVP_INPOL_HREF_Pos			1		// 0 active high (rising edge)
+#define DVP_INPOL_HREF_Msk			(0x01 << DVP_INPOL_HREF_Pos)
+#define DVP_INPOL_VSYNC_Pos			2		// 0 active high (rising edge)
+#define DVP_INPOL_VSYNC_Msk			(0x01 << DVP_INPOL_VSYNC_Pos)
+#define DVP_INPOL_FIELD_Pos			3		// 0 active high
+#define DVP_INPOL_FIELD_Msk			(0x01 << DVP_INPOL_FIELD_Pos)
+
+#define DVP_INHSZ_CODE_Pos			0		// current input XY code
+#define DVP_INHSZ_CODE_Msk			(0xFF << DVP_INHSZ_CODE_Pos)
+#define DVP_INHSZ_CODERR_Pos		8		// input XY code when error
+#define DVP_INHSZ_CODERR_Msk		(0xFF << DVP_INHSZ_CODERR_Pos)
+#define DVP_INHSZ_PIXELS_Pos		16		// pixels per line
+#define DVP_INHSZ_PIXELS_Msk		(0x7FFF << DVP_INHSZ_PIXELS_Pos)
+
+#define DVP_INVSZ_LINE_Pos			0		// current line number
+#define DVP_INVSZ_LINE_Msk			(0x7FFF << DVP_INVSZ_LINE_Pos)
+#define DVP_INVSZ_FIELD_Pos			15		// current field
+#define DVP_INVSZ_FIELD_Msk			(0x01 << DVP_INVSZ_FIELD_Pos)
+#define DVP_INVSZ_LINES_Pos			16		// lines per frame
+#define DVP_INVSZ_LINES_Msk			(0x7FFF << DVP_INVSZ_LINES_Pos)
+
+#define DVP_OUTHSZ_BEGIN_Pos		0		// start position of horizontal data
+#define DVP_OUTHSZ_BEGIN_Msk		(0x3FFF << DVP_OUTHSZ_BEGIN_Pos)
+#define DVP_OUTHSZ_COUNT_Pos		16		// pixel count to be captured
+#define DVP_OUTHSZ_COUNT_Msk		(0x3FFF << DVP_OUTHSZ_COUNT_Pos)
+
+#define DVP_OUTVSZ_BEGIN_Pos		0		// start position of vertical line
+#define DVP_OUTVSZ_BEGIN_Msk		(0x3FFF << DVP_OUTVSZ_BEGIN_Pos)
+#define DVP_OUTVSZ_COUNT_Pos		16		// line count to be captured
+#define DVP_OUTVSZ_COUNT_Msk		(0x3FFF << DVP_OUTVSZ_COUNT_Pos)
+
+#define DVP_OUTCFG_FRAME_Pos		0		// start frame to be captured
+#define DVP_OUTCFG_FRAME_Msk		(0x3FFF << DVP_OUTCFG_FRAME_Pos)
+#define DVP_OUTCFG_FIELD_Pos		15		// start field to be captured, 0 field 0, 1 field 1
+#define DVP_OUTCFG_FIELD_Msk		(0x01 << DVP_OUTCFG_FIELD_Pos)
+#define DVP_OUTCFG_COUNT_Pos		16		// frame count to be captured
+#define DVP_OUTCFG_COUNT_Msk		(0x3FFF << DVP_OUTCFG_COUNT_Pos)
+#define DVP_OUTCFG_VIDEO_Pos		31		// capture mode, 0 snapshot, 1 video
+#define DVP_OUTCFG_VIDEO_Msk		(0x01 << DVP_OUTCFG_VIDEO_Pos)
+
+#define DVP_OUTCR_CAPON_Pos			0		// 1 capture start, 0 capture stop
+#define DVP_OUTCR_CAPON_Msk			(0x01 << DVP_OUTCR_CAPON_Pos)
+#define DVP_OUTCR_OFFMODE_Pos		1		// 0 capture stop after current frame, 1 capture stop immediately
+#define DVP_OUTCR_OFFMODE_Msk		(0x01 << DVP_OUTCR_OFFMODE_Pos)
+#define DVP_OUTCR_DMABUSY_Pos		2
+#define DVP_OUTCR_DMABUSY_Msk		(0x01 << DVP_OUTCR_DMABUSY_Pos)
+#define DVP_OUTCR_BUSBUSY_Pos		3
+#define DVP_OUTCR_BUSBUSY_Msk		(0x01 << DVP_OUTCR_BUSBUSY_Pos)
+#define DVP_OUTCR_BUSERR_Pos		4
+#define DVP_OUTCR_BUSERR_Msk		(0x01 << DVP_OUTCR_BUSERR_Pos)
 
 
 

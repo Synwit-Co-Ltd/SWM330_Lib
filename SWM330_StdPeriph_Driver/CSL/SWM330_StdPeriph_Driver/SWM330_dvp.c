@@ -17,3 +17,13 @@
 #include "SWM330_dvp.h"
 
 
+/*******************************************************************************************************************************
+* @brief	DVP init
+* @param	DVPx is the DVP to init
+* @param	initStruct is data used to init the DVP
+* @return
+*******************************************************************************************************************************/
+void DVP_Init(DVP_TypeDef * DVPx, DVP_InitStructure * initStruct)
+{
+	
+}
