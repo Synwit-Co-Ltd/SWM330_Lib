@@ -3070,6 +3070,8 @@ typedef struct {
 #define DVP_CR_INSEQ_Msk			(0x03 << DVP_CR_INSEQ_Pos)
 #define DVP_CR_INSWAP_Pos			10		// RAW data input swap, 0 no swap, 1 even/odd byte swap
 #define DVP_CR_INSWAP_Msk			(0x01 << DVP_CR_INSWAP_Pos)
+#define DVP_CR_FIELDSTM_Pos			11		// Field Store Mode, 0 normal mode (field by field), 1 field line interleaving mode (line by line)
+#define DVP_CR_FIELDSTM_Msk			(0x01 << DVP_CR_FIELDSTM_Pos)
 #define DVP_CR_OUTFMT_Pos			12		// DVP output format, 0 RAW/RGB565, 1 YUV422 NV16, 2 YUV420 NV12
 #define DVP_CR_OUTFMT_Msk			(0x07 << DVP_CR_OUTFMT_Pos)
 #define DVP_CR_RAWBIT_Pos			15		// RAW data bit width, 0 8-bit, 1 10-bit, 2 12-bit, 3 14-bit
@@ -3147,10 +3149,14 @@ typedef struct {
 
 #define DVP_OUTCFG_FRAME_Pos		0		// start frame to be captured
 #define DVP_OUTCFG_FRAME_Msk		(0x3FFF << DVP_OUTCFG_FRAME_Pos)
+#define DVP_OUTCFG_SINGLE_Pos		14		// for BT656 interleaving video, 0 capture double fields, 1 capture only single field
+#define DVP_OUTCFG_SINGLE_Msk		(0x01 << DVP_OUTCFG_SINGLE_Pos)
 #define DVP_OUTCFG_FIELD_Pos		15		// start field to be captured, 0 field 0, 1 field 1
 #define DVP_OUTCFG_FIELD_Msk		(0x01 << DVP_OUTCFG_FIELD_Pos)
 #define DVP_OUTCFG_COUNT_Pos		16		// frame count to be captured
 #define DVP_OUTCFG_COUNT_Msk		(0x3FFF << DVP_OUTCFG_COUNT_Pos)
+#define DVP_OUTCFG_INLEAVE_Pos		30		// BT656 interleaving video mode
+#define DVP_OUTCFG_INLEAVE_Msk		(0x01 << DVP_OUTCFG_INLEAVE_Pos)
 #define DVP_OUTCFG_VIDEO_Pos		31		// capture mode, 0 snapshot, 1 video
 #define DVP_OUTCFG_VIDEO_Msk		(0x01 << DVP_OUTCFG_VIDEO_Pos)
 
