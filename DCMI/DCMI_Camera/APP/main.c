@@ -1,12 +1,14 @@
 #include <string.h>
 #include "SWM330.h"
 #include "OV2640.h"
-#include "jfif_parser.h"
+
+#include "../../../JPEG/SimplJPEG/APP/jfif_parser.h"
+#include "../../../JPEG/SimplJPEG/APP/jfif_parser.c"
 
 
-#define LCD_HDOT	480		// 水平点数
-#define LCD_VDOT	272		// 垂直点数
-#define LCD_DIRH	1		// 水平显示？
+#define LCD_HDOT	480		// Horizontal points
+#define LCD_VDOT	272		// Vertical points
+#define LCD_DIRH	1		// horizontal display?
 
 #define CAP_FMT		OV_FMT_RGB565
 #define CAP_HDOT	320
@@ -21,11 +23,10 @@ uint16_t *RGB_Buffer = (uint16_t *)(PSRAMM_BASE + 0x200000);
 void SerialInit(void);
 void MemoryInit(void);
 void RGBLCDInit(void);
+void DCMI_Config(void);
 
 int main(void)
 {
-	DMA_InitStructure DMA_initStruct;
-	
 	SystemInit();
 	
 	SerialInit();
@@ -38,18 +39,7 @@ int main(void)
 	
 	OV2640_Init(CAP_FMT, 4, CAP_HDOT, CAP_VDOT);
 	
-	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
-	DMA_initStruct.Unit = DMA_UNIT_WORD;
-	DMA_initStruct.Count = CAP_HDOT * CAP_VDOT * 2 / 4;
-	DMA_initStruct.MemoryAddr = (uint32_t)CAP_Buffer;
-	DMA_initStruct.MemoryAddrInc = 1;
-	DMA_initStruct.PeripheralAddr = (uint32_t)&DCMI->DR;
-	DMA_initStruct.PeripheralAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_CH3_DCMIRX;
-	DMA_initStruct.Priority = DMA_PRI_LOW;
-	DMA_initStruct.INTEn = 0;
-	DMA_CH_Init(DMA_CH3, &DMA_initStruct);
-	DMA_CH_Open(DMA_CH3);
+	DCMI_Config();
 	
 #if CAP_FMT == OV_FMT_JPEG
 	jfif_info_t jfif_info;
@@ -63,22 +53,18 @@ int main(void)
 
 	while(1==1)
 	{
-#if CAP_FMT == OV_FMT_RGB565
 		DCMI_Start(DCMI);
-		while(DCMI->CR & DCMI_CR_CAPTURE_Msk) __NOP();
+		while(DCMI_Busy(DCMI)) __NOP();
 		
+#if CAP_FMT == OV_FMT_RGB565
 		for(int i = 0; i < CAP_VDOT; i++)
 			for(int j = 0; j < CAP_HDOT; j++)
 				LCD_Buffer[LCD_HDOT * i + j] = CAP_Buffer[CAP_HDOT * i + j];
 #else
-		DCMI_Start(DCMI);
-		while(DCMI_INTStat(DCMI, DCMI_IT_FRAME) == 0) __NOP();
-		DCMI_INTClr(DCMI, DCMI_IT_FRAME);
+		DMA_CH_Close(DMA_CH3);	// data amount of the compressed image is obviously less than CAP_HDOT * CAP_VDOT * 2/4
+		DMA_CH_Open(DMA_CH3);
 		
-		DMA_CH_Abort(DMA_CH4);	// 压缩后图片的数据量显然小于 CAP_HDOT * CAP_VDOT * 2 / 4 个，因此需要终止传输
-		DMA_CH_Open(DMA_CH4);	// 为下一次捕获开启 DMA 通道
-		
-		uint32_t xfer_len = CAP_HDOT * CAP_VDOT * 2 / 4 - DMA_CH_GetRemaining(DMA_CH4);
+		uint32_t xfer_len = CAP_HDOT * CAP_VDOT * 2 / 4 - DMA_CH_GetRemaining(DMA_CH3);
 		
 		jfif_parse((uint8_t  *)CAP_Buffer, xfer_len * 4, &jfif_info);
 		
@@ -149,7 +135,7 @@ void RGBLCDInit(void)
 	LCD_initStruct.VsyncWidth = 5;
 	LCD_initStruct.DataSource = (uint32_t)LCD_Buffer;
 	LCD_initStruct.Background = 0xFFFF;
-	LCD_initStruct.SampleEdge = LCD_SAMPLE_FALL;	// ATK-4342 RGBLCD 下降沿采样
+	LCD_initStruct.SampleEdge = LCD_SAMPLE_FALL;	// ATK-4342 RGBLCD sampling on falling edge
 	LCD_initStruct.IntEOTEn = 0;
 	LCD_Init(LCD, &LCD_initStruct);
 }
@@ -177,6 +163,54 @@ void MemoryInit(void)
 	PSRAM_initStruct.tACC = 50;
 	PSRAM_initStruct.tCSM = 4;
 	PSRAM_Init(&PSRAM_initStruct);
+}
+
+
+void DCMI_Config(void)
+{
+	DMA_InitStructure  DMA_initStruct;
+	DCMI_InitStructure DCMI_initStruct;
+	
+	PORT_Init(PORTC, PIN2,  PORTC_PIN2_DVP_VS,   1);
+	PORT_Init(PORTC, PIN3,  PORTC_PIN3_DVP_HS,   1);
+	PORT_Init(PORTC, PIN1,  PORTC_PIN1_DVP_CK,   1);
+	PORT_Init(PORTC, PIN4,  PORTC_PIN4_DVP_D0,   1);
+	PORT_Init(PORTC, PIN5,  PORTC_PIN5_DVP_D1,   1);
+	PORT_Init(PORTC, PIN6,  PORTC_PIN6_DVP_D2,   1);
+	PORT_Init(PORTC, PIN7,  PORTC_PIN7_DVP_D3,   1);
+	PORT_Init(PORTC, PIN8,  PORTC_PIN8_DVP_D4,   1);
+	PORT_Init(PORTA, PIN8,  PORTA_PIN8_DVP_D5,   1);
+	PORT_Init(PORTA, PIN13, PORTA_PIN13_DVP_D6,  1);
+	PORT_Init(PORTA, PIN14, PORTA_PIN14_DVP_D7,  1);
+	PORT_Init(PORTA, PIN15, PORTA_PIN15_DVP_D8,  1);
+	PORT_Init(PORTC, PIN15, PORTC_PIN15_DVP_D9,  1);
+	PORT_Init(PORTC, PIN14, PORTC_PIN14_DVP_D10, 1);
+	PORT_Init(PORTE, PIN12, PORTE_PIN12_DVP_D11, 1);
+	PORT_Init(PORTA, PIN12, PORTA_PIN12_DVP_D12, 1);
+	PORT_Init(PORTC, PIN0,  PORTC_PIN0_DVP_D13,  1);
+	
+	DCMI_initStruct.Format = CAP_FMT == OV_FMT_RGB565 ? DCMI_FMT_RGB565 : DCMI_FMT_JPEG;
+	DCMI_initStruct.StartLine = 1;
+	DCMI_initStruct.LineCount = CAP_VDOT;
+	DCMI_initStruct.StartPixel = 1;
+	DCMI_initStruct.PixelCount = CAP_HDOT;
+	DCMI_initStruct.DownSample = 0;
+	DCMI_initStruct.SampleEdge = DCMI_PCKPolarity_Rising;
+	DCMI_initStruct.IntEn = 0;
+	DCMI_Init(DCMI, &DCMI_initStruct);
+	
+	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
+	DMA_initStruct.Unit = DMA_UNIT_WORD;
+	DMA_initStruct.Count = CAP_HDOT * CAP_VDOT * 2 / 4;
+	DMA_initStruct.MemoryAddr = (uint32_t)CAP_Buffer;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&DCMI->DR;
+	DMA_initStruct.PeripheralAddrInc = 0;
+	DMA_initStruct.Handshake = DMA_CH3_DCMIRX;
+	DMA_initStruct.Priority = DMA_PRI_LOW;
+	DMA_initStruct.INTEn = 0;
+	DMA_CH_Init(DMA_CH3, &DMA_initStruct);
+	DMA_CH_Open(DMA_CH3);
 }
 
 

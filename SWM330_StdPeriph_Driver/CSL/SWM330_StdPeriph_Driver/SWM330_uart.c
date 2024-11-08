@@ -51,8 +51,8 @@ void UART_Init(UART_TypeDef * UARTx, UART_InitStructure * initStruct)
 	UART_Close(UARTx);
 	
 	UARTx->BAUD &= ~(UART_BAUD_BAUD_Msk | UART_BAUD_FRAC_Msk);
-	UARTx->BAUD |= (((SystemCoreClock/initStruct->Baudrate - 1) / 16) << UART_BAUD_BAUD_Pos) |
-				   (((SystemCoreClock/initStruct->Baudrate - 1) % 16) << UART_BAUD_FRAC_Pos);
+	UARTx->BAUD |= (((SystemCoreClock/2/initStruct->Baudrate - 1) / 16) << UART_BAUD_BAUD_Pos) |
+				   (((SystemCoreClock/2/initStruct->Baudrate - 1) % 16) << UART_BAUD_FRAC_Pos);
 	
 	UARTx->CTRL &= ~(UART_CTRL_DATA9b_Msk | UART_CTRL_PARITY_Msk | UART_CTRL_STOP2b_Msk);
 	UARTx->CTRL |= (initStruct->DataBits << UART_CTRL_DATA9b_Pos) |
@@ -115,6 +115,17 @@ void UART_Init(UART_TypeDef * UARTx, UART_InitStructure * initStruct)
 		else
 		{
 			NVIC_DisableIRQ(UART3_IRQn);
+		}
+		break;
+	
+	case ((uint32_t)UART4):		
+		if(initStruct->RXThresholdIEn | initStruct->TXThresholdIEn | initStruct->TimeoutIEn)
+		{
+			NVIC_EnableIRQ(UART4_IRQn);
+		}
+		else
+		{
+			NVIC_DisableIRQ(UART4_IRQn);
 		}
 		break;
 	}
@@ -207,8 +218,8 @@ uint32_t UART_IsTXFIFOFull(UART_TypeDef * UARTx)
 void UART_SetBaudrate(UART_TypeDef * UARTx, uint32_t baudrate)
 {
 	UARTx->BAUD &= ~(UART_BAUD_BAUD_Msk | UART_BAUD_FRAC_Msk);
-	UARTx->BAUD |= (((SystemCoreClock/baudrate - 1) / 16) << UART_BAUD_BAUD_Pos) |
-				   (((SystemCoreClock/baudrate - 1) % 16) << UART_BAUD_FRAC_Pos);
+	UARTx->BAUD |= (((SystemCoreClock/2/baudrate - 1) / 16) << UART_BAUD_BAUD_Pos) |
+				   (((SystemCoreClock/2/baudrate - 1) % 16) << UART_BAUD_FRAC_Pos);
 }
 
 /*******************************************************************************************************************************
@@ -218,8 +229,8 @@ void UART_SetBaudrate(UART_TypeDef * UARTx, uint32_t baudrate)
 *******************************************************************************************************************************/
 uint32_t UART_GetBaudrate(UART_TypeDef * UARTx)
 {
-	return SystemCoreClock/(((UARTx->BAUD & UART_BAUD_BAUD_Msk) >> UART_BAUD_BAUD_Pos) * 16 +
-	                        ((UARTx->BAUD & UART_BAUD_FRAC_Msk) >> UART_BAUD_FRAC_Pos) + 1);
+	return SystemCoreClock/2/(((UARTx->BAUD & UART_BAUD_BAUD_Msk) >> UART_BAUD_BAUD_Pos) * 16 +
+	                          ((UARTx->BAUD & UART_BAUD_FRAC_Msk) >> UART_BAUD_FRAC_Pos) + 1);
 }
 
 /*******************************************************************************************************************************

@@ -393,11 +393,6 @@
               <FileType>1</FileType>
               <FilePath>.\APP\OV2640.c</FilePath>
             </File>
-            <File>
-              <FileName>jfif_parser.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\APP\jfif_parser.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -487,6 +482,11 @@
               <FileName>SWM330_psram.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_psram.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWM330_jpeg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\SWM330_StdPeriph_Driver\CSL\SWM330_StdPeriph_Driver\SWM330_jpeg.c</FilePath>
             </File>
           </Files>
         </Group>

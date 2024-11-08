@@ -2896,40 +2896,40 @@ typedef struct {
 } DCMI_TypeDef;
 
 
-#define DCMI_CR_CAPTURE_Pos			0
-#define DCMI_CR_CAPTURE_Msk			(0x01 << DCMI_CR_CAPTURE_Pos)
-#define DCMI_CR_CAPMODE_Pos			1		// Capture Mode, 0 Continuous grab mode   1 Snapshot mode (single frame)
+#define DCMI_CR_CAPON_Pos			0		// capture switch on
+#define DCMI_CR_CAPON_Msk			(0x01 << DCMI_CR_CAPON_Pos)
+#define DCMI_CR_CAPMODE_Pos			1		// Capture Mode, 0 Continuous grab mode, 1 Snapshot mode (single frame)
 #define DCMI_CR_CAPMODE_Msk			(0x01 << DCMI_CR_CAPMODE_Pos)
 #define DCMI_CR_CROPEN_Pos			2		// Crop Enable
 #define DCMI_CR_CROPEN_Msk			(0x01 << DCMI_CR_CROPEN_Pos)
-#define DCMI_CR_JPEG_Pos			3		// JPEG Format, 0 Uncompressed video format   1 JPEG Format
+#define DCMI_CR_JPEG_Pos			3		// JPEG Format, 0 Uncompressed format, 1 JPEG Format
 #define DCMI_CR_JPEG_Msk			(0x01 << DCMI_CR_JPEG_Pos)
-#define DCMI_CR_EMBSYNC_Pos			4		// Embedded Synchronization, 0 DCMI_VSYNC & DCMI_HSYNC sync   1 Embedded synchronization code sync (Valid only for 8-bit parallel data)
+#define DCMI_CR_EMBSYNC_Pos			4		// Embedded Synchronization, 0 DCMI_VSYNC & DCMI_HSYNC sync, 1 Embedded synchronization code sync (Valid only for 8-bit parallel data)
 #define DCMI_CR_EMBSYNC_Msk			(0x01 << DCMI_CR_EMBSYNC_Pos)
-#define DCMI_CR_PCKPOL_Pos			5		// Pixel clock polarity, 0 Falling edge active   1 Rising edge active
+#define DCMI_CR_PCKPOL_Pos			5		// Pixel clock polarity, 0 sample on falling edge, 1 sample on rising edge
 #define DCMI_CR_PCKPOL_Msk			(0x01 << DCMI_CR_PCKPOL_Pos)
-#define DCMI_CR_HSPOL_Pos			6		// Horizontal synchronization polarity, 0 HSYNC active low   1 HSYNC active high
+#define DCMI_CR_HSPOL_Pos			6		// Horizontal sync polarity, 0 HSYNC active low, 1 HSYNC active high
 #define DCMI_CR_HSPOL_Msk			(0x01 << DCMI_CR_HSPOL_Pos)
-#define DCMI_CR_VSPOL_Pos			7		// Vertical synchronization polarity, 0 VSYNC active low   1 VSYNC active high
+#define DCMI_CR_VSPOL_Pos			7		// Vertical sync polarity, 0 VSYNC active low, 1 VSYNC active high
 #define DCMI_CR_VSPOL_Msk			(0x01 << DCMI_CR_VSPOL_Pos)
-#define DCMI_CR_FRAMESEL_Pos		8		// Frame Select in Continuous grab mode, 0 all frame   1 every alternate frame   2 one frame out of four
+#define DCMI_CR_FRAMESEL_Pos		8		// Frame Select in Continuous grab mode, 0 all frame, 1 every alternate frame, 2 one frame out of four
 #define DCMI_CR_FRAMESEL_Msk		(0x03 << DCMI_CR_FRAMESEL_Pos)
-#define DCMI_CR_BUSWIDTH_Pos		10		// 0 8-bit data   1 10-bit data   2 12-bit data   3 14-bit data
+#define DCMI_CR_BUSWIDTH_Pos		10		// 0 8-bit data, 1 10-bit data, 2 12-bit data, 3 14-bit data
 #define DCMI_CR_BUSWIDTH_Msk		(0x03 << DCMI_CR_BUSWIDTH_Pos)
 #define DCMI_CR_ENA_Pos				14		// DCMI Enable, can config only when ENA=0
 #define DCMI_CR_ENA_Msk				(0x01 << DCMI_CR_ENA_Pos)
-#define DCMI_CR_BYTESEL_Pos			16		// Byte Select, 0 all byte   1 every alternate byte   2 one byte out of four   3 two bytes out of four
+#define DCMI_CR_BYTESEL_Pos			16		// Byte Select, 0 all byte, 1 every alternate byte, 2 one byte out of four, 3 two bytes out of four
 #define DCMI_CR_BYTESEL_Msk			(0x03 << DCMI_CR_BYTESEL_Pos)
-#define DCMI_CR_BYTE2nd_Pos			18		// Second Byte Start, 0 first byte start   1 second byte start
+#define DCMI_CR_BYTE2nd_Pos			18		// Second Byte Start, 0 first byte star, 1 second byte start
 #define DCMI_CR_BYTE2nd_Msk			(0x01 << DCMI_CR_BYTE2nd_Pos)
-#define DCMI_CR_LINESEL_Pos			19		// Line Select, 0 all line   1 every alternate line
+#define DCMI_CR_LINESEL_Pos			19		// Line Select, 0 all line, 1 every alternate line
 #define DCMI_CR_LINESEL_Msk			(0x01 << DCMI_CR_LINESEL_Pos)
-#define DCMI_CR_LINE2nd_Pos			20		// Second Line Start, 0 first line start   1 second line start
+#define DCMI_CR_LINE2nd_Pos			20		// Second Line Start, 0 first line start, 1 second line start
 #define DCMI_CR_LINE2nd_Msk			(0x01 << DCMI_CR_LINE2nd_Pos)
 
-#define DCMI_SR_HSYNC_Pos			0		// 0 active line   1 synchronization between lines
+#define DCMI_SR_HSYNC_Pos			0		// 0 active line, 1 synchronization between lines
 #define DCMI_SR_HSYNC_Msk			(0x01 << DCMI_SR_HSYNC_Pos)
-#define DCMI_SR_VSYNC_Pos			1		// 0 active frame   1 synchronization between frames
+#define DCMI_SR_VSYNC_Pos			1		// 0 active frame, 1 synchronization between frames
 #define DCMI_SR_VSYNC_Msk			(0x01 << DCMI_SR_VSYNC_Pos)
 #define DCMI_SR_FIFONE_Pos			2		// FIFO not empty
 #define DCMI_SR_FIFONE_Msk			(0x01 << DCMI_SR_FIFONE_Pos)

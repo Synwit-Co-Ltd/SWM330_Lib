@@ -27,162 +27,79 @@ void DCMI_Init(DCMI_TypeDef * DCMIx, DCMI_InitStructure * initStruct)
 {
 	SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_DVP_Pos);
 	
-	DCMI_Close(DCMIx);
+	DCMI->CR = (1        				  << DCMI_CR_CAPMODE_Pos)  |
+			   ((initStruct->Format != 1) << DCMI_CR_CROPEN_Pos)   |		//  crop cannot be used in the JPEG format
+			   ((initStruct->Format == 1) << DCMI_CR_JPEG_Pos)     |
+			   (0                         << DCMI_CR_EMBSYNC_Pos)  |		// hardware sync (DCMI_VSYNC & DCMI_HSYNC)
+			   (initStruct->SampleEdge	  << DCMI_CR_PCKPOL_Pos)   |
+			   (1						  << DCMI_CR_HSPOL_Pos)    |
+			   (1						  << DCMI_CR_VSPOL_Pos)    |
+			   ((initStruct->Format >> 8) << DCMI_CR_BUSWIDTH_Pos) |
+			   (initStruct->DownSample	  << DCMI_CR_BYTESEL_Pos);
 	
-	DCMI->CR = (initStruct->Mode        << DCMI_CR_CAPMODE_Pos)  |
-			   (0                       << DCMI_CR_CROPEN_Pos)   |		// crop function disable
-			   (initStruct->Format      << DCMI_CR_JPEG_Pos)     |
-			   (0                       << DCMI_CR_EMBSYNC_Pos)  |		// hardware sync (DCMI_VSYNC & DCMI_HSYNC)
-			   (initStruct->PCKPolarity << DCMI_CR_PCKPOL_Pos)   |
-			   (initStruct->HSPolarity  << DCMI_CR_HSPOL_Pos)    |
-			   (initStruct->VSPolarity  << DCMI_CR_VSPOL_Pos)    |
-			   (initStruct->BusWidth    << DCMI_CR_BUSWIDTH_Pos) |
-			   (0                       << DCMI_CR_LINESEL_Pos)  |		// all line
-			   (0                       << DCMI_CR_BYTESEL_Pos);		// all byte
+	int pixel_clock_count = initStruct->PixelCount;
+	if((initStruct->Format == DCMI_FMT_RGB565) || (initStruct->Format == DCMI_FMT_YUV422))
+		pixel_clock_count *= 2;		// each RGB565/YUV422 pixel requires two pixel clocks
 	
-	DCMI->ICR = 0x1F;
-	DCMI->IER = (initStruct->IntEOCEn << DCMI_IER_FRAME_Pos);
+	DCMIx->CWPOS = ((initStruct->StartLine  - 1) << DCMI_CWPOS_LINE_Pos) |
+				   ((initStruct->StartPixel - 1) << DCMI_CWPOS_PIXEL_Pos);
 	
-	if(initStruct->IntEOCEn)
+	DCMIx->CWSIZ = ((initStruct->LineCount  - 1) << DCMI_CWSIZ_LINE_Pos) |
+				   ((pixel_clock_count      - 1) << DCMI_CWSIZ_PIXEL_Pos);
+	
+	DCMIx->CR |= DCMI_CR_ENA_Msk;
+	
+	DCMI_INTClr(DCMI, initStruct->IntEn);
+	DCMI_INTEn(DCMI, initStruct->IntEn);
+	
+	if(initStruct->IntEn)
 		NVIC_EnableIRQ(DVP_IRQn);
 }
 
-
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_Open()
-* 功能说明:	DCMI接口开启
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
-void DCMI_Open(DCMI_TypeDef * DCMIx)
-{
-	DCMIx->CR |= DCMI_CR_ENA_Msk;
-}
-
-
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_Close()
-* 功能说明:	DCMI接口关闭
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
-void DCMI_Close(DCMI_TypeDef * DCMIx)
-{
-	DCMIx->CR &= ~DCMI_CR_ENA_Msk;
-}
-
-
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_Start()
-* 功能说明:	DCMI接口启动捕获，检测到帧起始后开始捕获数据
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
+/*******************************************************************************************************************************
+* @brief	DCMI capture start
+* @param	DCMIx is the DCMI to start
+* @return
+*******************************************************************************************************************************/
 void DCMI_Start(DCMI_TypeDef * DCMIx)
 {
-	DCMIx->CR |= DCMI_CR_CAPTURE_Msk;
+	DCMIx->CR |= DCMI_CR_CAPON_Msk;
 }
 
-
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_Stop()
-* 功能说明:	DCMI接口停止捕获
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-* 输    出: 无
-* 注意事项: 帧数据捕获过程中执行此函数，捕获操作不会立即停止，而是等到当前帧捕获完成后才会真正停止
-******************************************************************************************************************************************/
+/*******************************************************************************************************************************
+* @brief	DCMI capture stop, actually stop after current frame captured done
+* @param	DCMIx is the DCMI to stop
+* @return
+*******************************************************************************************************************************/
 void DCMI_Stop(DCMI_TypeDef * DCMIx)
 {
-	DCMIx->CR &= ~DCMI_CR_CAPTURE_Msk;
+	DCMIx->CR &= ~DCMI_CR_CAPON_Msk;
 }
 
-
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_DataAvaliable()
-* 功能说明:	DCMI接口有数据可读
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
-bool DCMI_DataAvaliable(DCMI_TypeDef * DCMIx)
+/*******************************************************************************************************************************
+* @brief	DCMI busy query
+* @param	DCMIx is the DCMI to query
+* @return	true: DCMI is busy on image capture, false: capture done
+*******************************************************************************************************************************/
+bool DCMI_Busy(DCMI_TypeDef * DCMIx)
 {
-	return DCMIx->SR & DCMI_SR_FIFONE_Msk;
+	return DCMIx->CR & DCMI_CR_CAPON_Msk;
 }
 
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_SetCropWindow()
-* 功能说明:	Set Crop Window
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-*			uint16_t start_x		start pixel point in line
-*			uint16_t start_y		start line
-*			uint16_t count_x		pixel count in line
-*			uint16_t count_y		line count
-* 输    出: 无
-* 注意事项: Valid only for 8-bit parallel data.
-           The Crop configuration should be made before to enable and start the DCMI interface.
-******************************************************************************************************************************************/
-void DCMI_SetCropWindow(DCMI_TypeDef * DCMIx, uint16_t start_x, uint16_t start_y, uint16_t count_x, uint16_t count_y)
-{
-	DCMIx->CWPOS = ( start_y      << DCMI_CWPOS_LINE_Pos) |
-				   ( start_x      << DCMI_CWPOS_PIXEL_Pos);
-	
-	DCMIx->CWSIZ = ((count_y - 1)     << DCMI_CWSIZ_LINE_Pos) |
-				   ((count_x * 2 - 1) << DCMI_CWSIZ_PIXEL_Pos); //DCMI_CWSIZ_PIXEL_Pos需要写入一行的像素时钟数，8-bit parallel一个像素需要两个时钟
-}
-
-
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_CropSwitch()
-* 功能说明:	DCMI 裁切窗口功能开关
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-*			bool on					true 开启裁切功能   false 关闭裁切功能
-* 输    出: 无
-* 注意事项: Valid only for 8-bit parallel data
-******************************************************************************************************************************************/
-void DCMI_CropSwitch(DCMI_TypeDef * DCMIx, bool on)
-{
-	if(on)
-		DCMIx->CR |=  DCMI_CR_CROPEN_Msk;
-	else
-		DCMIx->CR &= ~DCMI_CR_CROPEN_Msk;
-}
-
-
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_DownSampling()
-* 功能说明:	DCMI 降采样
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-*			DCMI_DownSampling_Line line_sel	降采样行选择
-*			DCMI_DownSampling_Byte byte_sel	降采样字节选择
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
-void DCMI_DownSampling(DCMI_TypeDef * DCMIx, DCMI_DownSampling_Line line_sel, DCMI_DownSampling_Byte byte_sel)
-{
-	DCMIx->CR &= ~(DCMI_CR_LINESEL_Msk | DCMI_CR_LINE2nd_Msk |
-				   DCMI_CR_BYTESEL_Msk | DCMI_CR_BYTE2nd_Msk);
-	
-	DCMIx->CR |= (line_sel << DCMI_CR_LINESEL_Pos) |
-				 (byte_sel << DCMI_CR_BYTESEL_Pos);
-}
-
-
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_EmbeddedSync()
-* 功能说明:	设置 Embedded Synchronization Code，并开启 Embedded synchronization code sync
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-*			uint8_t frame_start		Frame start delimiter code
-*			uint8_t line_start		Line start delimiter code
-*			uint8_t line_end		Line end delimiter code
-*			uint8_t frame_end		Frame end delimiter code
-* 输    出: 无
-* 注意事项: Valid only for 8-bit parallel data
-******************************************************************************************************************************************/
+/*******************************************************************************************************************************
+* @brief	switch to use embedded sync, and set embedded sync code
+* @param	DCMIx is the DCMI to set
+* @param	frame_start is used to set Frame start delimiter code
+* @param	line_start is used to set Line start delimiter code
+* @param	line_end is used to set Line end delimiter code
+* @param	frame_end is used to set Frame end delimiter code
+* @return
+* @note		applicable to 8-bit data interface only
+*******************************************************************************************************************************/
 void DCMI_EmbeddedSync(DCMI_TypeDef * DCMIx, uint8_t frame_start, uint8_t line_start, uint8_t line_end, uint8_t frame_end)
 {
+	DCMIx->CR &= ~DCMI_CR_ENA_Msk;
+	
 	DCMIx->ESC = (frame_start << DCMI_ESC_FRMSTA_Pos) |
 				 (line_start  << DCMI_ESC_LINSTA_Pos) |
 				 (line_end    << DCMI_ESC_LINEND_Pos) |
@@ -194,56 +111,49 @@ void DCMI_EmbeddedSync(DCMI_TypeDef * DCMIx, uint8_t frame_start, uint8_t line_s
 				 (0xFF		  << DCMI_ESM_FRMEND_Pos);
 	
 	DCMIx->CR |= DCMI_CR_EMBSYNC_Msk;
+	
+	DCMIx->CR |= DCMI_CR_ENA_Msk;
 }
 
-
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_INTEn()
-* 功能说明:	中断使能
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-*			uint32_t it				interrupt type，有效值 DCMI_IT_FRAME、DCMI_IT_FIFOOV、DCMI_IT_ESCERR、DCMI_IT_VSYNC、DCMI_IT_HSYNC 及其“或”
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
+/*******************************************************************************************************************************
+* @brief	DCMI interrupt enable
+* @param	DCMIx is the DCMI to set
+* @param	it is interrupt type, can be DCMI_IT_FRAME, DCMI_IT_FIFOOV, ..., DCMI_IT_HSYNC and their '|' operation
+* @return
+*******************************************************************************************************************************/
 void DCMI_INTEn(DCMI_TypeDef * DCMIx, uint32_t it)
 {
 	DCMI->IER |=  it;
 }
 
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_INTDis()
-* 功能说明:	中断禁止
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-*			uint32_t it				interrupt type，有效值 DCMI_IT_FRAME、DCMI_IT_FIFOOV、DCMI_IT_ESCERR、DCMI_IT_VSYNC、DCMI_IT_HSYNC 及其“或”
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
+/*******************************************************************************************************************************
+* @brief	DCMI interrupt disable
+* @param	DCMIx is the DCMI to set
+* @param	it is interrupt type, can be DCMI_IT_FRAME, DCMI_IT_FIFOOV, ..., DCMI_IT_HSYNC and their '|' operation
+* @return
+*******************************************************************************************************************************/
 void DCMI_INTDis(DCMI_TypeDef * DCMIx, uint32_t it)
 {
 	DCMI->IER &= ~it;
 }
 
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_INTClr()
-* 功能说明:	中断标志清除
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-*			uint32_t it				interrupt type，有效值 DCMI_IT_FRAME、DCMI_IT_FIFOOV、DCMI_IT_ESCERR、DCMI_IT_VSYNC、DCMI_IT_HSYNC 及其“或”
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
+/*******************************************************************************************************************************
+* @brief	DCMI interrupt flag clear
+* @param	DCMIx is the DCMI to set
+* @param	it is interrupt type, can be DCMI_IT_FRAME, DCMI_IT_FIFOOV, ..., DCMI_IT_HSYNC and their '|' operation
+* @return
+*******************************************************************************************************************************/
 void DCMI_INTClr(DCMI_TypeDef * DCMIx, uint32_t it)
 {
 	DCMI->ICR = it;
 }
 
-/****************************************************************************************************************************************** 
-* 函数名称:	DCMI_INTStat()
-* 功能说明:	中断状态查询
-* 输    入: DCMI_TypeDef * DCMIx	指定要被设置的DCMI接口，有效值包括DCMI
-*			uint32_t it				interrupt type，有效值 DCMI_IT_FRAME、DCMI_IT_FIFOOV、DCMI_IT_ESCERR、DCMI_IT_VSYNC、DCMI_IT_HSYNC 及其“或”
-* 输    出: uint32_t				true 中断发生    false 中断未发生
-* 注意事项: 无
-******************************************************************************************************************************************/
+/*******************************************************************************************************************************
+* @brief	DCMI interrupt state query
+* @param	DCMIx is the DCMI to query
+* @param	it is interrupt type, can be DCMI_IT_FRAME, DCMI_IT_FIFOOV, ..., DCMI_IT_HSYNC and their '|' operation
+* @return	true: interrupt happened, false: interrupt not happen
+*******************************************************************************************************************************/
 bool DCMI_INTStat(DCMI_TypeDef * DCMIx, uint32_t it)
 {
 	return DCMI->RIS & it;

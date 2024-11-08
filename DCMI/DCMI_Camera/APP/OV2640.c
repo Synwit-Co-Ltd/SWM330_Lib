@@ -6,8 +6,6 @@
 
 bool OV2640_Init(uint8_t outfmt, uint8_t clkdiv, uint16_t width, uint16_t height)
 {
-	DCMI_InitStructure DCMI_initStruct;
-	
 	I2C_InitStructure  I2C_initStruct;
 	
 	PORT_Init(PORTB, PIN0, FUNMUX0_I2C1_SCL, 1);
@@ -69,39 +67,6 @@ bool OV2640_Init(uint8_t outfmt, uint8_t clkdiv, uint16_t width, uint16_t height
 	
 	OV2640_OutSize(width, height);
 	OV2640_ClkDiv(clkdiv);
-	
-	
-	PORT_Init(PORTC, PIN2,  PORTC_PIN2_DVP_VS,   1);
-	PORT_Init(PORTC, PIN3,  PORTC_PIN3_DVP_HS,   1);
-	PORT_Init(PORTC, PIN1,  PORTC_PIN1_DVP_CK,   1);
-	PORT_Init(PORTC, PIN4,  PORTC_PIN4_DVP_D0,   1);
-	PORT_Init(PORTC, PIN5,  PORTC_PIN5_DVP_D1,   1);
-	PORT_Init(PORTC, PIN6,  PORTC_PIN6_DVP_D2,   1);
-	PORT_Init(PORTC, PIN7,  PORTC_PIN7_DVP_D3,   1);
-	PORT_Init(PORTC, PIN8,  PORTC_PIN8_DVP_D4,   1);
-	PORT_Init(PORTA, PIN8,  PORTA_PIN8_DVP_D5,   1);
-	PORT_Init(PORTA, PIN13, PORTA_PIN13_DVP_D6,  1);
-	PORT_Init(PORTA, PIN14, PORTA_PIN14_DVP_D7,  1);
-	PORT_Init(PORTA, PIN15, PORTA_PIN15_DVP_D8,  1);
-	PORT_Init(PORTC, PIN15, PORTC_PIN15_DVP_D9,  1);
-	PORT_Init(PORTC, PIN14, PORTC_PIN14_DVP_D10, 1);
-	PORT_Init(PORTE, PIN12, PORTE_PIN12_DVP_D11, 1);
-	PORT_Init(PORTA, PIN12, PORTA_PIN12_DVP_D12, 1);
-	PORT_Init(PORTC, PIN0,  PORTC_PIN0_DVP_D13,  1);
-	
-	DCMI_initStruct.Mode = DCMI_MODE_SnapShot;
-if(outfmt == OV_FMT_RGB565)
-	DCMI_initStruct.Format = DCMI_FMT_Uncompressed;
-else
-	DCMI_initStruct.Format = DCMI_FMT_JPEG;
-	DCMI_initStruct.BusWidth = DCMI_BusWidth_8b;
-	DCMI_initStruct.PCKPolarity = DCMI_PCKPolarity_Rising;
-	DCMI_initStruct.VSPolarity = DCMI_VSPolarity_High;
-	DCMI_initStruct.HSPolarity = DCMI_HSPolarity_Low;
-	DCMI_initStruct.IntEOCEn = 0;
-	DCMI_Init(DCMI, &DCMI_initStruct);
-	
-	DCMI_Open(DCMI);
 	
 	return true;
 }
