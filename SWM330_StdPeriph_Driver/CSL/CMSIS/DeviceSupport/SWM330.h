@@ -2296,6 +2296,8 @@ typedef struct {
 #define PSRAMC_CSR_CLRBUF_Msk		(0x01 << PSRAMC_CSR_CLRBUF_Pos)
 #define PSRAMC_CSR_PREFEN_Pos		21		// prefetch enable
 #define PSRAMC_CSR_PREFEN_Msk		(0x01 << PSRAMC_CSR_PREFEN_Pos)
+#define PSRAMC_CSR_BUFLEN_Pos		22		// buffer length, 0 8-byte, 1 16-byte, 2 32-byte, 3 64-byte
+#define PSRAMC_CSR_BUFLEN_Msk		(0x03 << PSRAMC_CSR_BUFLEN_Pos)
 #define PSRAMC_CSR_WRBUSY_Pos		24		// write busy
 #define PSRAMC_CSR_WRBUSY_Msk		(0x01 << PSRAMC_CSR_WRBUSY_Pos)
 #define PSRAMC_CSR_RDBUSY_Pos		25		// read busy
@@ -2319,7 +2321,7 @@ typedef struct {
 #define PSRAMC_IR_ID1_Pos			16		// Device ID1
 #define PSRAMC_IR_ID1_Msk			(0xFFFF<< PSRAMC_IR_ID1_Pos)
 
-#define PSRAMC_CR0_BurstLen_Pos		0		// Burst Length, 3 32byte
+#define PSRAMC_CR0_BurstLen_Pos		0		// Burst Length, 1 64-byte, 2 16-byte, 3 32-byte
 #define PSRAMC_CR0_BurstLen_Msk		(0x03 << PSRAMC_CR0_BurstLen_Pos)
 #define PSRAMC_CR0_HybridBurst_Pos	2		// Hybrid Burst Enable, can only be 1
 #define PSRAMC_CR0_HybridBurst_Msk	(0x01 << PSRAMC_CR0_HybridBurst_Pos)

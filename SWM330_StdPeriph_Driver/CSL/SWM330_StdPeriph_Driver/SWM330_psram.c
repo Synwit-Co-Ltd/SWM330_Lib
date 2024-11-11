@@ -68,8 +68,9 @@ void PSRAM_Init(PSRAM_InitStructure * initStruct)
 				  (1	<< PSRAMC_CR1_ClockType_Pos)   |
 				  PSRAMC_CR1_MustAllBe1_Msk;
 	
-	PSRAMC->CSR = (initStruct->RowSize << PSRAMC_CSR_ROWSZ_Pos) |
+	PSRAMC->CSR = (initStruct->RowSize << PSRAMC_CSR_ROWSZ_Pos)  |
 				  (0				   << PSRAMC_CSR_BUS16b_Pos) |
+				  (2				   << PSRAMC_CSR_BUFLEN_Pos) |
 				  (0				   << PSRAMC_CSR_PREFEN_Pos);
 	
 	__NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP();
