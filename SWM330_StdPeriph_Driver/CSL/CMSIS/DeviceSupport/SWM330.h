@@ -2417,7 +2417,7 @@ typedef struct {
 		
 		__IO uint16_t MPUIRH;
 		
-			 uint32_t RESERVED5;
+		__IO uint32_t RESERVED5;
 	};
 	
 	union {
@@ -2425,7 +2425,7 @@ typedef struct {
 		
 		__IO uint16_t MPUDRH;
 		
-			 uint32_t RESERVED6;
+		__IO uint32_t RESERVED6;
 	};
 	
 	__IO uint32_t MPUAR;
@@ -3765,7 +3765,6 @@ typedef struct {
 #define I2C1				((I2C_TypeDef  *) I2C1_BASE)
 
 #define ADC0 				((ADC_TypeDef  *) ADC0_BASE)
-#define ADC1 				((ADC_TypeDef  *) ADC1_BASE)
 
 #define PWM0				((PWM_TypeDef  *) PWM0_BASE)
 #define PWM1				((PWM_TypeDef  *) PWM1_BASE)

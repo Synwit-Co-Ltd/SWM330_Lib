@@ -5,9 +5,9 @@
 typedef struct {
 	uint8_t  RowSize;	// PSRAM_ROWSIZE_1KB, PSRAM_ROWSIZE_2KB, PSRAM_ROWSIZE_4KB, PSRAM_ROWSIZE_8KB
 	
-	uint8_t  tRWR;		// HyperRAM Read-Write Recovery Time in ns
-	uint8_t  tACC;		// HyperRAM Read Initial Access Time in ns
-	uint8_t  tCSM;		// Chip Select Maximum Low Time in us
+	uint16_t tRWR;		// HyperRAM Read-Write Recovery Time in ns
+	uint16_t tACC;		// HyperRAM Read Initial Access Time in ns
+	uint16_t tCSM;		// Chip Select Maximum Low Time in us
 } PSRAM_InitStructure;
 
 

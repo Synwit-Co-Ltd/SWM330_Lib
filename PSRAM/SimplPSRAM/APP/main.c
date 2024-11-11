@@ -42,8 +42,10 @@ int main(void)
 	PSRAM_initStruct.tACC = 50;
 	PSRAM_initStruct.tCSM = 4;
 	PSRAM_Init(&PSRAM_initStruct);
-   	
 	
+	printf("HyperRAM ID0 = 0x%04X, ID1 = 0x%04X\n", (PSRAMC->IR & PSRAMC_IR_ID0_Msk) >> PSRAMC_IR_ID0_Pos,
+													(PSRAMC->IR & PSRAMC_IR_ID1_Msk) >> PSRAMC_IR_ID1_Pos);
+   	
 	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
 	WordTest(PSRAMM_BASE+0x100000, WordBuffer, sizeof(WordBuffer)/4);
 	WordTest(PSRAMM_BASE+0x110001, WordBuffer, sizeof(WordBuffer)/4);

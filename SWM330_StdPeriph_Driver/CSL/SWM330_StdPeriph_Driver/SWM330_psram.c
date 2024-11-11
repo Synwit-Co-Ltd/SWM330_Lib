@@ -28,11 +28,15 @@ void PSRAM_Init(PSRAM_InitStructure * initStruct)
 	
 	uint16_t ns_per_cycle = 1000 / CyclesPerUs;
 	
+	uint16_t acc_cycles = initStruct->tACC / ns_per_cycle + 1;
+	if(acc_cycles < 8)		// when 4 Clock Latency, 4 * tPSRAM_CLK = 8 * tSYS_CLK
+		acc_cycles = 8;
+	
 	PSRAMC->TR1US = CyclesPerUs;
 	
-	PSRAMC->TR = (initStruct->tCSM				  << PSRAMC_TR_CSM_Pos) |
-				 (initStruct->tRWR / ns_per_cycle << PSRAMC_TR_RWR_Pos) |
-				 (initStruct->tACC / ns_per_cycle << PSRAMC_TR_ACC_Pos);
+	PSRAMC->TR = (initStruct->tCSM				  		<< PSRAMC_TR_CSM_Pos) |
+				 ((initStruct->tRWR / ns_per_cycle + 1) << PSRAMC_TR_RWR_Pos) |
+				 (acc_cycles							<< PSRAMC_TR_ACC_Pos);
 	
 	/* W956A8MB		tVCS	tRP		tRH		tRPH	tHSIN	tCSHS	tEXTHS	tDPDIN	tCSDPD	tEXTDPD
 	 * MIN					200ns	200ns	400ns			60ns					200ns
@@ -40,23 +44,24 @@ void PSRAM_Init(PSRAM_InitStructure * initStruct)
 	 */
 	PSRAMC->INITTR = 300;
 	
-	PSRAMC->RSTTR  = (1000 / ns_per_cycle << PSRAMC_RSTTR_RP_Pos) |
-					 (1000 / ns_per_cycle << PSRAMC_RSTTR_RH_Pos) |
-					 (2000 / ns_per_cycle << PSRAMC_RSTTR_RPH_Pos);
+	PSRAMC->RSTTR  = ((1000 / ns_per_cycle + 1) << PSRAMC_RSTTR_RP_Pos) |
+					 ((1000 / ns_per_cycle + 1) << PSRAMC_RSTTR_RH_Pos) |
+					 ((2000 / ns_per_cycle + 1) << PSRAMC_RSTTR_RPH_Pos);
 	
-	PSRAMC->SLPTR  = (10				  << PSRAMC_SLPTR_HSIN_Pos) |
-					 (3000 / ns_per_cycle << PSRAMC_SLPTR_CSHS_Pos) |
-					 (200				  << PSRAMC_SLPTR_EXTHS_Pos);
+	PSRAMC->SLPTR  = (10				  		<< PSRAMC_SLPTR_HSIN_Pos) |
+					 ((3000 / ns_per_cycle + 1) << PSRAMC_SLPTR_CSHS_Pos) |
+					 (200				  		<< PSRAMC_SLPTR_EXTHS_Pos);
 	
-	PSRAMC->PWDNTR = (10				  << PSRAMC_PWDNTR_DPDIN_Pos) |
-					 (3000 / ns_per_cycle << PSRAMC_PWDNTR_CSDPD_Pos) |
-					 (200				  << PSRAMC_PWDNTR_EXTDPD_Pos);
+	PSRAMC->PWDNTR = (10				  		<< PSRAMC_PWDNTR_DPDIN_Pos) |
+					 ((3000 / ns_per_cycle + 1) << PSRAMC_PWDNTR_CSDPD_Pos) |
+					 (200				  		<< PSRAMC_PWDNTR_EXTDPD_Pos);
 	
 	PSRAMC->CR0 = (3	<< PSRAMC_CR0_BurstLen_Pos)    |
 				  (1	<< PSRAMC_CR0_HybridBurst_Pos) |
 				  (0	<< PSRAMC_CR0_FixLatency_Pos)  |
 				  (0xF	<< PSRAMC_CR0_InitLatency_Pos) |	// 4 Clock Latency @ 100MHz Max Frequency
-				  (1	<< PSRAMC_CR0_MustBe1_Pos);
+				  (1	<< PSRAMC_CR0_MustBe1_Pos)     |
+				  (1	<< PSRAMC_CR0_PowerDown_Pos);		// 1 Normal operation, 0 Writing 0 causes the device to enter Deep Power Down
 	
 	PSRAMC->CR1 = (1	<< PSRAMC_CR1_RefInterval_Pos) |
 				  (0	<< PSRAMC_CR1_PartialRef_Pos)  |
@@ -67,6 +72,7 @@ void PSRAM_Init(PSRAM_InitStructure * initStruct)
 				  (0				   << PSRAMC_CSR_BUS16b_Pos) |
 				  (0				   << PSRAMC_CSR_PREFEN_Pos);
 	
+	__NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP();
 	while((PSRAMC->CSR & PSRAMC_CSR_INITDONE_Msk) == 0) __NOP();
 }
 
