@@ -1,9 +1,8 @@
 #include <string.h>
 #include "SWM330.h"
 
-#define OV_ARRAY
-#include "../../../DCMI/DCMI_Camera/APP/OV2640.h"
-#include "../../../DCMI/DCMI_Camera/APP/OV2640.c"
+#include "ov2640.h"
+#include "ov2640_port.h"
 
 #include "../../../JPEG/SimplJPEG/APP/jfif_parser.h"
 #include "../../../JPEG/SimplJPEG/APP/jfif_parser.c"
@@ -22,11 +21,13 @@ uint16_t *LCD_Buffer = (uint16_t *)(PSRAMM_BASE);
 uint16_t *CAP_Buffer = (uint16_t *)(PSRAMM_BASE + 0x100000);
 uint16_t *RGB_Buffer = (uint16_t *)(PSRAMM_BASE + 0x200000);
 
+extern ov2640_handle_t ov_handle;
 
 void SerialInit(void);
 void MemoryInit(void);
 void RGBLCDInit(void);
 void DVP_Config(void);
+void OV2640_Config(void);
 
 int main(void)
 {
@@ -40,7 +41,7 @@ int main(void)
 	
 	LCD_Start(LCD);
 	
-	OV2640_Init(CAP_FMT, 4, CAP_HDOT, CAP_VDOT);
+	OV2640_Config();
 	
 	DVP_Config();
 	
@@ -198,6 +199,32 @@ void DVP_Config(void)
 	DVP_initStruct.RawAddr = (uint32_t)CAP_Buffer;
 	DVP_initStruct.IntEn = 0;
 	DVP_Init(DVP, &DVP_initStruct);
+}
+
+
+ov2640_handle_t ov_handle = {
+	.sccb_init			= ov2640_interface_sccb_init,
+	.sccb_deinit		= ov2640_interface_sccb_deinit,
+	.sccb_write			= ov2640_interface_sccb_write,
+	.sccb_read			= ov2640_interface_sccb_read,
+	.reset_init			= ov2640_interface_reset_init,
+	.reset_deinit		= ov2640_interface_reset_deinit,
+	.reset_write		= ov2640_interface_reset_write,
+	.power_down_init	= ov2640_interface_power_down_init,
+	.power_down_deinit	= ov2640_interface_power_down_deinit,
+	.power_down_write	= ov2640_interface_power_down_write,
+	.debug_print		= ov2640_interface_debug_print,
+	.delay_ms			= ov2640_interface_delay_ms,
+	.inited				= 0
+};
+
+void OV2640_Config(void)
+{
+	ov2640_init(&ov_handle);
+	
+	ov2640_table_init(&ov_handle);
+	
+	ov2640_table_rgb565_init(&ov_handle);
 }
 
 

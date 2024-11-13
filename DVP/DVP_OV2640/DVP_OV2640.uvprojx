@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\out\</OutputDirectory>
-          <OutputName>DVP_Camera</OutputName>
+          <OutputName>DVP_OV2640</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -387,6 +387,16 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\app\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>ov2640.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\ov2640.c</FilePath>
+            </File>
+            <File>
+              <FileName>ov2640_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\ov2640_port.c</FilePath>
             </File>
           </Files>
         </Group>
