@@ -23,4 +23,4 @@ void ST77903_WriteCmd(uint8_t cmd, uint8_t para[], uint32_t len);
 void ST77903_ReadCmd(uint8_t cmd, uint8_t para[], uint32_t len);
 
 
-#endif // __ST77903_h__
+#endif

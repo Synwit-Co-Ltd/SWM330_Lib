@@ -3,11 +3,11 @@
 
 
 typedef struct {
-	uint16_t Size;			// Flash 大小，双 Flash 时指两个 Flash 的总大小，取值 QSPI_Size_1MB、...、QSPI_Size_512MB
-	uint16_t ClkDiv;		// 可取值 2--256
-	uint8_t  ClkMode;		// 可取值 QSPI_ClkMode_0、QSPI_ClkMode_3
-	uint8_t  SampleShift;	// 可取值 QSPI_SampleShift_None、QSPI_SampleShift_1_SYSCLK、...
-	uint8_t  IntEn;			// 可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
+	uint16_t Size;			// Flash chip size, can be QSPI_Size_1MB, QSPI_Size_2MB, ..., QSPI_Size_512MB
+	uint16_t ClkDiv;		// 2--256
+	uint8_t  ClkMode;		// QSPI_ClkMode_0, QSPI_ClkMode_3
+	uint8_t  SampleShift;	// QSPI_SampleShift_None, QSPI_SampleShift_1_SYSCLK, ...
+	uint8_t  IntEn;			// QSPI_IT_ERR, QSPI_IT_DONE, QSPI_IT_FFTHR, QSPI_IT_PSMAT, QSPI_IT_TO and their '|' operation
 } QSPI_InitStructure;
 
 #define QSPI_Size_1MB		19
@@ -35,24 +35,24 @@ typedef struct {
 
 
 typedef struct {
-	uint8_t  Instruction;			// 指令码
-	uint8_t  InstructionMode;		// 可取值：QSPI_PhaseMode_None、QSPI_PhaseMode_1bit、QSPI_PhaseMode_2bit、QSPI_PhaseMode_4bit
+	uint8_t  Instruction;
+	uint8_t  InstructionMode;		// QSPI_PhaseMode_None, QSPI_PhaseMode_1bit, QSPI_PhaseMode_2bit, QSPI_PhaseMode_4bit
 	uint32_t Address;
-	uint8_t  AddressMode;			// 可取值：QSPI_PhaseMode_None、QSPI_PhaseMode_1bit、QSPI_PhaseMode_2bit、QSPI_PhaseMode_4bit
-	uint8_t  AddressSize;			// 可取值：QSPI_PhaseSize_8bit、QSPI_PhaseSize_16bit、QSPI_PhaseSize_24bit、QSPI_PhaseSize_32bit
+	uint8_t  AddressMode;			// QSPI_PhaseMode_None, QSPI_PhaseMode_1bit, QSPI_PhaseMode_2bit, QSPI_PhaseMode_4bit
+	uint8_t  AddressSize;			// QSPI_PhaseSize_8bit, QSPI_PhaseSize_16bit, QSPI_PhaseSize_24bit, QSPI_PhaseSize_32bit
 	uint32_t AlternateBytes;
-	uint8_t  AlternateBytesMode;	// 可取值：QSPI_PhaseMode_None、QSPI_PhaseMode_1bit、QSPI_PhaseMode_2bit、QSPI_PhaseMode_4bit
-	uint8_t  AlternateBytesSize;	// 可取值：QSPI_PhaseSize_8bit、QSPI_PhaseSize_16bit、QSPI_PhaseSize_24bit、QSPI_PhaseSize_32bit
-	uint8_t  DummyCycles;			// 可取值：0--31
-	uint8_t  DataMode;				// 可取值：QSPI_PhaseMode_None、QSPI_PhaseMode_1bit、QSPI_PhaseMode_2bit、QSPI_PhaseMode_4bit
-	uint32_t DataCount;				// 要读写数据的字节个数，0 表示一直读写直到存储器末尾
+	uint8_t  AlternateBytesMode;	// QSPI_PhaseMode_None, QSPI_PhaseMode_1bit, QSPI_PhaseMode_2bit, QSPI_PhaseMode_4bit
+	uint8_t  AlternateBytesSize;	// QSPI_PhaseSize_8bit, QSPI_PhaseSize_16bit, QSPI_PhaseSize_24bit, QSPI_PhaseSize_32bit
+	uint8_t  DummyCycles;			// 0--31
+	uint8_t  DataMode;				// QSPI_PhaseMode_None, QSPI_PhaseMode_1bit, QSPI_PhaseMode_2bit, QSPI_PhaseMode_4bit
+	uint32_t DataCount;				// the number of bytes to read/write
 	uint8_t  SendInstOnlyOnce;
 } QSPI_CmdStructure;
 
 #define QSPI_PhaseMode_None		0	// there is no this phase
-#define QSPI_PhaseMode_1bit		1	// 单线传输
-#define QSPI_PhaseMode_2bit		2	// 双线传输
-#define QSPI_PhaseMode_4bit		3	// 四线传输
+#define QSPI_PhaseMode_1bit		1	// 1-line transfer on D0
+#define QSPI_PhaseMode_2bit		2	// 2-line transfer on D0 and D1
+#define QSPI_PhaseMode_4bit		3	// 4-line transfer on D0, D1, D2, and D3
 
 #define QSPI_PhaseSize_8bit		0
 #define QSPI_PhaseSize_16bit	1
@@ -146,15 +146,15 @@ void QSPI_MemoryMapClose(QSPI_TypeDef * QSPIx);
 bool QSPI_FlashBusy(QSPI_TypeDef * QSPIx);
 uint8_t QSPI_QuadState(QSPI_TypeDef * QSPIx);
 void QSPI_QuadSwitch(QSPI_TypeDef * QSPIx, uint8_t on);
-void QSPI_SendCmd(QSPI_TypeDef * QSPIx, uint8_t cmd);
+
 uint32_t QSPI_ReadReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint8_t n_bytes);
 void QSPI_WriteReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t data, uint8_t n_bytes);
 
 #define QSPI_ReadJEDEC(QSPIx)			QSPI_ReadReg(QSPIx, QSPI_CMD_READ_JEDEC, 3)
-#define QSPI_WriteEnable(QSPIx)			QSPI_SendCmd(QSPIx, QSPI_CMD_WRITE_ENABLE)
-#define QSPI_WriteDisable(QSPIx)		QSPI_SendCmd(QSPIx, QSPI_CMD_WRITE_DISABLE)
-#define QSPI_4ByteAddrEnable(QSPIx)		QSPI_SendCmd(QSPIx, QSPI_CMD_4BYTE_ADDR_ENTER)
-#define QSPI_4ByteAddrDisable(QSPIx)	QSPI_SendCmd(QSPIx, QSPI_CMD_4BYTE_ADDR_EXIT)
+#define QSPI_WriteEnable(QSPIx)			QSPI_WriteReg(QSPIx, QSPI_CMD_WRITE_ENABLE, 0, 0)
+#define QSPI_WriteDisable(QSPIx)		QSPI_WriteReg(QSPIx, QSPI_CMD_WRITE_DISABLE, 0, 0)
+#define QSPI_4ByteAddrEnable(QSPIx)		QSPI_WriteReg(QSPIx, QSPI_CMD_4BYTE_ADDR_ENTER, 0, 0)
+#define QSPI_4ByteAddrDisable(QSPIx)	QSPI_WriteReg(QSPIx, QSPI_CMD_4BYTE_ADDR_EXIT, 0, 0)
 
 
 static inline bool QSPI_Busy(QSPI_TypeDef * QSPIx)
@@ -179,7 +179,8 @@ static inline bool QSPI_FIFOEmpty(QSPI_TypeDef * QSPIx)
 
 static inline void QSPI_DMAEnable(QSPI_TypeDef * QSPIx, uint32_t mode)
 {
-	/* 必须先设置正确的读写模式，然后再置位 QSPI->CR.DMAEN；且在设置 CCR.MODE 时不能写 CCR.CODE 域 */
+	/* You must first set the correct read and write mode, and then set QSPI->CR.DMAEN;
+	   In addition, the CCR.CODE domain cannot be written when CCR.MODE is set */
 	*((uint8_t *)((uint32_t)&QSPIx->CCR + 3)) = (mode << (QSPI_CCR_MODE_Pos - 24));
 	
 	QSPIx->CR |=  QSPI_CR_DMAEN_Msk;

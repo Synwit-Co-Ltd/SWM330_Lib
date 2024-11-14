@@ -2,9 +2,9 @@
 #include "ST77903.h"
 
 
-static uint16_t *LCD_VideoMemory = 0;	// 显存
+static uint16_t *LCD_VideoMemory = 0;
 
-static uint32_t  LCD_LineCounter = 0;	// 行计数器
+static uint32_t  LCD_LineCounter = 0;
 
 
 typedef struct {
@@ -41,14 +41,14 @@ static const init_line_t init_table[] = {
 	{ 0xBD, 11, 0xA1, 0xB2, 0x2B, 0x1A, 0x56, 0x43, 0x34, 0x65, 0xFF, 0xFF, 0x0F },
 	{ 0x35,  1, 0x00 },
 	{ 0x36,  1, 0x0C },
-	{ 0x3A,  1, 0x05 },		//0x05: RGB565   0x06: RGB666   0x07: RGB888
+	{ 0x3A,  1, 0x05 },		// 0x05: RGB565   0x06: RGB666   0x07: RGB888
 	{ 0x21,  0,  },
 	{ 0x11,  0,  },
 	{ 0xFF,  1, 120},		// if command is 0xFF, means a delay time unit ms
 	{ 0x29,  0,  },
 	{ 0xFF,  1, 120},
 
-//	显示色条
+//	color bar
 //	{ 0xB0,  1, 0xA5 },
 //	{ 0xCC,  9, 0x40, 0x00, 0x3F, 0x00, 0x0A, 0x0A, 0xEA, 0xEA, 0x03 },
 };
@@ -73,9 +73,6 @@ int ST77903_Init(void)
 	PORT_Init(PORTB, PIN12, PORTB_PIN12_QSPI1_D2, 1);
 	PORT_Init(PORTB, PIN11, PORTB_PIN11_QSPI1_D3, 1);
 	
-	/* 需要确保 SDRAM CLK 频率至少是 QSPI CLK 频率的四倍，
-	   以保证 QSPI_CLK 引脚上时钟输出连续，不出现中断现象
-	*/
 	QSPI_initStruct.Size = QSPI_Size_16MB;
 	QSPI_initStruct.ClkDiv = 4;
 	QSPI_initStruct.ClkMode = QSPI_ClkMode_3;

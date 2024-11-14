@@ -113,7 +113,7 @@ int main(void)
 	for(i = 0; i < RWLEN; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	/* 内存映射开启时，不能执行 QSPI_Erase()、QSPI_Write() 等函数 */
+	/*When memory mapping is enabled, QSPI_Erase() and QSPI_Write() cannot be executed */
 	QSPI_MemoryMapClose(QSPI0);
 	
 	QSPI_Erase(QSPI0, EEPROM_ADDR, 1);
@@ -125,7 +125,7 @@ int main(void)
 	for(i = 0; i < RWLEN; i++) printf("0x%02X, ", RdBuff[i]);
 
 
-	/* 2MB 读写校验 */
+	/* 2MB Read/write check */
 #if 1
 	uint32_t addr;
 	uint32_t rwbuff[256 / 4];
@@ -199,7 +199,7 @@ void QSPI_Write_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t data_
 	while(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE) == 0) __NOP();
 	DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
 	
-	/* 在 QSPI busy 时，写 QSPI->CR 寄存器无效 */
+	/* When QSPI busy, writing to the QSPI->CR register is invalid */
 	while(QSPI_Busy(QSPI0)) __NOP();
 	
 	QSPI_DMADisable(QSPI0);

@@ -26,7 +26,7 @@
 #define W25N_STATUS_REG2			0xB0
 #define W25N_STATUS_REG3			0xC0
 
-#define W25N_STATUS_REG1_WPE_Pos	1		// 硬件写保护使能位，关闭时引脚 /WP & /HOLD 用作 IO
+#define W25N_STATUS_REG1_WPE_Pos	1		// Hardware write protection enable bit, when off pin /WP & /HOLD is used as IO
 
 #define W25N_STATUS_REG1_TB_Pos		2
 #define W25N_STATUS_REG1_TB_Msk		(0x01 << W25N_STATUS_REG1_TB_Pos)
@@ -75,4 +75,4 @@ void W25N01G_WriteReg(uint8_t reg_addr, uint8_t data);
 uint8_t W25N01G_ReadReg(uint8_t reg_addr);
 
 
-#endif // __W25N01G_H__
+#endif

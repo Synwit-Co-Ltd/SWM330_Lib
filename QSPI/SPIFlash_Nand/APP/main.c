@@ -124,7 +124,7 @@ void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
 	while(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE) == 0) __NOP();
     DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
 	
-	/* 在 QSPI busy 时，写 QSPI->CR 寄存器无效 */
+	/* When QSPI busy, writing to the QSPI->CR register is invalid */
 	while(QSPI_Busy(QSPI0)) __NOP();
 	
 	QSPI_DMADisable(QSPI0);
