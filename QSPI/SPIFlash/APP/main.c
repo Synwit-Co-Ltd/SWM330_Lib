@@ -54,7 +54,7 @@ int main(void)
 	printf("SPI Flash Quad %s\n", quad ? "enabled" : "disabled");
 	
 	
-	QSPI_Erase(QSPI0, (QSPI_initStruct.Size > QSPI_Size_16MB) ? QSPI_C4B_ERASE_SECTOR : QSPI_CMD_ERASE_SECTOR, EEPROM_ADDR, 1);
+	QSPI_Erase(QSPI0, EEPROM_ADDR, 1);
 	
 	QSPI_Read(QSPI0, EEPROM_ADDR, RdBuff, RWLEN);
 	
@@ -82,7 +82,7 @@ int main(void)
 	for(i = 0; i < RWLEN; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	QSPI_Erase(QSPI0, (QSPI_initStruct.Size > QSPI_Size_16MB) ? QSPI_C4B_ERASE_SECTOR : QSPI_CMD_ERASE_SECTOR, EEPROM_ADDR, 1);
+	QSPI_Erase(QSPI0, EEPROM_ADDR, 1);
 	QSPI_Write_4bit(QSPI0, EEPROM_ADDR, WrBuff, RWLEN);
 	
 	QSPI_Read_4bit(QSPI0, EEPROM_ADDR, RdBuff, RWLEN);
@@ -97,7 +97,7 @@ int main(void)
 	for(i = 0; i < RWLEN; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	QSPI_Erase(QSPI0, (QSPI_initStruct.Size > QSPI_Size_16MB) ? QSPI_C4B_ERASE_SECTOR : QSPI_CMD_ERASE_SECTOR, EEPROM_ADDR, 1);
+	QSPI_Erase(QSPI0, EEPROM_ADDR, 1);
 	QSPI_Write_DMA(EEPROM_ADDR, WrBuff, RWLEN, 4);
 	
 	QSPI_Read_DMA(EEPROM_ADDR, RdBuff, RWLEN, 4, 4);
@@ -116,7 +116,7 @@ int main(void)
 	/* 内存映射开启时，不能执行 QSPI_Erase()、QSPI_Write() 等函数 */
 	QSPI_MemoryMapClose(QSPI0);
 	
-	QSPI_Erase(QSPI0, (QSPI_initStruct.Size > QSPI_Size_16MB) ? QSPI_C4B_ERASE_SECTOR : QSPI_CMD_ERASE_SECTOR, EEPROM_ADDR, 1);
+	QSPI_Erase(QSPI0, EEPROM_ADDR, 1);
 	
 	QSPI_MemoryMap(QSPI0, 4, 4);
 	memcpy(RdBuff, (uint8_t *)(SFLASH_BASE + EEPROM_ADDR), RWLEN);
@@ -134,7 +134,7 @@ int main(void)
 	
 	for(addr = 0; addr < 0x200000; addr += 1024 * 64)
 	{
-		QSPI_Erase(QSPI0, (QSPI_initStruct.Size > QSPI_Size_16MB) ? QSPI_C4B_ERASE_BLOCK64KB : QSPI_CMD_ERASE_BLOCK64KB, addr, 1);
+		QSPI_Erase_Block64KB(QSPI0, addr, 1);
 	}
 	
 	for(addr = 0; addr < 0x200000; addr += 256)
