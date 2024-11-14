@@ -41,7 +41,6 @@ typedef struct {
 #define LCD_SAMPLE_FALL	1	// sample data at falling edge of DOTCLK
 
 #define LCD_LAYER_1	  	0
-#define LCD_LAYER_2     1
 
 /* Interrupt Type */
 #define LCD_IT_DONE		LCD_IF_DONE_Msk		// frame transfer done interrupt

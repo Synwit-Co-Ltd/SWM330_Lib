@@ -2408,9 +2408,9 @@ typedef struct {
 		__IO uint32_t CK;					// Color Key
 		
 			 uint32_t RESERVED3[10];
-	} L[2];									// Layer
+	} L[1];									// Layer
 	
-		 uint32_t RESERVED4[16];
+		 uint32_t RESERVED4[32];
 	
 	__IO uint32_t MPUCR;
 	
@@ -2429,10 +2429,6 @@ typedef struct {
 		
 		__IO uint32_t RESERVED6;
 	};
-	
-	__IO uint32_t MPUAR;
-	
-	__IO uint32_t MPULEN;
 } LCD_TypeDef;
 
 
@@ -2471,7 +2467,7 @@ typedef struct {
 #define LCD_CR_BURSTLEN_Pos			8		// Burst Length, 0 Single, 1 Burst INCR4, 2 Burst INCR8, 3 Burst INCR16
 #define LCD_CR_BURSTLEN_Msk			(0x03 << LCD_CR_BURSTLEN_Pos)
 #define LCD_CR_PARTSIZE_Pos			11		// size used to generate partial frame interrupt, 0 no partial frame interrupt, 1 1/4 frame, 2 2/4 frame, 3 3/4 frame
-#define LCD_CR_PARTSIZE_Msk			(0x01 << LCD_CR_PARTSIZE_Pos)
+#define LCD_CR_PARTSIZE_Msk			(0x03 << LCD_CR_PARTSIZE_Pos)
 #define LCD_CR_AUTORESTA_Pos		13		// Auto Restart
 #define LCD_CR_AUTORESTA_Msk		(0x01 << LCD_CR_AUTORESTA_Pos)
 #define LCD_CR_IMMRELOAD_Pos		14		// Immediate Reload, Immediately loads the value of the layer configuration register into the layer working register
@@ -2540,11 +2536,6 @@ typedef struct {
 #define LCD_MPUCR_WRHOLD_Msk		(0x0F << LCD_MPUCR_WRHOLD_Pos)
 #define LCD_MPUCR_CS0WR0_Pos		20		// LCD_CS falling edge to LCD_WR falling edge delay
 #define LCD_MPUCR_CS0WR0_Msk		(0x03 << LCD_MPUCR_CS0WR0_Pos)
-
-#define LCD_MPULEN_VPIX_Pos			0		// number of lines. 0 indicates 1 line
-#define LCD_MPULEN_VPIX_Msk			(0x1FFF<< LCD_MPULEN_VPIX_Pos)
-#define LCD_MPULEN_HPIX_Pos			16		// number of pixels per line, 0 represents 1 pixel
-#define LCD_MPULEN_HPIX_Msk			(0x1FFF<< LCD_MPULEN_HPIX_Pos)
 
 
 

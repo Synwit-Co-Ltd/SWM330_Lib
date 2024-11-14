@@ -83,7 +83,7 @@ void LCD_Init(LCD_TypeDef * LCDx, LCD_InitStructure * initStruct)
 /*******************************************************************************************************************************
 * @brief	LCD layer init
 * @param	LCDx is the LCD to set
-* @param	layerx is the LCD layer to init, can be LCD_LAYER_1 or LCD_LAYER_2
+* @param	layerx is the LCD layer to init, can be LCD_LAYER_1
 * @param	initStruct is data used to init the LCD layer
 * @return
 *******************************************************************************************************************************/
@@ -109,7 +109,7 @@ void LCD_LayerInit(LCD_TypeDef * LCDx, uint32_t layerx, LCD_LayerInitStructure *
 /*******************************************************************************************************************************
 * @brief	LCD layer position set
 * @param	LCDx is the LCD to set
-* @param	layerx is the LCD layer to set, can be LCD_LAYER_1 or LCD_LAYER_2
+* @param	layerx is the LCD layer to set, can be LCD_LAYER_1
 * @param	hstart is horizontal starting position
 * @param	hstop is horizontal termination position (included)
 * @param	vstart is vertical starting position
@@ -320,10 +320,15 @@ uint16_t MPULCD_ReadReg16(LCD_TypeDef * LCDx, uint16_t reg)
 *******************************************************************************************************************************/
 void MPULCD_DMAStart(LCD_TypeDef * LCDx, uint32_t * buff, uint16_t hpix, uint16_t vpix)
 {
-	LCDx->MPUAR = (uint32_t)buff;
+	LCDx->L[0].ADDR = (uint32_t)buff;
 	
-	LCDx->MPULEN = ((vpix - 1) << LCD_MPULEN_VPIX_Pos) |
-				   ((hpix - 1) << LCD_MPULEN_HPIX_Pos);
+	LCDx->L[0].LLEN = hpix - 1;
+	
+	LCDx->L[0].WHP = (0			 << LCD_WHP_STA_Pos) |
+				     ((hpix - 1) << LCD_WHP_STP_Pos);
+	
+	LCDx->L[0].WVP = (0			 << LCD_WVP_STA_Pos) |
+				     ((vpix - 1) << LCD_WVP_STP_Pos);
 	
 	LCDx->START |= (1 << LCD_START_GO_Pos);
 }

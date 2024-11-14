@@ -24,6 +24,8 @@ int main(void)
 	
 	NT35510_Clear(C_RED);
 	
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);
+	
 	UG_Init(&gui,(void(*)(UG_S16,UG_S16,UG_COLOR))NT35510_DrawPoint, 480, 800);
 	
 	UG_DrawLine(0, 68, 480, 68, C_GREEN);
@@ -37,23 +39,11 @@ int main(void)
 	
 	/* MPU DMA write and interrupt using demo */
 	for(int i = 0; i < sizeof(Buffer) / 2; i++)
-		Buffer[i] = 0xFF00;
-	
-	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);
-	GPIO_ClrBit(GPIOA, PIN5);
-	
-	NVIC_EnableIRQ(LCD_IRQn);
+		Buffer[i] = 0x5555;
 	
 	while(1==1)
 	{
-		GPIO_SetBit(GPIOA, PIN5);
-		NT35510_DMAWrite((uint32_t *)Buffer, 0, sizeof(Buffer) / 2 / NT35510_HPIX);
-		
-		/* note: Since transfers started by writing LCD->MPUIR, LCD->MPUDR also generate LCD interrupts, 
-		 *		so interrupt is only enabled after DMA transfers are started, and interrupt enables are turned off in LCD ISR.
-		 */
-		LCD_INTClr(LCD, LCD_IT_DONE);
-		LCD_INTEn(LCD, LCD_IT_DONE);
+		NT35510_DMAWrite((uint32_t *)Buffer, 400, sizeof(Buffer) / 2 / NT35510_HPIX);
 		
 		for(int i = 0; i < SystemCoreClock / 100; i++) __NOP();
 	}
@@ -80,35 +70,37 @@ void MPULCDInit(void)
 	for(i = 0; i < 1000000; i++) __NOP();
 	GPIO_SetBit(GPIOC, PIN6);
 	
-	PORT_Init(PORTB, PIN8,  PORTB_PIN8_LCD_CS,  0);
-	PORT_Init(PORTB, PIN9,  PORTB_PIN9_LCD_WR,  0);
-	PORT_Init(PORTB, PIN10, PORTB_PIN10_LCD_RS, 0);
-	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_RD,  0);
-//	PORT_Init(PORTB, PIN11, PORTB_PIN11_LCD_B0, 0);
-//	PORT_Init(PORTB, PIN12, PORTB_PIN12_LCD_B1, 0);
-//	PORT_Init(PORTB, PIN13, PORTB_PIN13_LCD_B2, 0);
-	PORT_Init(PORTB, PIN14, PORTB_PIN14_LCD_B3, 0);		// MPU_D0
+	PORT_Init(PORTB, PIN6,  PORTB_PIN6_LCD_CS,  0);
+	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_WR,  0);
+	PORT_Init(PORTB, PIN8,  PORTB_PIN8_LCD_RS,  0);
+	PORT_Init(PORTD, PIN15, PORTD_PIN15_LCD_RD, 0);
+//	PORT_Init(PORTB, PIN9,  PORTB_PIN9_LCD_B0,  0);
+//	PORT_Init(PORTB, PIN10, PORTB_PIN10_LCD_B1, 0);
+//	PORT_Init(PORTB, PIN11, PORTB_PIN11_LCD_B2, 0);
+	PORT_Init(PORTB, PIN13, PORTB_PIN13_LCD_B3, 0);
 	PORT_Init(PORTB, PIN15, PORTB_PIN15_LCD_B4, 0);
 	PORT_Init(PORTA, PIN0,  PORTA_PIN0_LCD_B5,  0);
 	PORT_Init(PORTA, PIN1,  PORTA_PIN1_LCD_B6,  0);
 	PORT_Init(PORTA, PIN2,  PORTA_PIN2_LCD_B7,  0);
-//	PORT_Init(PORTC, PIN9,  PORTC_PIN9_LCD_G0,  0);
-//	PORT_Init(PORTD, PIN10, PORTD_PIN10_LCD_G1, 0);
-	PORT_Init(PORTE, PIN13, PORTE_PIN13_LCD_G2, 0);
-	PORT_Init(PORTA, PIN9,  PORTA_PIN9_LCD_G3,  0);
-	PORT_Init(PORTA, PIN10, PORTA_PIN10_LCD_G4, 0);
-	PORT_Init(PORTA, PIN11, PORTA_PIN11_LCD_G5, 0);
-	PORT_Init(PORTC, PIN10, PORTC_PIN10_LCD_G6, 0);
-	PORT_Init(PORTC, PIN11, PORTC_PIN11_LCD_G7, 0);
-//	PORT_Init(PORTC, PIN12, PORTC_PIN12_LCD_R0, 0);
-//	PORT_Init(PORTC, PIN13, PORTC_PIN13_LCD_R1, 0);
-//	PORT_Init(PORTD, PIN0,  PORTD_PIN0_LCD_R2,  0);
-	PORT_Init(PORTD, PIN1,  PORTD_PIN1_LCD_R3,  0);
-	PORT_Init(PORTD, PIN2,  PORTD_PIN2_LCD_R4,  0);
-	PORT_Init(PORTD, PIN3,  PORTD_PIN3_LCD_R5,  0);
-	PORT_Init(PORTD, PIN4,  PORTD_PIN4_LCD_R6,  0);
-	PORT_Init(PORTD, PIN5,  PORTD_PIN5_LCD_R7,  0);		// MPU_D15
+//	PORT_Init(PORTD, PIN10, PORTD_PIN10_LCD_G0, 0);
+//	PORT_Init(PORTE, PIN13, PORTE_PIN13_LCD_G1, 0);
+	PORT_Init(PORTA, PIN9,  PORTA_PIN9_LCD_G2,  0);		// MPU_D0
+	PORT_Init(PORTA, PIN10, PORTA_PIN10_LCD_G3, 0);
+	PORT_Init(PORTA, PIN11, PORTA_PIN11_LCD_G4, 0);
+	PORT_Init(PORTC, PIN10, PORTC_PIN10_LCD_G5, 0);
+	PORT_Init(PORTC, PIN11, PORTC_PIN11_LCD_G6, 0);
+	PORT_Init(PORTC, PIN12, PORTC_PIN12_LCD_G7, 0);
+//	PORT_Init(PORTD, PIN0,  PORTD_PIN0_LCD_R0,  0);
+//	PORT_Init(PORTD, PIN1,  PORTD_PIN1_LCD_R1,  0);
+//	PORT_Init(PORTD, PIN2,  PORTD_PIN2_LCD_R2,  0);
+	PORT_Init(PORTD, PIN3,  PORTD_PIN3_LCD_R3,  0);
+	PORT_Init(PORTD, PIN4,  PORTD_PIN4_LCD_R4,  0);
+	PORT_Init(PORTD, PIN5,  PORTD_PIN5_LCD_R5,  0);
+	PORT_Init(PORTD, PIN6,  PORTD_PIN6_LCD_R6,  0);
+	PORT_Init(PORTD, PIN7,  PORTD_PIN7_LCD_R7,  0);		// MPU_D15
 	
+	MPULCD_initStruct.BusWidth = MPULCD_BusWidth_16;
+	MPULCD_initStruct.ByteOrder = MPULCD_ByteOrder_MSB;
 	MPULCD_initStruct.RDHoldTime = 32;
 	MPULCD_initStruct.WRHoldTime = 16;
 	MPULCD_initStruct.CSFall_WRFall = 4;
@@ -116,6 +108,10 @@ void MPULCDInit(void)
 	MPULCD_initStruct.RDCSRise_Fall = 32;
 	MPULCD_initStruct.WRCSRise_Fall = 16;
 	MPULCD_Init(LCD, &MPULCD_initStruct);
+	
+	LCD_INTClr(LCD, LCD_IT_DONE);
+	LCD_INTEn(LCD, LCD_IT_DONE);
+	NVIC_EnableIRQ(LCD_IRQn);
 }
 
 
