@@ -2484,8 +2484,12 @@ typedef struct {
 #define LCD_CR_HSYNCINV_Msk			(0x01 << LCD_CR_HSYNCINV_Pos)
 #define LCD_CR_VS2HS_Pos			22		// 1 VSYNC and HSYNC valid at same PIXCLK edge, 0 VSYNC valid one PIXCLK earlier than HSYNC
 #define LCD_CR_VS2HS_Msk			(0x01 << LCD_CR_VS2HS_Pos)
-#define LCD_CR_MPUMSB_Pos			23		// when 8-bit MPU mode, for 16-bit data access: 0 LSB, 1 MSB
-#define LCD_CR_MPUMSB_Msk			(0x01 << LCD_CR_MPUMSB_Pos)
+#define LCD_CR_MPU8MSB_Pos			23		// when 8-bit MPU mode, for 16-bit data access: 0 LSB, 1 MSB
+#define LCD_CR_MPU8MSB_Msk			(0x01 << LCD_CR_MPU8MSB_Pos)
+#define LCD_CR_MPUDMAMSB_Pos		24		// when MPU DMA mode, 0 low half word first, 1 high half word first
+#define LCD_CR_MPUDMAMSB_Msk		(0x01 << LCD_CR_MPUDMAMSB_Pos)
+#define LCD_CR_MPU8PIN_Pos			25		// when 8-bit MPU mode, 0 use LCD_B3-7 and LCD_G2-4 pin, 1 use LCD_G5-7 and LCD_R3-7 pin
+#define LCD_CR_MPU8PIN_Msk			(0x01 << LCD_CR_MPU8PIN_Pos)
 
 #define LCD_CRH0_HSW_Pos			0		// Hsync Width, Output HSYNC low for how many DOTCLK cycles. 0 indicates 1 cycle
 #define LCD_CRH0_HSW_Msk			(0x1FF<< LCD_CRH0_HSW_Pos)

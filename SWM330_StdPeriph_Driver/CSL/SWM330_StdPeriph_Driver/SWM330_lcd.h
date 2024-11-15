@@ -63,7 +63,7 @@ uint32_t LCD_INTStat(LCD_TypeDef * LCDx, uint32_t it);
 
 
 typedef struct {
-	uint8_t  BusWidth;		// MPULCD_BusWidth_8, MPULCD_BusWidth_16
+	uint8_t  BusWidth;		// MPULCD_BusWidth_16, MPULCD_BusWidth_L8, MPULCD_BusWidth_H8
 	uint8_t  ByteOrder;		// when MPULCD_BusWidth_8, for 16-bit data access: MPULCD_ByteOrder_LSB, MPULCD_ByteOrder_MSB
 	uint8_t  RDHoldTime;	// LCD_RD Low level holding time, can be 1--32
 	uint8_t  WRHoldTime;	// LCD_WR Low level holding time, can be 1--16
@@ -73,8 +73,9 @@ typedef struct {
 	uint8_t  WRCSRise_Fall;	// for write, LCD_CS rising edge to falling edge delay, can be 1--16
 } MPULCD_InitStructure;
 
-#define MPULCD_BusWidth_8		3	// 8-bit MPU interface
-#define MPULCD_BusWidth_16		2	// 16-bit MPU interface
+#define MPULCD_BusWidth_L8		(3 | (0 << 2))	// 8-bit MPU interface, use LCD_B3-7 and LCD_G2-4 pin
+#define MPULCD_BusWidth_H8		(3 | (1 << 2))	// 8-bit MPU interface, use LCD_G5-7 and LCD_R3-7 pin
+#define MPULCD_BusWidth_16		(2)				// 16-bit MPU interface
 
 #define MPULCD_ByteOrder_LSB	0	// low byte first
 #define MPULCD_ByteOrder_MSB	1	// high byte first

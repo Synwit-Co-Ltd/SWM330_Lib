@@ -242,9 +242,11 @@ void MPULCD_Init(LCD_TypeDef * LCDx, MPULCD_InitStructure * initStruct)
 		break;
 	}
 	
-	LCDx->CR  = (initStruct->BusWidth	<< LCD_CR_MODE_Pos) |
-				(initStruct->ByteOrder	<< LCD_CR_MPUMSB_Pos) |
-				(LCD_FMT_RGB565			<< LCD_CR_FORMAT_Pos);	// in MPU mode, only support RGB565
+	LCDx->CR  = (LCD_FMT_RGB565				 << LCD_CR_FORMAT_Pos)  |	// in MPU mode, only support RGB565
+				((initStruct->BusWidth  & 3) << LCD_CR_MODE_Pos)    |
+				((initStruct->BusWidth >> 2) << LCD_CR_MPU8PIN_Pos) |
+				(initStruct->ByteOrder		 << LCD_CR_MPU8MSB_Pos) |
+				(0							 << LCD_CR_MPUDMAMSB_Pos);	
 	
 	LCDx->L[0].LCR |= (1 << LCD_LCR_EN_Pos);
 	
