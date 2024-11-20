@@ -99,7 +99,7 @@ void MPULCDInit(void)
 	PORT_Init(PORTD, PIN6,  PORTD_PIN6_LCD_R6,  0);
 	PORT_Init(PORTD, PIN7,  PORTD_PIN7_LCD_R7,  0);		// MPU_D15
 	
-	MPULCD_initStruct.BusWidth = MPULCD_BusWidth_16;
+	MPULCD_initStruct.BusWidth = MPULCD_BusWidth_L8;
 	MPULCD_initStruct.ByteOrder = MPULCD_ByteOrder_MSB;
 	MPULCD_initStruct.RDHoldTime = 32;
 	MPULCD_initStruct.WRHoldTime = 16;
