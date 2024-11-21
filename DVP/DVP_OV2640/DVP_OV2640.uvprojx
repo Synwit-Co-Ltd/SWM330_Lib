@@ -389,14 +389,9 @@
               <FilePath>.\app\main.c</FilePath>
             </File>
             <File>
-              <FileName>ov2640.c</FileName>
+              <FileName>OV2640.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\ov2640.c</FilePath>
-            </File>
-            <File>
-              <FileName>ov2640_port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\APP\ov2640_port.c</FilePath>
+              <FilePath>.\APP\OV2640.c</FilePath>
             </File>
           </Files>
         </Group>

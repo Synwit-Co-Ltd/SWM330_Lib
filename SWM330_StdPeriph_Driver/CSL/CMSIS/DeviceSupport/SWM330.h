@@ -2292,10 +2292,6 @@ typedef struct {
 #define PSRAMC_CSR_ROWSZ_Msk		(0x03 << PSRAMC_CSR_ROWSZ_Pos)
 #define PSRAMC_CSR_BUS16b_Pos		2		// 0 8-bit bus, 1 16-bit bus
 #define PSRAMC_CSR_BUS16b_Msk		(0x01 << PSRAMC_CSR_BUS16b_Pos)
-#define PSRAMC_CSR_CLRBUF_Pos		16		// clear read buffer
-#define PSRAMC_CSR_CLRBUF_Msk		(0x01 << PSRAMC_CSR_CLRBUF_Pos)
-#define PSRAMC_CSR_PREFEN_Pos		21		// prefetch enable
-#define PSRAMC_CSR_PREFEN_Msk		(0x01 << PSRAMC_CSR_PREFEN_Pos)
 #define PSRAMC_CSR_BUFLEN_Pos		22		// buffer length, 0 8-byte, 1 16-byte, 2 32-byte, 3 64-byte
 #define PSRAMC_CSR_BUFLEN_Msk		(0x03 << PSRAMC_CSR_BUFLEN_Pos)
 #define PSRAMC_CSR_WRBUSY_Pos		24		// write busy
@@ -2308,6 +2304,8 @@ typedef struct {
 #define PSRAMC_CSR_ISSLEEP_Msk		(0x01 << PSRAMC_CSR_ISSLEEP_Pos)
 #define PSRAMC_CSR_INITDONE_Pos		28		// init done?
 #define PSRAMC_CSR_INITDONE_Msk		(0x01 << PSRAMC_CSR_INITDONE_Pos)
+#define PSRAMC_CSR_ERROR_Pos		31		// read timeout
+#define PSRAMC_CSR_ERROR_Msk		(0x01u<< PSRAMC_CSR_ERROR_Pos)
 
 #define PSRAMC_TR_CSM_Pos			0		// tCSM, Chip Select Maximum Low Time in us
 #define PSRAMC_TR_CSM_Msk			(0xFF << PSRAMC_TR_CSM_Pos)

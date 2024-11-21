@@ -1,8 +1,7 @@
 #include <string.h>
 #include "SWM330.h"
 
-#include "ov2640.h"
-#include "ov2640_port.h"
+#include "OV2640.h"
 
 #include "../../../JPEG/SimplJPEG/APP/jfif_parser.h"
 #include "../../../JPEG/SimplJPEG/APP/jfif_parser.c"
@@ -21,7 +20,6 @@ uint16_t *LCD_Buffer = (uint16_t *)(PSRAMM_BASE);
 uint16_t *CAP_Buffer = (uint16_t *)(PSRAMM_BASE + 0x100000);
 uint16_t *RGB_Buffer = (uint16_t *)(PSRAMM_BASE + 0x200000);
 
-extern ov2640_handle_t ov_handle;
 
 void SerialInit(void);
 void MemoryInit(void);
@@ -41,7 +39,7 @@ int main(void)
 	
 	LCD_Start(LCD);
 	
-	OV2640_Config();
+	OV2640_Init(OV_FMT_RGB565, 4, 480, 240);
 	
 	DVP_Config();
 	
@@ -95,11 +93,11 @@ void RGBLCDInit(void)
 	for(i = 0; i < 1000000; i++) __NOP();
 	GPIO_SetBit(GPIOC, PIN6);
 	
-	PORT_Init(PORTB, PIN6,  PORTB_PIN6_LCD_VS,  0);
-	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_HS,  0);
+	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_VS,  0);
+	PORT_Init(PORTB, PIN6,  PORTB_PIN6_LCD_HS,  0);
 	PORT_Init(PORTB, PIN8,  PORTB_PIN8_LCD_DE,  0);
-	PORT_Init(PORTD, PIN15, PORTD_PIN15_LCD_CK,  0);
-	PORT_Init(PORTB, PIN9,  PORTB_PIN9_LCD_B0, 0);
+	PORT_Init(PORTD, PIN15, PORTD_PIN15_LCD_CK, 0);
+	PORT_Init(PORTB, PIN9,  PORTB_PIN9_LCD_B0,  0);
 	PORT_Init(PORTB, PIN10, PORTB_PIN10_LCD_B1, 0);
 	PORT_Init(PORTB, PIN11, PORTB_PIN11_LCD_B2, 0);
 	PORT_Init(PORTB, PIN13, PORTB_PIN13_LCD_B3, 0);
@@ -110,13 +108,13 @@ void RGBLCDInit(void)
 	PORT_Init(PORTD, PIN10, PORTD_PIN10_LCD_G0, 0);
 	PORT_Init(PORTE, PIN13, PORTE_PIN13_LCD_G1, 0);
 	PORT_Init(PORTA, PIN9,  PORTA_PIN9_LCD_G2,  0);
-	PORT_Init(PORTA, PIN10, PORTA_PIN10_LCD_G3,  0);
+	PORT_Init(PORTA, PIN10, PORTA_PIN10_LCD_G3, 0);
 	PORT_Init(PORTA, PIN11, PORTA_PIN11_LCD_G4, 0);
 	PORT_Init(PORTC, PIN10, PORTC_PIN10_LCD_G5, 0);
 	PORT_Init(PORTC, PIN11, PORTC_PIN11_LCD_G6, 0);
 	PORT_Init(PORTC, PIN12, PORTC_PIN12_LCD_G7, 0);
-	PORT_Init(PORTD, PIN0,  PORTD_PIN0_LCD_R0, 0);
-	PORT_Init(PORTD, PIN1,  PORTD_PIN1_LCD_R1, 0);
+	PORT_Init(PORTD, PIN0,  PORTD_PIN0_LCD_R0,  0);
+	PORT_Init(PORTD, PIN1,  PORTD_PIN1_LCD_R1,  0);
 	PORT_Init(PORTD, PIN2,  PORTD_PIN2_LCD_R2,  0);
 	PORT_Init(PORTD, PIN3,  PORTD_PIN3_LCD_R3,  0);
 	PORT_Init(PORTD, PIN4,  PORTD_PIN4_LCD_R4,  0);
@@ -171,23 +169,23 @@ void DVP_Config(void)
 {
 	DVP_InitStructure DVP_initStruct;
 	
-	PORT_Init(PORTC, PIN2,  PORTC_PIN2_DVP_VS,   1);
-	PORT_Init(PORTC, PIN3,  PORTC_PIN3_DVP_HS,   1);
-	PORT_Init(PORTC, PIN1,  PORTC_PIN1_DVP_CK,   1);
-	PORT_Init(PORTC, PIN4,  PORTC_PIN4_DVP_D0,   1);
-	PORT_Init(PORTC, PIN5,  PORTC_PIN5_DVP_D1,   1);
-	PORT_Init(PORTC, PIN6,  PORTC_PIN6_DVP_D2,   1);
-	PORT_Init(PORTC, PIN7,  PORTC_PIN7_DVP_D3,   1);
-	PORT_Init(PORTC, PIN8,  PORTC_PIN8_DVP_D4,   1);
-	PORT_Init(PORTA, PIN8,  PORTA_PIN8_DVP_D5,   1);
-	PORT_Init(PORTA, PIN13, PORTA_PIN13_DVP_D6,  1);
-	PORT_Init(PORTA, PIN14, PORTA_PIN14_DVP_D7,  1);
-	PORT_Init(PORTA, PIN15, PORTA_PIN15_DVP_D8,  1);
-	PORT_Init(PORTC, PIN15, PORTC_PIN15_DVP_D9,  1);
-	PORT_Init(PORTC, PIN14, PORTC_PIN14_DVP_D10, 1);
-	PORT_Init(PORTE, PIN12, PORTE_PIN12_DVP_D11, 1);
-	PORT_Init(PORTA, PIN12, PORTA_PIN12_DVP_D12, 1);
-	PORT_Init(PORTC, PIN0,  PORTC_PIN0_DVP_D13,  1);
+	PORT_Init(PORTD, PIN13, PORTD_PIN13_DVP_VS,  1);
+	PORT_Init(PORTD, PIN14, PORTD_PIN14_DVP_HS,  1);
+	PORT_Init(PORTD, PIN12, PORTD_PIN12_DVP_CK,  1);
+	PORT_Init(PORTC, PIN14, PORTC_PIN14_DVP_D0,  1);
+	PORT_Init(PORTE, PIN12, PORTE_PIN12_DVP_D1,  1);
+	PORT_Init(PORTA, PIN12, PORTA_PIN12_DVP_D2,  1);
+	PORT_Init(PORTC, PIN0,  PORTC_PIN0_DVP_D3,   1);
+	PORT_Init(PORTC, PIN1,  PORTC_PIN1_DVP_D4,   1);
+	PORT_Init(PORTC, PIN2,  PORTC_PIN2_DVP_D5,   1);
+	PORT_Init(PORTC, PIN3,  PORTC_PIN3_DVP_D6,   1);
+	PORT_Init(PORTC, PIN4,  PORTC_PIN4_DVP_D7,   1);
+	PORT_Init(PORTC, PIN6,  PORTC_PIN6_DVP_D8,   1);
+	PORT_Init(PORTC, PIN7,  PORTC_PIN7_DVP_D9,   1);
+	PORT_Init(PORTC, PIN8,  PORTC_PIN8_DVP_D10,  1);
+	PORT_Init(PORTD, PIN8,  PORTD_PIN8_DVP_D11,  1);
+	PORT_Init(PORTD, PIN9,  PORTD_PIN9_DVP_D12,  1);
+	PORT_Init(PORTD, PIN11, PORTD_PIN11_DVP_D13, 1);
 	
 	DVP_initStruct.InFormat = DVP_INFMT_RGB565;
 	DVP_initStruct.OutFormat = DVP_OUTFMT_RAW;
@@ -199,32 +197,6 @@ void DVP_Config(void)
 	DVP_initStruct.RawAddr = (uint32_t)CAP_Buffer;
 	DVP_initStruct.IntEn = 0;
 	DVP_Init(DVP, &DVP_initStruct);
-}
-
-
-ov2640_handle_t ov_handle = {
-	.sccb_init			= ov2640_interface_sccb_init,
-	.sccb_deinit		= ov2640_interface_sccb_deinit,
-	.sccb_write			= ov2640_interface_sccb_write,
-	.sccb_read			= ov2640_interface_sccb_read,
-	.reset_init			= ov2640_interface_reset_init,
-	.reset_deinit		= ov2640_interface_reset_deinit,
-	.reset_write		= ov2640_interface_reset_write,
-	.power_down_init	= ov2640_interface_power_down_init,
-	.power_down_deinit	= ov2640_interface_power_down_deinit,
-	.power_down_write	= ov2640_interface_power_down_write,
-	.debug_print		= ov2640_interface_debug_print,
-	.delay_ms			= ov2640_interface_delay_ms,
-	.inited				= 0
-};
-
-void OV2640_Config(void)
-{
-	ov2640_init(&ov_handle);
-	
-	ov2640_table_init(&ov_handle);
-	
-	ov2640_table_rgb565_init(&ov_handle);
 }
 
 

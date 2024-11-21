@@ -70,8 +70,7 @@ void PSRAM_Init(PSRAM_InitStructure * initStruct)
 	
 	PSRAMC->CSR = (initStruct->RowSize << PSRAMC_CSR_ROWSZ_Pos)  |
 				  (0				   << PSRAMC_CSR_BUS16b_Pos) |
-				  (2				   << PSRAMC_CSR_BUFLEN_Pos) |
-				  (0				   << PSRAMC_CSR_PREFEN_Pos);
+				  (2				   << PSRAMC_CSR_BUFLEN_Pos);
 	
 	__NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP();
 	while((PSRAMC->CSR & PSRAMC_CSR_INITDONE_Msk) == 0) __NOP();
