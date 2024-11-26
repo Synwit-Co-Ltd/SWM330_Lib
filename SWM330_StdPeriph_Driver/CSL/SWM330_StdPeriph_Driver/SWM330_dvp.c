@@ -25,10 +25,12 @@
 *******************************************************************************************************************************/
 void DVP_Init(DVP_TypeDef * DVPx, DVP_InitStructure * initStruct)
 {
+	uint8_t clk_per_pixel  = (initStruct->InFormat & 0xF) == 0 ? 1 : 2;
+	uint8_t byte_per_pixel =  initStruct->InFormat		  == 0 ? 1 : 2;
+	
 	SYS->CLKEN0 |= SYS_CLKEN0_DVP_Msk;
 	
-	DVPx->CR = (0					  << DVP_CR_ENA_Pos)    |
-			   (1					  << DVP_CR_DROPEN_Pos) |
+	DVPx->CR = (1					  << DVP_CR_DROPEN_Pos) |
 			   (0					  << DVP_CR_CONTEN_Pos) |
 			   (initStruct->InFormat  << DVP_CR_INFMT_Pos)  |
 			   (initStruct->OutFormat << DVP_CR_OUTFMT_Pos);
@@ -38,26 +40,32 @@ void DVP_Init(DVP_TypeDef * DVPx, DVP_InitStructure * initStruct)
 				  (0					  << DVP_INPOL_VSYNC_Pos) |
 				  (0					  << DVP_INPOL_FIELD_Pos);
 	
-	DVPx->OUTHSZ = ((initStruct->StartPixel - 1) << DVP_OUTHSZ_BEGIN_Pos) |
-				   ((initStruct->PixelCount - 1) << DVP_OUTHSZ_COUNT_Pos);
+	DVPx->OUTHSZ = ((initStruct->StartPixel - 1) * clk_per_pixel << DVP_OUTHSZ_BEGIN_Pos) |
+				   ((initStruct->PixelCount * clk_per_pixel - 1) << DVP_OUTHSZ_COUNT_Pos);
 	
 	DVPx->OUTVSZ = ((initStruct->StartLine  - 1) << DVP_OUTVSZ_BEGIN_Pos) |
 				   ((initStruct->LineCount  - 1) << DVP_OUTVSZ_COUNT_Pos);
 	
-	if(initStruct->InFormat & 1)
+	if(initStruct->OutFormat == DVP_OUTFMT_RAW)
+	{
+		DVPx->BASE_YRAW = initStruct->RGBAddr;
+		
+		DVPx->STEP_YRAW = initStruct->LineStride * byte_per_pixel;
+	}
+	else
 	{
 		DVPx->BASE_YRAW = initStruct->YAddr;
 		DVPx->BASE_UV   = initStruct->UVAddr;
 		
-		DVPx->STEP_YRAW = initStruct->PixelCount;
-		DVPx->STEP_UV   = initStruct->PixelCount / 2;
-	}
-	else
-	{
-		DVPx->BASE_YRAW = initStruct->RawAddr;
+		DVPx->STEP_YRAW = initStruct->LineStride;
 		
-		DVPx->STEP_YRAW = initStruct->PixelCount * 2;
+		if(initStruct->OutFormat == DVP_OUTFMT_YUV422)
+			DVPx->STEP_UV   = initStruct->LineStride;
+		else
+			DVPx->STEP_UV   = initStruct->LineStride / 2;
 	}
+	
+	DVPx->UPDATE = 1;
 	
 	DVPx->CR |= DVP_CR_ENA_Msk;
 	
@@ -74,14 +82,15 @@ void DVP_Init(DVP_TypeDef * DVPx, DVP_InitStructure * initStruct)
 /*******************************************************************************************************************************
 * @brief	DVP capture start
 * @param	DVPx is the DVP to start
+* @param	start_frame is the start frame to be captured, start from 1
 * @param	frame_count is the number of frame to capture
 * @return
 *******************************************************************************************************************************/
-void DVP_Start(DVP_TypeDef * DVPx, uint32_t frame_count)
+void DVP_Start(DVP_TypeDef * DVPx, uint16_t start_frame, uint16_t frame_count)
 {
-	DVPx->OUTCFG = (0			<< DVP_OUTCFG_FIELD_Pos) |
-				   (0			<< DVP_OUTCFG_FRAME_Pos) |
-				   (frame_count << DVP_OUTCFG_COUNT_Pos);
+	DVPx->OUTCFG = (0				  << DVP_OUTCFG_FIELD_Pos) |
+				   ((start_frame - 1) << DVP_OUTCFG_FRAME_Pos) |
+				   ((frame_count - 1) << DVP_OUTCFG_COUNT_Pos);
 	
 	DVPx->OUTCR = DVP_OUTCR_CAPON_Msk;
 }

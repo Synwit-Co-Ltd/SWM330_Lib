@@ -7,15 +7,17 @@ typedef struct {
 	uint16_t OutFormat;			// DVP_OUTFMT_RAW, DVP_OUTFMT_YUV422, DVP_OUTFMT_YUV420
 	
 	/* position and size of output window */
-	uint16_t StartLine;
+	uint16_t StartLine;			// start from 1
 	uint16_t LineCount;
-	uint16_t StartPixel;		// must be multiple of 2
+	uint16_t StartPixel;		// must be multiple of 2, start from 1
 	uint16_t PixelCount;		// must be multiple of 4
+	
+	uint16_t LineStride;		// must be multiple of 8, line stride in pixel
 	
 	uint8_t  SampleEdge;		// DVP_PCKPolarity_Rising, DVP_PCKPolarity_Falling
 	
 	/* for RAW/RGB output */
-	uint32_t RawAddr;			// must be word aligned
+	uint32_t RGBAddr;			// must be word aligned
 	
 	/* for YUV output */
 	uint32_t YAddr;				// must be word aligned
@@ -29,8 +31,8 @@ typedef struct {
 #define DVP_INFMT_RAW_10b		((1 << 11) | (0 << 6) | (0 << 4) | 0)
 #define DVP_INFMT_RAW_12b		((2 << 11) | (0 << 6) | (0 << 4) | 0)
 #define DVP_INFMT_RAW_14b		((3 << 11) | (0 << 6) | (0 << 4) | 0)
-#define DVP_INFMT_RGB565		((0 << 11) | (0 << 6) | (0 << 4) | 0)
-#define DVP_INFMT_RGB565_SWAP	((0 << 11) | (1 << 6) | (0 << 4) | 0)	// odd/even byte swap
+#define DVP_INFMT_RGB565		((0 << 11) | (0 << 6) | (0 << 4) | 8)
+#define DVP_INFMT_RGB565_SWAP	((0 << 11) | (1 << 6) | (0 << 4) | 8)	// odd/even byte swap
 #define DVP_INFMT_YUV422_YUYV	((0 << 11) | (0 << 6) | (0 << 4) | 1)
 #define DVP_INFMT_YUV422_YVYU	((0 << 11) | (0 << 6) | (1 << 4) | 1)
 #define DVP_INFMT_YUV422_UYVY	((0 << 11) | (0 << 6) | (2 << 4) | 1)
@@ -68,7 +70,7 @@ typedef struct {
 
 void DVP_Init(DVP_TypeDef * DVPx, DVP_InitStructure * initStruct);
 
-void DVP_Start(DVP_TypeDef * DVPx, uint32_t frame_count);
+void DVP_Start(DVP_TypeDef * DVPx, uint16_t start_frame, uint16_t frame_count);
 void DVP_Stop(DVP_TypeDef * DVPx, uint32_t immediate);
 bool DVP_Busy(DVP_TypeDef * DVPx);
 
