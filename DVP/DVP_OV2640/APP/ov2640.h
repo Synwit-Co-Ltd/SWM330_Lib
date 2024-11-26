@@ -2,8 +2,9 @@
 #define __OV2640_H__
 
 
-#define  OV_FMT_RGB565	1
-#define  OV_FMT_JPEG	2
+#define OV_FMT_RGB565	1
+#define OV_FMT_YUV422	2
+#define OV_FMT_JPEG		3
 
 
 /* OV2640 Registers definition when sensor bank selected (0xFF = 0x01) */
@@ -99,7 +100,6 @@ void OV2640_ColorBar(bool on);
 
 bool OV2640_ClkDiv(uint8_t clkdiv);
 bool OV2640_OutSize(uint16_t width, uint16_t height);
-void OV2640_auto_exposure(uint8_t level);
 
 void OV2640_WriteReg(uint8_t reg_addr, uint8_t data);
 uint8_t OV2640_ReadReg(uint8_t reg_addr);
@@ -542,7 +542,7 @@ const uint8_t ov2640_rgb565_reg_tbl[][2]=
 const uint8_t ov2640_yuv422_reg_tbl[][2]=
 {
 	0xFF, 0x00,
-	0xDA, 0x10,
+	0xDA, 0x00,
 	0xD7, 0x03,
 	0xDF, 0x00,
 	0x33, 0x80,
@@ -553,6 +553,15 @@ const uint8_t ov2640_yuv422_reg_tbl[][2]=
 
 const uint8_t ov2640_jpeg_reg_tbl[][2]=
 {
+	0xFF, 0x00,
+	0xDA, 0x10,
+	0xD7, 0x03,
+	0xDF, 0x00,
+	0x33, 0x80,
+	0x3C, 0x40,
+	0xe1, 0x77,
+	0x00, 0x00,
+	
 	0xff, 0x01,
 	0xe0, 0x14,
 	0xe1, 0x77,

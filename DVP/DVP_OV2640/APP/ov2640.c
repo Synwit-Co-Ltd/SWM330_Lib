@@ -52,13 +52,15 @@ bool OV2640_Init(uint8_t outfmt, uint8_t clkdiv, uint16_t width, uint16_t height
 			OV2640_WriteReg(ov2640_rgb565_reg_tbl[i][0], ov2640_rgb565_reg_tbl[i][1]);
 		}
 	}
-	else
+	else if(outfmt == OV_FMT_YUV422)
 	{
 		for(int i = 0; i < sizeof(ov2640_yuv422_reg_tbl)/2; i++)
 		{
 			OV2640_WriteReg(ov2640_yuv422_reg_tbl[i][0], ov2640_yuv422_reg_tbl[i][1]);
 		}
-		
+	}
+	else if(outfmt == OV_FMT_JPEG)
+	{
 		for(int i = 0; i < sizeof(ov2640_jpeg_reg_tbl)/2; i++)
 		{
 			OV2640_WriteReg(ov2640_jpeg_reg_tbl[i][0], ov2640_jpeg_reg_tbl[i][1]);
@@ -75,6 +77,7 @@ bool OV2640_Init(uint8_t outfmt, uint8_t clkdiv, uint16_t width, uint16_t height
 void OV2640_Reset(void)
 {
 	OV2640_WriteReg(OV2640_DSP_RA_DLMT, 0x01);
+	
 	OV2640_WriteReg(OV2640_REG_COM7, 0x80);
 }
 
@@ -82,6 +85,7 @@ void OV2640_Reset(void)
 void OV2640_ReadID(uint16_t * vid, uint16_t * pid)
 {
 	OV2640_WriteReg(OV2640_DSP_RA_DLMT, 0x01);
+	
 	*vid = (OV2640_ReadReg(OV2640_REG_MIDH) << 8) | OV2640_ReadReg(OV2640_REG_MIDL);
 	*pid = (OV2640_ReadReg(OV2640_REG_PIDH) << 8) | OV2640_ReadReg(OV2640_REG_PIDL);
 }
@@ -89,6 +93,8 @@ void OV2640_ReadID(uint16_t * vid, uint16_t * pid)
 
 void OV2640_ColorBar(bool on)
 {
+	OV2640_WriteReg(OV2640_DSP_RA_DLMT, 0x01);
+	
 	uint8_t reg = OV2640_ReadReg(OV2640_REG_COM7);
 	reg = (reg & (~(1 << 1))) | (on << 1);
 	OV2640_WriteReg(OV2640_REG_COM7, reg);
@@ -99,7 +105,8 @@ bool OV2640_ClkDiv(uint8_t clkdiv)
 {
 	if(clkdiv > 64) return false;
 	
-	OV2640_WriteReg(0XFF, 0X01);
+	OV2640_WriteReg(OV2640_DSP_RA_DLMT, 0x01);
+	
 	uint8_t reg = OV2640_ReadReg(OV2640_REG_CLKRC);
 	reg = (reg & 0xC0) | (clkdiv - 1);
 	OV2640_WriteReg(OV2640_REG_CLKRC, reg);
@@ -116,60 +123,15 @@ bool OV2640_OutSize(uint16_t width, uint16_t height)
 	width  = width/4;
 	height = height/4;
 	
-	OV2640_WriteReg(0XFF, 0X00);
-	OV2640_WriteReg(0XE0, 0X04);
-	OV2640_WriteReg(0X5A, width&0XFF);
-	OV2640_WriteReg(0X5B, height&0XFF);
-	OV2640_WriteReg(0X5C, ((width>>8)&0X03) | ((height>>6)&0X04));
-	OV2640_WriteReg(0XE0, 0X00);
+	OV2640_WriteReg(OV2640_DSP_RA_DLMT, 0x00);
+	
+	OV2640_WriteReg(OV2640_DSP_RESET, 0x04);
+	OV2640_WriteReg(OV2640_DSP_ZMOW, width&0xFF);
+	OV2640_WriteReg(OV2640_DSP_ZMOH, height&0xFF);
+	OV2640_WriteReg(OV2640_DSP_ZMHH, ((width>>8)&0x03) | ((height>>6)&0x04));
+	OV2640_WriteReg(OV2640_DSP_RESET, 0x00);
 	
 	return true;
-}
-
-
-const static uint8_t OV2640_AUTOEXPOSURE_LEVEL[5][8]=
-{
-	{
-		0xFF,0x01,
-		0x24,0x20,
-		0x25,0x18,
-		0x26,0x60,
-	},
-	{
-		0xFF,0x01,
-		0x24,0x34,
-		0x25,0x1c,
-		0x26,0x00,
-	},
-	{
-		0xFF,0x01,
-		0x24,0x3e,
-		0x25,0x38,
-		0x26,0x81,
-	},
-	{
-		0xFF,0x01,
-		0x24,0x48,
-		0x25,0x40,
-		0x26,0x81,
-	},
-	{
-		0xFF,0x01,
-		0x24,0x58,
-		0x25,0x50,
-		0x26,0x92,
-	},
-};
-
-//level:0~4
-void OV2640_auto_exposure(uint8_t level)
-{
-	uint8_t *p = (uint8_t *)OV2640_AUTOEXPOSURE_LEVEL[level];
-	
-	for(int i = 0; i < 4; i++)
-	{
-		OV2640_WriteReg(p[i*2], p[i*2+1]);
-	}
 }
 
 
@@ -178,27 +140,25 @@ void OV2640_auto_exposure(uint8_t level)
 void OV2640_WriteReg(uint8_t reg_addr, uint8_t data)
 {
 	I2C_Start(I2C1, OV2640_I2C_ADDR | 0, 1);
-
+	
 	I2C_Write(I2C1, reg_addr, 1);
-
+	
 	I2C_Write(I2C1, data, 1);
-
+	
 	I2C_Stop(I2C1, 1);
 }
 
 
 uint8_t OV2640_ReadReg(uint8_t reg_addr)
 {
-	uint8_t data;
-	
 	I2C_Start(I2C1, OV2640_I2C_ADDR | 0, 1);
-
+	
 	I2C_Write(I2C1, reg_addr, 1);
 	
 	I2C_Start(I2C1, OV2640_I2C_ADDR | 1, 1);
-
-	data =  I2C_Read(I2C1, 0, 1);
- 
+	
+	uint8_t data =  I2C_Read(I2C1, 0, 1);
+	
 	I2C_Stop(I2C1, 1);
 	
 	return data;

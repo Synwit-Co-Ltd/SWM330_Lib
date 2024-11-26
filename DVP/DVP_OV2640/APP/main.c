@@ -32,7 +32,7 @@ int main(void)
 	
 	DVP_Config();
 	
-	OV2640_Init(OV_FMT_RGB565, 4, 480, 320);
+	OV2640_Init(CAP_FMT, 4, 480, 320);
 	
 	while(1==1)
 	{
