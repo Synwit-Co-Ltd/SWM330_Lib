@@ -8,20 +8,22 @@
 #define LCD_VDOT	272		// Vertical points
 #define LCD_DIRH	1		// horizontal display?
 
-#define CAP_HDOT	320
-#define CAP_VDOT	240
+#define CAP_HDOT	480		// TVP5150 output width: 720
+#define CAP_VDOT	240		// TVP5150 output height: 263
 
 
 uint16_t *LCD_Buffer = (uint16_t *)(PSRAMM_BASE);
 uint8_t  *CAP_Y_Buffer = (uint8_t *)(PSRAMM_BASE + 0x100000);
 uint8_t  *CAP_UV_Buffer = (uint8_t *)(PSRAMM_BASE + 0x200000);
 
+volatile int DVP_Cap_done = 0;
+
 
 void SerialInit(void);
 void MemoryInit(void);
 void RGBLCDInit(void);
 void DVP_Config(void);
-void YUV422ToRGB565(const uint8_t * Ybuf, const uint8_t * UVbuf, uint16_t * RGBbuf, int width, int height, int lcd_width);
+void YUV422ToRGB565(const uint8_t * Ybuf, const uint8_t * UVbuf, uint16_t * RGBbuf, int width, int height);
 
 int main(void)
 {
@@ -33,19 +35,21 @@ int main(void)
 	
 	RGBLCDInit();
 	
-	DVP_Config();
-	
 	TVP_Init();
 	
-	DVP_Start(DVP, 2, 2);
+	DVP_Config();
+	
+	DVP_Start(DVP, 1, 1);
 	
 	while(1==1)
 	{
-		if(!DVP_Busy(DVP))
+		if(DVP_Cap_done)
 		{
-			YUV422ToRGB565(CAP_Y_Buffer, CAP_UV_Buffer, LCD_Buffer, CAP_HDOT, CAP_VDOT, LCD_HDOT);
+			DVP_Cap_done = 0;
 			
-			DVP_Start(DVP, 2, 2);
+			YUV422ToRGB565(CAP_Y_Buffer, CAP_UV_Buffer, LCD_Buffer, CAP_HDOT, CAP_VDOT);
+			
+			DVP_Start(DVP, 1, 1);
 		}
 	}
 }
@@ -67,7 +71,7 @@ void MemoryInit(void)
 	PORT_Init(PORTE, PIN5,  PORTE_PIN5_PSRAM_D5,  1);
 	PORT_Init(PORTE, PIN6,  PORTE_PIN6_PSRAM_D6,  1);
 	PORT_Init(PORTE, PIN7,  PORTE_PIN7_PSRAM_D7,  1);
-
+	
 	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
 	PSRAM_initStruct.tRWR = 50;
 	PSRAM_initStruct.tACC = 50;
@@ -116,7 +120,7 @@ void RGBLCDInit(void)
 	PORT_Init(PORTD, PIN6,  PORTD_PIN6_LCD_R6,  0);
 	PORT_Init(PORTD, PIN7,  PORTD_PIN7_LCD_R7,  0);
 	
-	LCD_initStruct.ClkDiv = 8;
+	LCD_initStruct.ClkDiv = 12;
 	LCD_initStruct.Format = LCD_FMT_RGB565;
 	LCD_initStruct.HnPixel = LCD_HDOT;
 	LCD_initStruct.VnPixel = LCD_VDOT;
@@ -132,10 +136,6 @@ void RGBLCDInit(void)
 	LCD_initStruct.IntEOTEn = 0;
 	LCD_Init(LCD, &LCD_initStruct);
 	
-	for(int i = 0; i < LCD_VDOT; i++)
-		for(int j = 0; j < LCD_HDOT; j++)
-			LCD_Buffer[i * LCD_HDOT + j] = 0x001F;
-	
 	LCD_Start(LCD);
 }
 
@@ -144,8 +144,8 @@ void DVP_Config(void)
 {
 	DVP_InitStructure DVP_initStruct;
 	
-	PORT_Init(PORTD, PIN13, PORTD_PIN13_DVP_VS,  1);
-	PORT_Init(PORTD, PIN14, PORTD_PIN14_DVP_HS,  1);
+//	PORT_Init(PORTD, PIN13, PORTD_PIN13_DVP_VS,  1);
+//	PORT_Init(PORTD, PIN14, PORTD_PIN14_DVP_HS,  1);
 	PORT_Init(PORTD, PIN12, PORTD_PIN12_DVP_CK,  1);
 	PORT_Init(PORTC, PIN14, PORTC_PIN14_DVP_D0,  1);
 	PORT_Init(PORTE, PIN12, PORTE_PIN12_DVP_D1,  1);
@@ -162,7 +162,7 @@ void DVP_Config(void)
 //	PORT_Init(PORTD, PIN9,  PORTD_PIN9_DVP_D12,  1);
 //	PORT_Init(PORTD, PIN11, PORTD_PIN11_DVP_D13, 1);
 	
-	DVP_initStruct.InFormat = DVP_INFMT_YUV422_YUYV;
+	DVP_initStruct.InFormat = DVP_INFMT_BT656_UYVY;
 	DVP_initStruct.OutFormat = DVP_OUTFMT_YUV422;
 	DVP_initStruct.StartLine = 1;
 	DVP_initStruct.LineCount = CAP_VDOT;
@@ -172,38 +172,58 @@ void DVP_Config(void)
 	DVP_initStruct.SampleEdge = DVP_PCKPolarity_Falling;
 	DVP_initStruct.YAddr = (uint32_t)CAP_Y_Buffer;
 	DVP_initStruct.UVAddr = (uint32_t)CAP_UV_Buffer;
-	DVP_initStruct.IntEn = 0;
+	DVP_initStruct.IntEn = DVP_IT_DONE;
 	DVP_Init(DVP, &DVP_initStruct);
+}
+
+
+void DVP_Handler(void)
+{
+	DVP_INTClr(DVP, DVP_IT_DONE);
 	
-	DVP->INPOL |= (DVP_HSPolarity_Low << DVP_INPOL_HREF_Pos) |
-				  (DVP_VSPolarity_Low << DVP_INPOL_VSYNC_Pos);
+	DVP_Cap_done = 1;
 }
 
 
 #define RANGE_LIMIT(x) (x > 255 ? 255 : (x < 0 ? 0 : x))
 
-void YUV422ToRGB565(const uint8_t * Ybuf, const uint8_t * UVbuf, uint16_t * RGBbuf, int width, int height, int lcd_width)
+void YUV422ToRGB565(const uint8_t * Ybuf, const uint8_t * UVbuf, uint16_t * RGBbuf, int width, int height)
 {
-	int y, u, v, r, g, b;
+	int16_t Y[16], U[16], V[16];
+	int16_t y, u, v;
+	uint8_t r, g, b;
 	
 	for(int i = 0; i < height; i++)
 	{
-		for(int j = 0; j < width; j++)
+		for(int j = 0; j < width; j += 16)
 		{
 			uint32_t index = i * width + j;
-
-			y = Ybuf[index];
-			u = UVbuf[(index & 0xFFFFFE)] - 128;
-			v = UVbuf[(index & 0xFFFFFE) + 1] - 128;
 			
-			// R = Y + 1.402*(V-128)
-			// G = Y - 0.34414*(U-128)
-			// B = Y + 1.772*(U-128)
-			r = RANGE_LIMIT(y + v + ((v * 103) >> 8));
-			g = RANGE_LIMIT(y - ((u * 88) >> 8) - ((v * 183) >> 8));
-			b = RANGE_LIMIT(y + u + ((u * 198) >> 8));
+			/* 对同一个地址的连续读写，可大幅提升 PSRAM 的读写效率 */
+			for(int k = 0; k < 16; k++)
+				Y[k] = Ybuf[index + k];
 			
-			RGBbuf[i * lcd_width + j] = ((y>>3)<<11) | ((y>>2)<<5) | ((y>>3)<<0); //(((r & 0xf8) << 8) | ((g & 0xfc) << 3) | ((b & 0xf8) >> 3));
+			for(int k = 0; k < 16; k++)
+				U[k] = UVbuf[((index + k) & 0xFFFFFE)] - 128;
+			
+			for(int k = 0; k < 16; k++)
+				V[k] = UVbuf[((index + k) & 0xFFFFFE) + 1] - 128;
+			
+			for(int k = 0; k < 16; k++)
+			{
+				y = Y[k];
+				u = U[k];
+				v = V[k];
+				
+				// R = Y + 1.402*(V-128)
+				// G = Y - 0.34414*(U-128)
+				// B = Y + 1.772*(U-128)
+				r = RANGE_LIMIT(y + v + ((v * 103) >> 8));
+				g = RANGE_LIMIT(y - ((u * 88) >> 8) - ((v * 183) >> 8));
+				b = RANGE_LIMIT(y + u + ((u * 198) >> 8));
+				
+				RGBbuf[index + k] = (((r & 0xf8) << 8) | ((g & 0xfc) << 3) | ((b & 0xf8) >> 3));
+			}
 		}
 	}
 }

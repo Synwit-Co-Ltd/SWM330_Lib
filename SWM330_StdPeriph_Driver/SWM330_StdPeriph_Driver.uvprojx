@@ -52,7 +52,7 @@
           <OutputName>SWM330_stdperiph_lib</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\out\</ListingPath>
@@ -517,11 +517,6 @@
               <FileName>SWM330_psram.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\CSL\SWM330_StdPeriph_Driver\SWM330_psram.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM330_dcmi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CSL\SWM330_StdPeriph_Driver\SWM330_dcmi.c</FilePath>
             </File>
             <File>
               <FileName>SWM330_dvp.c</FileName>

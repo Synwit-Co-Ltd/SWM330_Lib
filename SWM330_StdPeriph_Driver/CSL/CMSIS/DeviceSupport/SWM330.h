@@ -2869,144 +2869,6 @@ typedef struct {
 typedef struct {
 	__IO uint32_t CR;
 	
-	__I  uint32_t SR;
-	
-	__I  uint32_t RIS;						// Raw Interrupt Status
-	
-	__IO uint32_t IER;						// Interrupt Enable Register
-	
-	__I  uint32_t MIS;						// Masked Interrupt Status
-	
-	__O  uint32_t ICR;						// Interrupt Clear Register
-	
-	__IO uint32_t ESC;						// Embedded Synchronization Code
-	
-	__IO uint32_t ESM;						// Embedded Synchronization Mask
-	
-	__IO uint32_t CWPOS;					// Crop window Position
-	
-	__IO uint32_t CWSIZ;					// Crop window Size
-	
-	__I  uint32_t DR;
-} DCMI_TypeDef;
-
-
-#define DCMI_CR_CAPON_Pos			0		// capture switch on
-#define DCMI_CR_CAPON_Msk			(0x01 << DCMI_CR_CAPON_Pos)
-#define DCMI_CR_CAPMODE_Pos			1		// Capture Mode, 0 Continuous grab mode, 1 Snapshot mode (single frame)
-#define DCMI_CR_CAPMODE_Msk			(0x01 << DCMI_CR_CAPMODE_Pos)
-#define DCMI_CR_CROPEN_Pos			2		// Crop Enable
-#define DCMI_CR_CROPEN_Msk			(0x01 << DCMI_CR_CROPEN_Pos)
-#define DCMI_CR_JPEG_Pos			3		// JPEG Format, 0 Uncompressed format, 1 JPEG Format
-#define DCMI_CR_JPEG_Msk			(0x01 << DCMI_CR_JPEG_Pos)
-#define DCMI_CR_EMBSYNC_Pos			4		// Embedded Synchronization, 0 DCMI_VSYNC & DCMI_HSYNC sync, 1 Embedded synchronization code sync (Valid only for 8-bit parallel data)
-#define DCMI_CR_EMBSYNC_Msk			(0x01 << DCMI_CR_EMBSYNC_Pos)
-#define DCMI_CR_PCKPOL_Pos			5		// Pixel clock polarity, 0 sample on falling edge, 1 sample on rising edge
-#define DCMI_CR_PCKPOL_Msk			(0x01 << DCMI_CR_PCKPOL_Pos)
-#define DCMI_CR_HSPOL_Pos			6		// Horizontal sync polarity, 0 HSYNC active low, 1 HSYNC active high
-#define DCMI_CR_HSPOL_Msk			(0x01 << DCMI_CR_HSPOL_Pos)
-#define DCMI_CR_VSPOL_Pos			7		// Vertical sync polarity, 0 VSYNC active low, 1 VSYNC active high
-#define DCMI_CR_VSPOL_Msk			(0x01 << DCMI_CR_VSPOL_Pos)
-#define DCMI_CR_FRAMESEL_Pos		8		// Frame Select in Continuous grab mode, 0 all frame, 1 every alternate frame, 2 one frame out of four
-#define DCMI_CR_FRAMESEL_Msk		(0x03 << DCMI_CR_FRAMESEL_Pos)
-#define DCMI_CR_BUSWIDTH_Pos		10		// 0 8-bit data, 1 10-bit data, 2 12-bit data, 3 14-bit data
-#define DCMI_CR_BUSWIDTH_Msk		(0x03 << DCMI_CR_BUSWIDTH_Pos)
-#define DCMI_CR_ENA_Pos				14		// DCMI Enable, can config only when ENA=0
-#define DCMI_CR_ENA_Msk				(0x01 << DCMI_CR_ENA_Pos)
-#define DCMI_CR_BYTESEL_Pos			16		// Byte Select, 0 all byte, 1 every alternate byte, 2 one byte out of four, 3 two bytes out of four
-#define DCMI_CR_BYTESEL_Msk			(0x03 << DCMI_CR_BYTESEL_Pos)
-#define DCMI_CR_BYTE2nd_Pos			18		// Second Byte Start, 0 first byte star, 1 second byte start
-#define DCMI_CR_BYTE2nd_Msk			(0x01 << DCMI_CR_BYTE2nd_Pos)
-#define DCMI_CR_LINESEL_Pos			19		// Line Select, 0 all line, 1 every alternate line
-#define DCMI_CR_LINESEL_Msk			(0x01 << DCMI_CR_LINESEL_Pos)
-#define DCMI_CR_LINE2nd_Pos			20		// Second Line Start, 0 first line start, 1 second line start
-#define DCMI_CR_LINE2nd_Msk			(0x01 << DCMI_CR_LINE2nd_Pos)
-
-#define DCMI_SR_HSYNC_Pos			0		// 0 active line, 1 synchronization between lines
-#define DCMI_SR_HSYNC_Msk			(0x01 << DCMI_SR_HSYNC_Pos)
-#define DCMI_SR_VSYNC_Pos			1		// 0 active frame, 1 synchronization between frames
-#define DCMI_SR_VSYNC_Msk			(0x01 << DCMI_SR_VSYNC_Pos)
-#define DCMI_SR_FIFONE_Pos			2		// FIFO not empty
-#define DCMI_SR_FIFONE_Msk			(0x01 << DCMI_SR_FIFONE_Pos)
-
-#define DCMI_RIS_FRAME_Pos			0		// Frame Capture complete
-#define DCMI_RIS_FRAME_Msk			(0x01 << DCMI_RIS_FRAME_Pos)
-#define DCMI_RIS_FIFOOV_Pos			1		// FIFO Overrun
-#define DCMI_RIS_FIFOOV_Msk			(0x01 << DCMI_RIS_FIFOOV_Pos)
-#define DCMI_RIS_ESCERR_Pos			2		// Embedded Synchronization Code Error
-#define DCMI_RIS_ESCERR_Msk			(0x01 << DCMI_RIS_ESCERR_Pos)
-#define DCMI_RIS_VSYNC_Pos			3		// VSYNC change from inactive to active
-#define DCMI_RIS_VSYNC_Msk			(0x01 << DCMI_RIS_VSYNC_Pos)
-#define DCMI_RIS_HSYNC_Pos			4		// HSYNC change from inactive to active
-#define DCMI_RIS_HSYNC_Msk			(0x01 << DCMI_RIS_HSYNC_Pos)
-
-#define DCMI_IER_FRAME_Pos			0
-#define DCMI_IER_FRAME_Msk			(0x01 << DCMI_IER_FRAME_Pos)
-#define DCMI_IER_FIFOOV_Pos			1
-#define DCMI_IER_FIFOOV_Msk			(0x01 << DCMI_IER_FIFOOV_Pos)
-#define DCMI_IER_ESCERR_Pos			2
-#define DCMI_IER_ESCERR_Msk			(0x01 << DCMI_IER_ESCERR_Pos)
-#define DCMI_IER_VSYNC_Pos			3
-#define DCMI_IER_VSYNC_Msk			(0x01 << DCMI_IER_VSYNC_Pos)
-#define DCMI_IER_HSYNC_Pos			4
-#define DCMI_IER_HSYNC_Msk			(0x01 << DCMI_IER_HSYNC_Pos)
-
-#define DCMI_MIS_FRAME_Pos			0
-#define DCMI_MIS_FRAME_Msk			(0x01 << DCMI_MIS_FRAME_Pos)
-#define DCMI_MIS_FIFOOV_Pos			1
-#define DCMI_MIS_FIFOOV_Msk			(0x01 << DCMI_MIS_FIFOOV_Pos)
-#define DCMI_MIS_ESCERR_Pos			2
-#define DCMI_MIS_ESCERR_Msk			(0x01 << DCMI_MIS_ESCERR_Pos)
-#define DCMI_MIS_VSYNC_Pos			3
-#define DCMI_MIS_VSYNC_Msk			(0x01 << DCMI_MIS_VSYNC_Pos)
-#define DCMI_MIS_HSYNC_Pos			4
-#define DCMI_MIS_HSYNC_Msk			(0x01 << DCMI_MIS_HSYNC_Pos)
-
-#define DCMI_ICR_FRAME_Pos			0
-#define DCMI_ICR_FRAME_Msk			(0x01 << DCMI_ICR_FRAME_Pos)
-#define DCMI_ICR_FIFOOV_Pos			1
-#define DCMI_ICR_FIFOOV_Msk			(0x01 << DCMI_ICR_FIFOOV_Pos)
-#define DCMI_ICR_ESCERR_Pos			2
-#define DCMI_ICR_ESCERR_Msk			(0x01 << DCMI_ICR_ESCERR_Pos)
-#define DCMI_ICR_VSYNC_Pos			3
-#define DCMI_ICR_VSYNC_Msk			(0x01 << DCMI_ICR_VSYNC_Pos)
-#define DCMI_ICR_HSYNC_Pos			4
-#define DCMI_ICR_HSYNC_Msk			(0x01 << DCMI_ICR_HSYNC_Pos)
-
-#define DCMI_ESC_FRMSTA_Pos			0		// Frame Start delimiter code
-#define DCMI_ESC_FRMSTA_Msk			(0xFF << DCMI_ESC_FRMSTA_Pos)
-#define DCMI_ESC_LINSTA_Pos			8		// Line Start delimiter code
-#define DCMI_ESC_LINSTA_Msk			(0xFF << DCMI_ESC_LINSTA_Pos)
-#define DCMI_ESC_LINEND_Pos			16		// Line End delimiter code
-#define DCMI_ESC_LINEND_Msk			(0xFF << DCMI_ESC_LINEND_Pos)
-#define DCMI_ESC_FRMEND_Pos			24		// Frame End delimiter code
-#define DCMI_ESC_FRMEND_Msk			(0xFF << DCMI_ESC_FRMEND_Pos)
-
-#define DCMI_ESM_FRMSTA_Pos			0
-#define DCMI_ESM_FRMSTA_Msk			(0xFF << DCMI_ESM_FRMSTA_Pos)
-#define DCMI_ESM_LINSTA_Pos			8
-#define DCMI_ESM_LINSTA_Msk			(0xFF << DCMI_ESM_LINSTA_Pos)
-#define DCMI_ESM_LINEND_Pos			16
-#define DCMI_ESM_LINEND_Msk			(0xFF << DCMI_ESM_LINEND_Pos)
-#define DCMI_ESM_FRMEND_Pos			24
-#define DCMI_ESM_FRMEND_Msk			(0xFF << DCMI_ESM_FRMEND_Pos)
-
-#define DCMI_CWPOS_PIXEL_Pos		0		// number of pixel in line before starting a capture
-#define DCMI_CWPOS_PIXEL_Msk		(0x3FFF << DCMI_CWPOS_PIXEL_Pos)
-#define DCMI_CWPOS_LINE_Pos			16		// number of line in frame before starting a capture
-#define DCMI_CWPOS_LINE_Msk			(0x1FFF << DCMI_CWPOS_LINE_Pos)
-
-#define DCMI_CWSIZ_PIXEL_Pos		0		// number of pixel in line to be captured
-#define DCMI_CWSIZ_PIXEL_Msk		(0x3FFF << DCMI_CWSIZ_PIXEL_Pos)
-#define DCMI_CWSIZ_LINE_Pos			16		// number of line in frame to be captured
-#define DCMI_CWSIZ_LINE_Msk			(0x1FFF << DCMI_CWSIZ_LINE_Pos)
-
-
-
-
-typedef struct {
-	__IO uint32_t CR;
-	
 	__IO uint32_t IE;
 	
 	__IO uint32_t IF;
@@ -3657,7 +3519,6 @@ typedef struct {
 
 #define DMA2D_BASE			(AHB_BASE + 0x03000)
 
-#define DCMI_BASE			(AHB_BASE + 0x03800)
 #define DVP_BASE			(AHB_BASE + 0x03900)
 
 #define JPEG_BASE			(AHB_BASE + 0x04000)
@@ -3786,8 +3647,6 @@ typedef struct {
 
 #define SRA					((SRA_TypeDef  *) SRA_BASE)
 
-#define DCMI				((DCMI_TypeDef *) DCMI_BASE)
-
 #define DVP					((DVP_TypeDef  *) DVP_BASE)
 
 #define FMC					((FMC_TypeDef  *) FMC_BASE)
@@ -3819,7 +3678,6 @@ typedef struct {
 #include "SWM330_dma2d.h"
 #include "SWM330_jpeg.h"
 #include "SWM330_sra.h"
-#include "SWM330_dcmi.h"
 #include "SWM330_dvp.h"
 #include "SWM330_dac.h"
 #include "SWM330_crc.h"

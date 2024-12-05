@@ -19,10 +19,10 @@ void TVP_Init(void)
 	
 	TVP_Write(TVP_REG_InputSource, TVP_InputSource_AIP1A);
 	
-	TVP_Write(TVP_REG_PinsConfig, TVP_PIN23_FID | TVP_PIN24_VSYNC | TVP_PIN27_VBLK);
+	TVP_Write(TVP_REG_PinsConfig, TVP_PIN23_LOCK | TVP_PIN24_LOCK | TVP_PIN27_VBLK);
 	TVP_Write(TVP_REG_MiscellaneousControls, 0xEF);
 	
-	TVP_Write(TVP_REG_OutputAndRatesSelect, TVP_FMT_YUV422 | TVP_CODE_PLUS128 | TVP_RANGE_EXT);
+	TVP_Write(TVP_REG_OutputAndRatesSelect, TVP_FMT_BT656 | TVP_CODE_PLUS128 | TVP_RANGE_EXT);
 }
 
 
