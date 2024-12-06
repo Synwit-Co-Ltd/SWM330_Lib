@@ -1,4 +1,3 @@
-#include <string.h>
 #include "SWM330.h"
 
 #include "tvp5150.h"
@@ -40,6 +39,8 @@ int main(void)
 	DVP_Config();
 	
 	DVP_Start(DVP, 1, 1);
+	
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);
 	
 	while(1==1)
 	{
@@ -180,6 +181,8 @@ void DVP_Config(void)
 void DVP_Handler(void)
 {
 	DVP_INTClr(DVP, DVP_IT_DONE);
+	
+	GPIO_InvBit(GPIOA, PIN5);
 	
 	DVP_Cap_done = 1;
 }

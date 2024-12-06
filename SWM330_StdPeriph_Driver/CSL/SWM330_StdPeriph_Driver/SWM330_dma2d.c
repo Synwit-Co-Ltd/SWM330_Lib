@@ -26,8 +26,10 @@ void DMA2D_Init(DMA2D_InitStructure * initStruct)
 {
 	SYS->CLKEN0 |= (1 << SYS_CLKEN0_DMA2D_Pos);
 	
-	DMA2D->CR &= ~DMA2D_CR_WAIT_Msk;
-	DMA2D->CR |= (initStruct->Interval << DMA2D_CR_WAIT_Pos);
+	DMA2D->CR &= ~(DMA2D_CR_BURST_Msk | DMA2D_CR_BLKSZ_Msk | DMA2D_CR_WAIT_Msk);
+	DMA2D->CR |= (2                    << DMA2D_CR_BURST_Pos) |
+				 (0					   << DMA2D_CR_BLKSZ_Pos) |
+				 (initStruct->Interval << DMA2D_CR_WAIT_Pos);
 	
 	DMA2D->IF = 0xFF;
 	DMA2D->IE = (initStruct->IntEOTEn << DMA2D_IE_DONE_Pos);
@@ -120,6 +122,12 @@ void DMA2D_PixelBlend(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * bgLayer
 									 (fgLayer->AlphaMode << DMA2D_PFCCR_AINV_Pos) |
 									 (fgLayer->Alpha     << DMA2D_PFCCR_ALPHA_Pos);
 	
+	if(fgLayer->AlphaMode == DMA2D_AMODE_EXTERN)
+	{
+		DMA2D->CR |= (1 << DMA2D_CR_AAREN_Pos);
+		DMA2D->AAR = fgLayer->AlhpaAddr;
+	}
+	
 	DMA2D->L[DMA2D_LAYER_BG].MAR = bgLayer->Address;
 	DMA2D->L[DMA2D_LAYER_BG].OR  = bgLayer->LineOffset;
 	DMA2D->L[DMA2D_LAYER_BG].PFCCR = (bgLayer->ColorMode << DMA2D_PFCCR_CFMT_Pos) |
@@ -150,40 +158,40 @@ uint32_t DMA2D_IsBusy(void)
 
 /*******************************************************************************************************************************
 * @brief	DMA2D interrupt enable
-* @param
+* @param	it is interrupt type, can be DMA2D_IT_DONE, DMA2D_IT_HALF, DMA2D_IT_ERROR and their '|' operation
 * @return
 *******************************************************************************************************************************/
-void DMA2D_INTEn(void)
+void DMA2D_INTEn(uint32_t it)
 {
-	DMA2D->IE = DMA2D_IE_DONE_Msk;
+	DMA2D->IE |= it;
 }
 
 /*******************************************************************************************************************************
 * @brief	DMA2D interrupt disable
-* @param
+* @param	it is interrupt type, can be DMA2D_IT_DONE, DMA2D_IT_HALF, DMA2D_IT_ERROR and their '|' operation
 * @return
 *******************************************************************************************************************************/
-void DMA2D_INTDis(void)
+void DMA2D_INTDis(uint32_t it)
 {
-	DMA2D->IE = 0;
+	DMA2D->IE &= ~it;
 }
 
 /*******************************************************************************************************************************
 * @brief	DMA2D interrupt flag clear
-* @param
+* @param	it is interrupt type, can be DMA2D_IT_DONE, DMA2D_IT_HALF, DMA2D_IT_ERROR and their '|' operation
 * @return
 *******************************************************************************************************************************/
-void DMA2D_INTClr(void)
+void DMA2D_INTClr(uint32_t it)
 {
-	DMA2D->IF = DMA2D_IF_DONE_Msk;
+	DMA2D->IF = it;
 }
 
 /*******************************************************************************************************************************
 * @brief	DMA2D interrupt state query
-* @param
+* @param	it is interrupt type, can be DMA2D_IT_DONE, DMA2D_IT_HALF, DMA2D_IT_ERROR and their '|' operation
 * @return	1 interrupt happened, 0 interrupt not happen
 *******************************************************************************************************************************/
-uint32_t DMA2D_INTStat(void)
+uint32_t DMA2D_INTStat(uint32_t it)
 {
-	return (DMA2D->IF & DMA2D_IF_DONE_Msk) ? 1 : 0;
+	return (DMA2D->IF & it) ? 1 : 0;
 }

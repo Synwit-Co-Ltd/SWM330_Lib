@@ -5,7 +5,7 @@
 
 
 typedef struct {
-	uint16_t Interval;			// data block (64 word) transfer interval in unit of HCLK period, can be 1--1023
+	uint16_t Interval;			// data block transfer interval in unit of HCLK period, can be 1--65536
 	uint8_t  IntEOTEn;			// End of Transter interrupt enable
 } DMA2D_InitStructure;
 
@@ -15,7 +15,8 @@ typedef struct {
 	uint32_t LineOffset;		// added at the end of each line to determine the starting address of the next line
 	uint8_t  ColorMode;			// DMA2D_FMT_ARGB888, DMA2D_FMT_RGB888, DMA2D_FMT_RGB565, ...
 	uint8_t  AlphaMode;			// DMA2D_AMODE_PIXEL, DMA2D_AMODE_ALPHA, DMA2D_AMODE_PMULA, ...
-	uint8_t  Alpha;
+	uint8_t  Alpha;				// used for DMA2D_AMODE_ALPHA mode, Assign a fixed Alpha value to the layer
+	uint32_t AlhpaAddr;			// used for DMA2D_AMODE_EXTERN mode, only suitable for foreground layer, Alpha values are stored in a separate storage area specified by AlphaAddr
 	
 	/* only for DMA2D_LAYER_OUT, not for DMA2D_LAYER_FG and DMA2D_LAYER_BG */
 	uint16_t LineCount;			// line per screen
@@ -39,6 +40,13 @@ typedef struct {
 #define DMA2D_AMODE_PIXEL	(0 | (0 << 5))	// use the pixel's own Alpha value
 #define DMA2D_AMODE_ALPHA	(0 | (1 << 5))	// use the Alpha value specified by software
 #define DMA2D_AMODE_PMULA	(0 | (2 << 5))	// use the product of the pixel's own Alpha value and the Alpha value specified by software
+#define DMA2D_AMODE_EXTERN	(0 | (3 << 5))	// only suitable for foreground layer, Alpha values are stored in a separate storage area specified by AlphaAddr
+
+
+/* Interrupt Type */
+#define DMA2D_IT_DONE		DMA2D_IF_DONE_Msk		// transfer done
+#define DMA2D_IT_HALF		DMA2D_IF_PART_Msk		// GPDMA transfer half done
+#define DMA2D_IT_ERROR		DMA2D_IF_ERROR_Msk		// Configration error
 
 
 void DMA2D_Init(DMA2D_InitStructure * initStruct);
@@ -48,10 +56,10 @@ void DMA2D_PixelConvert(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * outLa
 void DMA2D_PixelBlend(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * bgLayer, DMA2D_LayerSetting * outLayer);
 uint32_t DMA2D_IsBusy(void);
 
-void DMA2D_INTEn(void);
-void DMA2D_INTDis(void);
-void DMA2D_INTClr(void);
-uint32_t DMA2D_INTStat(void);
+void DMA2D_INTEn(uint32_t it);
+void DMA2D_INTDis(uint32_t it);
+void DMA2D_INTClr(uint32_t it);
+uint32_t DMA2D_INTStat(uint32_t it);
 
 
 #endif

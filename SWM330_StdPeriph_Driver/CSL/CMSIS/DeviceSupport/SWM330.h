@@ -2562,21 +2562,41 @@ typedef struct {
 	} L[3];									// Layer: 0 Foreground, 1 Background, 2 Output
 	
 	__IO uint32_t NLR;						// Number of Line Register
+	
+	__IO uint32_t AAR;						// Alpha Address, address for Foreground Layer Alpha
+	
+	__IO uint32_t ERR;						// Error flag
 } DMA2D_TypeDef;
 
 
 #define DMA2D_IF_DONE_Pos			1		// transfer done, wirte 1 to clear
 #define DMA2D_IF_DONE_Msk			(0x01 << DMA2D_IF_DONE_Pos)
+#define DMA2D_IF_PART_Pos			2		// GPDMA transfer part done, wirte 1 to clear
+#define DMA2D_IF_PART_Msk			(0x01 << DMA2D_IF_PART_Pos)
+#define DMA2D_IF_ERROR_Pos			3		// Configration error, wirte 1 to clear
+#define DMA2D_IF_ERROR_Msk			(0x01 << DMA2D_IF_ERROR_Pos)
 
 #define DMA2D_IE_DONE_Pos			1
 #define DMA2D_IE_DONE_Msk			(0x01 << DMA2D_IE_DONE_Pos)
+#define DMA2D_IE_PART_Pos			2
+#define DMA2D_IE_PART_Msk			(0x01 << DMA2D_IE_PART_Pos)
+#define DMA2D_IE_ERROR_Pos			3
+#define DMA2D_IE_ERROR_Msk			(0x01 << DMA2D_IE_ERROR_Pos)
 
 #define DMA2D_CR_START_Pos			0		// start transfer
 #define DMA2D_CR_START_Msk			(0x01 << DMA2D_CR_START_Pos)
+#define DMA2D_CR_BURST_Pos			3		//0 Incr16   1 Incr8   2 Incr4   3 Single
+#define DMA2D_CR_BURST_Msk			(0x03 << DMA2D_CR_BURST_Pos)
 #define DMA2D_CR_MODE_Pos			8		// 0 memory to memory, 1 memory to memory and do PFC, 2 memory to memory and do blend, 3 register to memory
 #define DMA2D_CR_MODE_Msk			(0x03 << DMA2D_CR_MODE_Pos)
-#define DMA2D_CR_WAIT_Pos			22		// data block (64 word) transfer interval in unit of HCLK period
-#define DMA2D_CR_WAIT_Msk			(0x3FFu<<DMA2D_CR_WAIT_Pos)
+#define DMA2D_CR_AAREN_Pos			10		// 1 Foreground Layer Alpha store at AAR
+#define DMA2D_CR_AAREN_Msk			(0x01 << DMA2D_CR_AAREN_Pos)
+#define DMA2D_CR_GPDMA_Pos			11		// 1 General Purpose DMA mode
+#define DMA2D_CR_GPDMA_Msk			(0x01 << DMA2D_CR_GPDMA_Pos)
+#define DMA2D_CR_BLKSZ_Pos			14		// Block Size, DMA2D can insert WAIT clock cycles for each BLKSZ word transported, 0 16   1 32   2 64   3 128
+#define DMA2D_CR_BLKSZ_Msk			(0x03 << DMA2D_CR_BLKSZ_Pos)
+#define DMA2D_CR_WAIT_Pos			16		// data block transfer interval in unit of HCLK period
+#define DMA2D_CR_WAIT_Msk			(0xFFFFu<<DMA2D_CR_WAIT_Pos)
 
 #define DMA2D_PFCCR_CFMT_Pos		0		// Color Format, 0 ARGB8888, 1 RGB8888, 2 RGB565
 #define DMA2D_PFCCR_CFMT_Msk		(0x07 << DMA2D_CFMT_FORMAT_Pos)
@@ -2593,6 +2613,15 @@ typedef struct {
 #define DMA2D_NLR_NLINE_Msk			(0xFFFF<<DMA2D_NLR_NLINE_Pos)
 #define DMA2D_NLR_NPIXEL_Pos		16		// Number of Pixel per line
 #define DMA2D_NLR_NPIXEL_Msk		(0x3FFF<<DMA2D_NLR_NPIXEL_Pos)
+
+#define DMA2D_ERR_FG_Pos			0		// FG layer address configration error
+#define DMA2D_ERR_FG_Msk			(0x01 << DMA2D_ERR_FG_Pos)
+#define DMA2D_ERR_BG_Pos			1		// BG layer address configration error
+#define DMA2D_ERR_BG_Msk			(0x01 << DMA2D_ERR_BG_Pos)
+#define DMA2D_ERR_OUT_Pos			2		// OUT layer address configration error
+#define DMA2D_ERR_OUT_Msk			(0x01 << DMA2D_ERR_OUT_Pos)
+#define DMA2D_ERR_ALPHA_Pos			3		// ALPHA layer address configration error
+#define DMA2D_ERR_ALPHA_Msk			(0x01 << DMA2D_ERR_ALPHA_Pos)
 
 
 
@@ -3006,14 +3035,10 @@ typedef struct {
 
 #define DVP_OUTCFG_FRAME_Pos		0		// start frame to be captured
 #define DVP_OUTCFG_FRAME_Msk		(0x3FFF << DVP_OUTCFG_FRAME_Pos)
-#define DVP_OUTCFG_SINGLE_Pos		14		// for BT656 interleaving video, 0 capture double fields, 1 capture only single field
-#define DVP_OUTCFG_SINGLE_Msk		(0x01 << DVP_OUTCFG_SINGLE_Pos)
 #define DVP_OUTCFG_FIELD_Pos		15		// start field to be captured, 0 field 0, 1 field 1
 #define DVP_OUTCFG_FIELD_Msk		(0x01 << DVP_OUTCFG_FIELD_Pos)
 #define DVP_OUTCFG_COUNT_Pos		16		// frame count to be captured
 #define DVP_OUTCFG_COUNT_Msk		(0x3FFF << DVP_OUTCFG_COUNT_Pos)
-#define DVP_OUTCFG_INLEAVE_Pos		30		// BT656 interleaving video mode
-#define DVP_OUTCFG_INLEAVE_Msk		(0x01 << DVP_OUTCFG_INLEAVE_Pos)
 #define DVP_OUTCFG_VIDEO_Pos		31		// capture mode, 0 snapshot, 1 video
 #define DVP_OUTCFG_VIDEO_Msk		(0x01 << DVP_OUTCFG_VIDEO_Pos)
 

@@ -1,4 +1,7 @@
+#include <string.h>
 #include "SWM330.h"
+
+extern const unsigned char gImage_Synwit128[32768];
 
 
 #define LCD_HDOT	480		// horizontal dot number
@@ -7,11 +10,10 @@
 
 
 uint16_t *LCD_Buffer = (uint16_t *) PSRAMM_BASE;
-uint32_t *Img_Buffer = (uint32_t *)(PSRAMM_BASE + 0x100000);
+uint16_t *Img_Buffer = (uint16_t *)(PSRAMM_BASE + 0x100000);
+uint16_t *Alpha_Buff = (uint16_t *)(PSRAMM_BASE + 0x200000);
 
 DMA2D_LayerSetting fgLayer, bgLayer, outLayer;
-
-extern const unsigned char gImage_Synwit128[32768];
 
 
 void SerialInit(void);
@@ -52,15 +54,13 @@ int main(void)
 
 
 void DMA2D_Handler(void)
-{	
-	DMA2D_INTClr();
+{
+	DMA2D_INTClr(DMA2D_IT_DONE);
 }
 
 
 void test_PixelFill(void)
 {
-	uint32_t i;
-	
 	/* full screen fill blue */
 	outLayer.Address = (uint32_t)LCD_Buffer;
 	outLayer.LineCount = LCD_VDOT;
@@ -71,7 +71,7 @@ void test_PixelFill(void)
 	
 	while(DMA2D_IsBusy()) __NOP();
 	
-	for(i = 0; i < SystemCoreClock/8; i++) __NOP();
+	for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
 	
 	/* Draw a 150*150 green square in the upper left corner */
 	outLayer.Address = (uint32_t)LCD_Buffer;
@@ -83,7 +83,7 @@ void test_PixelFill(void)
 	
 	while(DMA2D_IsBusy()) __NOP();
 	
-	for(i = 0; i < SystemCoreClock/8; i++) __NOP();
+	for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
 	
 	/* Draw a 150*150 red square in the lower right corner */
 	outLayer.Address = (uint32_t)LCD_Buffer + (LCD_HDOT * (LCD_VDOT - 150) + (LCD_HDOT - 150)) * 2;
@@ -95,15 +95,16 @@ void test_PixelFill(void)
 	
 	while(DMA2D_IsBusy()) __NOP();
 	
-	for(i = 0; i < SystemCoreClock/8; i++) __NOP();
+	for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
 }
 
 
 void test_PixelMove(void)
 {
-	uint32_t i;
+	/* DMA2D does not support data Move from Flash */
+	memcpy(Img_Buffer, gImage_Synwit128, 32768);
 	
-	fgLayer.Address = (uint32_t)gImage_Synwit128;
+	fgLayer.Address = (uint32_t)Img_Buffer;
 	fgLayer.LineOffset = 0;
 	fgLayer.ColorMode = DMA2D_FMT_RGB565;
 	
@@ -116,7 +117,7 @@ void test_PixelMove(void)
 	
 	while(DMA2D_IsBusy()) __NOP();
 	
-	for(i = 0; i < SystemCoreClock/8; i++) __NOP();
+	for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
 	
 	/* Draw a 128*128 picture in the lower right corner */
 	outLayer.Address = (uint32_t)LCD_Buffer + (LCD_HDOT * (LCD_VDOT - 128) + (LCD_HDOT - 128)) * 2;
@@ -127,39 +128,25 @@ void test_PixelMove(void)
 	
 	while(DMA2D_IsBusy()) __NOP();
 	
-	for(i = 0; i < SystemCoreClock/8; i++) __NOP();
+	for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
 }
 
 
 void test_PixelBlend(void)
 {
-	/* Convert images from RGB565 to ARGB888 format */
-	fgLayer.Address = (uint32_t)gImage_Synwit128;
-	fgLayer.LineOffset = 0;
-	fgLayer.ColorMode = DMA2D_FMT_RGB565;
-	
-	outLayer.Address = (uint32_t)Img_Buffer;
-	outLayer.LineCount = 128;
-	outLayer.LinePixel = 128;
-	outLayer.LineOffset = 0;
-	outLayer.ColorMode = DMA2D_FMT_ARGB888;
-	DMA2D_PixelConvert(&fgLayer, &outLayer);
-	
-	while(DMA2D_IsBusy()) __NOP();
-	
 	/*	Set the Alpha value of the white pixels to 0, so that the background color is displayed instead of the white color of the image when blending later.
 		Note: This step can be completed on the computer through the image processing software.
 	*/
 	for(int i = 0; i < 128; i++)
 		for(int j = 0; j < 128; j++)
-			if(Img_Buffer[i*128+j] == 0xFFFFFFFF)
-				Img_Buffer[i*128+j] = 0x00FFFFFF;
+			Alpha_Buff[i*128+j] = (Img_Buffer[i*128+j] == 0xFFFF) ? 0x00 : 0xFF;
 	
 	/* do image blending */
 	fgLayer.Address = (uint32_t)Img_Buffer;
 	fgLayer.LineOffset = 0;
-	fgLayer.ColorMode = DMA2D_FMT_ARGB888;
-	fgLayer.AlphaMode = DMA2D_AMODE_PIXEL;
+	fgLayer.ColorMode = DMA2D_FMT_RGB565;
+	fgLayer.AlphaMode = DMA2D_AMODE_EXTERN;
+	fgLayer.AlhpaAddr = (uint32_t)Alpha_Buff;
 	
 	bgLayer.Address = (uint32_t)LCD_Buffer + (LCD_HDOT * (LCD_VDOT - 128)/2 + (LCD_HDOT - 128)/2) * 2;;
 	bgLayer.LineOffset = LCD_HDOT-128;
@@ -189,36 +176,36 @@ void RGBLCDInit(void)
 	for(i = 0; i < CyclesPerUs*1000; i++) __NOP();
 	GPIO_SetBit(GPIOC, PIN6);
 	
-	PORT_Init(PORTB, PIN8,  PORTB_PIN8_LCD_VS,  0);
-	PORT_Init(PORTB, PIN9,  PORTB_PIN9_LCD_HS,  0);
-	PORT_Init(PORTB, PIN10, PORTB_PIN10_LCD_DE, 0);
-	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_CK,  0);
-	PORT_Init(PORTB, PIN11, PORTB_PIN11_LCD_B0, 0);
-	PORT_Init(PORTB, PIN12, PORTB_PIN12_LCD_B1, 0);
-	PORT_Init(PORTB, PIN13, PORTB_PIN13_LCD_B2, 0);
-	PORT_Init(PORTB, PIN14, PORTB_PIN14_LCD_B3, 0);
+	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_VS,  0);
+	PORT_Init(PORTB, PIN6,  PORTB_PIN6_LCD_HS,  0);
+	PORT_Init(PORTB, PIN8,  PORTB_PIN8_LCD_DE,  0);
+	PORT_Init(PORTD, PIN15, PORTD_PIN15_LCD_CK, 0);
+//	PORT_Init(PORTB, PIN9,  PORTB_PIN9_LCD_B0,  0);
+//	PORT_Init(PORTB, PIN10, PORTB_PIN10_LCD_B1, 0);
+//	PORT_Init(PORTB, PIN11, PORTB_PIN11_LCD_B2, 0);
+	PORT_Init(PORTB, PIN13, PORTB_PIN13_LCD_B3, 0);
 	PORT_Init(PORTB, PIN15, PORTB_PIN15_LCD_B4, 0);
 	PORT_Init(PORTA, PIN0,  PORTA_PIN0_LCD_B5,  0);
 	PORT_Init(PORTA, PIN1,  PORTA_PIN1_LCD_B6,  0);
 	PORT_Init(PORTA, PIN2,  PORTA_PIN2_LCD_B7,  0);
-	PORT_Init(PORTC, PIN9,  PORTC_PIN9_LCD_G0,  0);
-	PORT_Init(PORTD, PIN10, PORTD_PIN10_LCD_G1, 0);
-	PORT_Init(PORTE, PIN13, PORTE_PIN13_LCD_G2, 0);
-	PORT_Init(PORTA, PIN9,  PORTA_PIN9_LCD_G3,  0);
-	PORT_Init(PORTA, PIN10, PORTA_PIN10_LCD_G4, 0);
-	PORT_Init(PORTA, PIN11, PORTA_PIN11_LCD_G5, 0);
-	PORT_Init(PORTC, PIN10, PORTC_PIN10_LCD_G6, 0);
-	PORT_Init(PORTC, PIN11, PORTC_PIN11_LCD_G7, 0);
-	PORT_Init(PORTC, PIN12, PORTC_PIN12_LCD_R0, 0);
-	PORT_Init(PORTC, PIN13, PORTC_PIN13_LCD_R1, 0);
-	PORT_Init(PORTD, PIN0,  PORTD_PIN0_LCD_R2,  0);
-	PORT_Init(PORTD, PIN1,  PORTD_PIN1_LCD_R3,  0);
-	PORT_Init(PORTD, PIN2,  PORTD_PIN2_LCD_R4,  0);
-	PORT_Init(PORTD, PIN3,  PORTD_PIN3_LCD_R5,  0);
-	PORT_Init(PORTD, PIN4,  PORTD_PIN4_LCD_R6,  0);
-	PORT_Init(PORTD, PIN5,  PORTD_PIN5_LCD_R7,  0);
+//	PORT_Init(PORTD, PIN10, PORTD_PIN10_LCD_G0, 0);
+//	PORT_Init(PORTE, PIN13, PORTE_PIN13_LCD_G1, 0);
+	PORT_Init(PORTA, PIN9,  PORTA_PIN9_LCD_G2,  0);
+	PORT_Init(PORTA, PIN10, PORTA_PIN10_LCD_G3, 0);
+	PORT_Init(PORTA, PIN11, PORTA_PIN11_LCD_G4, 0);
+	PORT_Init(PORTC, PIN10, PORTC_PIN10_LCD_G5, 0);
+	PORT_Init(PORTC, PIN11, PORTC_PIN11_LCD_G6, 0);
+	PORT_Init(PORTC, PIN12, PORTC_PIN12_LCD_G7, 0);
+//	PORT_Init(PORTD, PIN0,  PORTD_PIN0_LCD_R0,  0);
+//	PORT_Init(PORTD, PIN1,  PORTD_PIN1_LCD_R1,  0);
+//	PORT_Init(PORTD, PIN2,  PORTD_PIN2_LCD_R2,  0);
+	PORT_Init(PORTD, PIN3,  PORTD_PIN3_LCD_R3,  0);
+	PORT_Init(PORTD, PIN4,  PORTD_PIN4_LCD_R4,  0);
+	PORT_Init(PORTD, PIN5,  PORTD_PIN5_LCD_R5,  0);
+	PORT_Init(PORTD, PIN6,  PORTD_PIN6_LCD_R6,  0);
+	PORT_Init(PORTD, PIN7,  PORTD_PIN7_LCD_R7,  0);
 	
-	LCD_initStruct.ClkDiv = 8;
+	LCD_initStruct.ClkDiv = 12;
 	LCD_initStruct.Format = LCD_FMT_RGB565;
 	LCD_initStruct.HnPixel = LCD_HDOT;
 	LCD_initStruct.VnPixel = LCD_VDOT;
@@ -231,15 +218,8 @@ void RGBLCDInit(void)
 	LCD_initStruct.DataSource = (uint32_t)LCD_Buffer;
 	LCD_initStruct.Background = 0xFFFF;
 	LCD_initStruct.SampleEdge = LCD_SAMPLE_FALL;	// ATK-4342 samples data on falling edge
-	LCD_initStruct.IntEOTEn = 1;
+	LCD_initStruct.IntEOTEn = 0;
 	LCD_Init(LCD, &LCD_initStruct);
-}
-
-void LCD_Handler(void)
-{
-	LCD_INTClr(LCD, LCD_IT_DONE);
-	
-	LCD_Start(LCD);
 }
 
 
