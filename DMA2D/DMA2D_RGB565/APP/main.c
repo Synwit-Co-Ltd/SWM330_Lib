@@ -22,6 +22,7 @@ void RGBLCDInit(void);
 void test_PixelFill(void);
 void test_PixelMove(void);
 void test_PixelBlend(void);
+void test_DMA2D_memcpy(void);
 
 int main(void)
 {
@@ -38,7 +39,7 @@ int main(void)
 	LCD_Start(LCD);
 	
 	DMA2D_initStruct.Interval = CyclesPerUs;
-	DMA2D_initStruct.IntEOTEn = 1;
+	DMA2D_initStruct.IntEn = DMA2D_IT_DONE;
 	DMA2D_Init(&DMA2D_initStruct);
 	
 	test_PixelFill();
@@ -46,6 +47,8 @@ int main(void)
 	test_PixelMove();
 	
 	test_PixelBlend();
+	
+	test_DMA2D_memcpy();
 	
 	while(1==1)
 	{
@@ -161,6 +164,23 @@ void test_PixelBlend(void)
 	DMA2D_PixelBlend(&fgLayer, &bgLayer, &outLayer);
 	
 	while(DMA2D_IsBusy()) __NOP();
+	
+	for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
+}
+
+
+void test_DMA2D_memcpy(void)
+{
+	DMA2D_memcpy(Img_Buffer, LCD_Buffer, DMA2D_UNIT_WORD, LCD_VDOT * LCD_HDOT * 2 / 4);
+	while(DMA2D_IsBusy()) __NOP();
+	
+	memset(LCD_Buffer, 0xAA, LCD_VDOT * LCD_HDOT * 2);
+	
+	for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
+	
+	LCD->L[0].ADDR = (uint32_t)Img_Buffer;
+	
+	LCD->CR |= LCD_CR_IMMRELOAD_Msk;
 }
 
 

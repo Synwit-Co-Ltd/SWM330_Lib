@@ -26,15 +26,14 @@ void DMA2D_Init(DMA2D_InitStructure * initStruct)
 {
 	SYS->CLKEN0 |= (1 << SYS_CLKEN0_DMA2D_Pos);
 	
-	DMA2D->CR &= ~(DMA2D_CR_BURST_Msk | DMA2D_CR_BLKSZ_Msk | DMA2D_CR_WAIT_Msk);
-	DMA2D->CR |= (2                    << DMA2D_CR_BURST_Pos) |
-				 (0					   << DMA2D_CR_BLKSZ_Pos) |
-				 (initStruct->Interval << DMA2D_CR_WAIT_Pos);
+	DMA2D->CR = (2					  << DMA2D_CR_BURST_Pos) |		// Incr4
+				(0					  << DMA2D_CR_BLKSZ_Pos) |		// 16 word
+				(initStruct->Interval << DMA2D_CR_WAIT_Pos);
 	
-	DMA2D->IF = 0xFF;
-	DMA2D->IE = (initStruct->IntEOTEn << DMA2D_IE_DONE_Pos);
+	DMA2D_INTClr(initStruct->IntEn);
+	DMA2D_INTEn(initStruct->IntEn);
 	
-	if(initStruct->IntEOTEn)
+	if(initStruct->IntEn)
 		NVIC_EnableIRQ(DMA2D_IRQn);
 }
 
@@ -55,7 +54,7 @@ void DMA2D_PixelFill(DMA2D_LayerSetting * outLayer, uint32_t color)
 	DMA2D->NLR = ((outLayer->LineCount - 1) << DMA2D_NLR_NLINE_Pos) |
 				 ((outLayer->LinePixel - 1) << DMA2D_NLR_NPIXEL_Pos);
 	
-	DMA2D->CR &= ~DMA2D_CR_MODE_Msk;
+	DMA2D->CR &= ~(DMA2D_CR_MODE_Msk | DMA2D_CR_GPDMA_Msk);
 	DMA2D->CR |= (3 << DMA2D_CR_MODE_Pos) |
 				 (1 << DMA2D_CR_START_Pos);
 }
@@ -78,7 +77,7 @@ void DMA2D_PixelMove(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * outLayer
 	DMA2D->NLR = ((outLayer->LineCount - 1) << DMA2D_NLR_NLINE_Pos) |
 				 ((outLayer->LinePixel - 1) << DMA2D_NLR_NPIXEL_Pos);
 	
-	DMA2D->CR &= ~DMA2D_CR_MODE_Msk;
+	DMA2D->CR &= ~(DMA2D_CR_MODE_Msk | DMA2D_CR_GPDMA_Msk);
 	DMA2D->CR |= (0 << DMA2D_CR_MODE_Pos) |
 				 (1 << DMA2D_CR_START_Pos);
 }
@@ -102,7 +101,7 @@ void DMA2D_PixelConvert(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * outLa
 	DMA2D->NLR = ((outLayer->LineCount - 1) << DMA2D_NLR_NLINE_Pos) |
 				 ((outLayer->LinePixel - 1) << DMA2D_NLR_NPIXEL_Pos);
 	
-	DMA2D->CR &= ~DMA2D_CR_MODE_Msk;
+	DMA2D->CR &= ~(DMA2D_CR_MODE_Msk | DMA2D_CR_GPDMA_Msk);
 	DMA2D->CR |= (1 << DMA2D_CR_MODE_Pos) |
 				 (1 << DMA2D_CR_START_Pos);
 }
@@ -122,9 +121,10 @@ void DMA2D_PixelBlend(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * bgLayer
 									 (fgLayer->AlphaMode << DMA2D_PFCCR_AINV_Pos) |
 									 (fgLayer->Alpha     << DMA2D_PFCCR_ALPHA_Pos);
 	
+	DMA2D->CR &= ~DMA2D_CR_AAREN_Msk;
 	if(fgLayer->AlphaMode == DMA2D_AMODE_EXTERN)
 	{
-		DMA2D->CR |= (1 << DMA2D_CR_AAREN_Pos);
+		DMA2D->CR |= DMA2D_CR_AAREN_Msk;
 		DMA2D->AAR = fgLayer->AlhpaAddr;
 	}
 	
@@ -141,7 +141,7 @@ void DMA2D_PixelBlend(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * bgLayer
 	DMA2D->NLR = ((outLayer->LineCount - 1) << DMA2D_NLR_NLINE_Pos) |
 				 ((outLayer->LinePixel - 1) << DMA2D_NLR_NPIXEL_Pos);
 	
-	DMA2D->CR &= ~DMA2D_CR_MODE_Msk;
+	DMA2D->CR &= ~(DMA2D_CR_MODE_Msk | DMA2D_CR_GPDMA_Msk);
 	DMA2D->CR |= (2 << DMA2D_CR_MODE_Pos) |
 				 (1 << DMA2D_CR_START_Pos);
 }
@@ -154,6 +154,29 @@ void DMA2D_PixelBlend(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * bgLayer
 uint32_t DMA2D_IsBusy(void)
 {
 	return (DMA2D->CR & DMA2D_CR_START_Msk) ? 1 : 0;
+}
+
+/*******************************************************************************************************************************
+* @brief	DMA2D memcpy
+* @param	destin is destination address, must be half-word/word aligned when unit_size == DMA2D_UNIT_HALF/DMA2D_UNIT_WORD
+* @param	source is source address, must be half-word/word aligned when unit_size == DMA2D_UNIT_HALF/DMA2D_UNIT_WORD
+* @param	unit_size: DMA2D_UNIT_BYTE, DMA2D_UNIT_HALF, DMA2D_UNIT_WORD
+* @param	unit_count is unit count to transfer from src_addr to dest_addr
+* @return
+*******************************************************************************************************************************/
+void DMA2D_memcpy(void * destin, const void * source, uint8_t unit_size, uint16_t unit_count)
+{
+	DMA2D->L[DMA2D_LAYER_FG].MAR = (uint32_t)source;
+	DMA2D->L[DMA2D_LAYER_FG].PFCCR = unit_size;
+	
+	DMA2D->L[DMA2D_LAYER_OUT].MAR = (uint32_t)destin;
+	DMA2D->L[DMA2D_LAYER_OUT].PFCCR = unit_size;
+	
+	DMA2D->NLR = ((unit_count - 1) << DMA2D_NLR_NLINE_Pos) |
+				 ((unit_count / 2) << DMA2D_NLR_NPIXEL_Pos);
+	
+	DMA2D->CR |= (1 << DMA2D_CR_GPDMA_Pos) |
+				 (1 << DMA2D_CR_START_Pos);
 }
 
 /*******************************************************************************************************************************

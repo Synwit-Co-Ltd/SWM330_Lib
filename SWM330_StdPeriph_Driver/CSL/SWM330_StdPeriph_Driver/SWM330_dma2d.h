@@ -6,7 +6,7 @@
 
 typedef struct {
 	uint16_t Interval;			// data block transfer interval in unit of HCLK period, can be 1--65536
-	uint8_t  IntEOTEn;			// End of Transter interrupt enable
+	uint8_t  IntEn;				// Interrupt Enable, can be DMA2D_IT_DONE, DMA2D_IT_HALF, DMA2D_IT_ERROR and their '|' operation
 } DMA2D_InitStructure;
 
 
@@ -43,6 +43,12 @@ typedef struct {
 #define DMA2D_AMODE_EXTERN	(0 | (3 << 5))	// only suitable for foreground layer, Alpha values are stored in a separate storage area specified by AlphaAddr
 
 
+/* when GPDMA mode, transfer unit */
+#define DMA2D_UNIT_BYTE		4
+#define DMA2D_UNIT_HALF		5
+#define DMA2D_UNIT_WORD		6
+
+
 /* Interrupt Type */
 #define DMA2D_IT_DONE		DMA2D_IF_DONE_Msk		// transfer done
 #define DMA2D_IT_HALF		DMA2D_IF_PART_Msk		// GPDMA transfer half done
@@ -55,6 +61,8 @@ void DMA2D_PixelMove(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * outLayer
 void DMA2D_PixelConvert(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * outLayer);
 void DMA2D_PixelBlend(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * bgLayer, DMA2D_LayerSetting * outLayer);
 uint32_t DMA2D_IsBusy(void);
+
+void DMA2D_memcpy(void * destin, const void * source, uint8_t unit_size, uint16_t unit_count);
 
 void DMA2D_INTEn(uint32_t it);
 void DMA2D_INTDis(uint32_t it);
