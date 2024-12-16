@@ -45,6 +45,7 @@ typedef struct {
 #define DVP_OUTFMT_RAW			0	// no processing, save as input
 #define DVP_OUTFMT_YUV422		1	// NV16
 #define DVP_OUTFMT_YUV420		2	// NV12
+#define DVP_OUTFMT_RGB565		3
 
 #define DVP_PCKPolarity_Rising		0		// sample on rising edge
 #define DVP_PCKPolarity_Falling		1		// sample on falling edge

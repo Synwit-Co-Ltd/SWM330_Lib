@@ -46,7 +46,8 @@ void DVP_Init(DVP_TypeDef * DVPx, DVP_InitStructure * initStruct)
 	DVPx->OUTVSZ = ((initStruct->StartLine  - 1) << DVP_OUTVSZ_BEGIN_Pos) |
 				   ((initStruct->LineCount  - 1) << DVP_OUTVSZ_COUNT_Pos);
 	
-	if(initStruct->OutFormat == DVP_OUTFMT_RAW)
+	if((initStruct->OutFormat == DVP_OUTFMT_RAW) ||
+	   (initStruct->OutFormat == DVP_OUTFMT_RGB565))
 	{
 		DVPx->BASE_YRAW = initStruct->RGBAddr;
 		

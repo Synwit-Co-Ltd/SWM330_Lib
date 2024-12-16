@@ -9,13 +9,12 @@
 
 #define CAP_HDOT	480		// TVP5150 output width: 720
 #define CAP_VDOT	240		// TVP5150 output height: 263
+#define CAP_YUV		0		// 0 output RGB directly, 1 output YUV, and then software convert it to RGB
 
 
 uint16_t *LCD_Buffer = (uint16_t *)(PSRAMM_BASE);
 uint8_t  *CAP_Y_Buffer = (uint8_t *)(PSRAMM_BASE + 0x100000);
 uint8_t  *CAP_UV_Buffer = (uint8_t *)(PSRAMM_BASE + 0x200000);
-
-volatile int DVP_Cap_done = 0;
 
 
 void SerialInit(void);
@@ -44,14 +43,12 @@ int main(void)
 	
 	while(1==1)
 	{
-		if(DVP_Cap_done)
-		{
-			DVP_Cap_done = 0;
-			
-			YUV422ToRGB565(CAP_Y_Buffer, CAP_UV_Buffer, LCD_Buffer, CAP_HDOT, CAP_VDOT);
-			
-			DVP_Start(DVP, 1, 1);
-		}
+		DVP_Start(DVP, 1, 1);
+		while(DVP_Busy(DVP)) __NOP();
+		
+#if CAP_YUV
+		YUV422ToRGB565(CAP_Y_Buffer, CAP_UV_Buffer, LCD_Buffer, CAP_HDOT, CAP_VDOT);
+#endif
 	}
 }
 
@@ -163,6 +160,7 @@ void DVP_Config(void)
 //	PORT_Init(PORTD, PIN9,  PORTD_PIN9_DVP_D12,  1);
 //	PORT_Init(PORTD, PIN11, PORTD_PIN11_DVP_D13, 1);
 	
+#if CAP_YUV
 	DVP_initStruct.InFormat = DVP_INFMT_BT656_UYVY;
 	DVP_initStruct.OutFormat = DVP_OUTFMT_YUV422;
 	DVP_initStruct.StartLine = 1;
@@ -173,18 +171,21 @@ void DVP_Config(void)
 	DVP_initStruct.SampleEdge = DVP_PCKPolarity_Falling;
 	DVP_initStruct.YAddr = (uint32_t)CAP_Y_Buffer;
 	DVP_initStruct.UVAddr = (uint32_t)CAP_UV_Buffer;
-	DVP_initStruct.IntEn = DVP_IT_DONE;
+	DVP_initStruct.IntEn = 0;
 	DVP_Init(DVP, &DVP_initStruct);
-}
-
-
-void DVP_Handler(void)
-{
-	DVP_INTClr(DVP, DVP_IT_DONE);
-	
-	GPIO_InvBit(GPIOA, PIN5);
-	
-	DVP_Cap_done = 1;
+#else
+	DVP_initStruct.InFormat = DVP_INFMT_BT656_UYVY;
+	DVP_initStruct.OutFormat = DVP_OUTFMT_RGB565;
+	DVP_initStruct.StartLine = 1;
+	DVP_initStruct.LineCount = CAP_VDOT;
+	DVP_initStruct.StartPixel = 1;
+	DVP_initStruct.PixelCount = CAP_HDOT;
+	DVP_initStruct.LineStride = LCD_HDOT;
+	DVP_initStruct.SampleEdge = DVP_PCKPolarity_Falling;
+	DVP_initStruct.RGBAddr = (uint32_t)LCD_Buffer;
+	DVP_initStruct.IntEn = 0;
+	DVP_Init(DVP, &DVP_initStruct);
+#endif
 }
 
 

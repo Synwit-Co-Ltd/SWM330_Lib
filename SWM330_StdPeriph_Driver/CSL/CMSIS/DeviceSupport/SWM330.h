@@ -2958,10 +2958,14 @@ typedef struct {
 #define DVP_CR_INSWAP_Msk			(0x01 << DVP_CR_INSWAP_Pos)
 #define DVP_CR_FIELDSTM_Pos			11		// Field Store Mode, 0 normal mode (field by field), 1 field line interleaving mode (line by line)
 #define DVP_CR_FIELDSTM_Msk			(0x01 << DVP_CR_FIELDSTM_Pos)
-#define DVP_CR_OUTFMT_Pos			12		// DVP output format, 0 RAW/RGB565, 1 YUV422 NV16, 2 YUV420 NV12
+#define DVP_CR_OUTFMT_Pos			12		// DVP output format, 0 RAW/RGB565, 1 YUV422 NV16, 2 YUV420 NV12, 3 RGB565, 4 RGB888, 5 RGBX888
 #define DVP_CR_OUTFMT_Msk			(0x07 << DVP_CR_OUTFMT_Pos)
 #define DVP_CR_RAWBIT_Pos			15		// RAW data bit width, 0 8-bit, 1 10-bit, 2 12-bit, 3 14-bit
 #define DVP_CR_RAWBIT_Msk			(0x03 << DVP_CR_RAWBIT_Pos)
+#define DVP_CR_RBSWAP_Pos			17		// RGB output read and blue swap
+#define DVP_CR_RBSWAP_Msk			(0x01 << DVP_CR_RBSWAP_Pos)
+#define DVP_CR_YUVRANGE_Pos			18		// 0 16-235, 1 0-255
+#define DVP_CR_YUVRANGE_Msk			(0x01 << DVP_CR_YUVRANGE_Pos)
 
 #define DVP_IE_DONE_Pos				0		// all frames captured done interrupt enable
 #define DVP_IE_DONE_Msk				(0x01 << DVP_IE_DONE_Pos)
