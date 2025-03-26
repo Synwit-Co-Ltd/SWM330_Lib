@@ -3071,7 +3071,7 @@ typedef struct {
 	
 	__IO uint32_t CFG0;
 	
-	__IO uint32_t CFG1;
+	__IO uint32_t CFG1;						// 依次写入 0x5A5A5A5A、0xA5A5A5A5 解除 readonly，写其他值恢复 readonly
 	
 	__IO uint32_t CFG2;
 	
@@ -3083,19 +3083,20 @@ typedef struct {
 } FMC_TypeDef;
 
 
-#define FMC_ERASE_ADDR_Pos			0		// 4K bytes per page
-#define FMC_ERASE_ADDR_Msk			(0x7FFFF << FMC_ERASE_ADDR_Pos)
-#define FMC_ERASE_REQ_Pos			27
-#define FMC_ERASE_REQ_Msk			(0x1Fu<< FMC_ERASE_REQ_Pos)
+#define FMC_ERASE_ADDR_Pos			0		// 高10位有效，1K每页
+#define FMC_ERASE_ADDR_Msk			(0xFFFFF << FMC_ERASE_ADDR_Pos)
+#define FMC_ERASE_REQ_Pos			24
+#define FMC_ERASE_REQ_Msk			(0xFFu<< FMC_ERASE_REQ_Pos)
 
-#define FMC_CACHE_PROGEN_Pos		0		// Flash Program Enable
-#define FMC_CACHE_PROGEN_Msk		(0x01 << FMC_CACHE_PROGEN_Pos)
-#define FMC_CACHE_CEN_Pos			16		// Cache Enable
+#define FMC_CACHE_CEN_Pos			0		// Cache Enable
 #define FMC_CACHE_CEN_Msk			(0x01 << FMC_CACHE_CEN_Pos)
-#define FMC_CACHE_CPEN_Pos			17		// Cache Predict Enable
+#define FMC_CACHE_CPEN_Pos			1		// Cache Predict Enable
 #define FMC_CACHE_CPEN_Msk			(0x01 << FMC_CACHE_CPEN_Pos)
-#define FMC_CACHE_CCLR_Pos			18		// Cache Clear, automatically clear
-#define FMC_CACHE_CCLR_Msk			(0x01 << FMC_CACHE_CCLR_Pos)
+#define FMC_CACHE_CCLR_Pos			31		// Cache Clear，自动清零
+#define FMC_CACHE_CCLR_Msk			(0x01u<< FMC_CACHE_CCLR_Pos)
+
+#define FMC_CFG0_WREN_Pos			9		// 擦写使能
+#define FMC_CFG0_WREN_Msk			(0x01 << FMC_CFG0_WREN_Pos)
 
 #define FMC_STAT_ERASEBUSY_Pos		0
 #define FMC_STAT_ERASEBUSY_Msk		(0x01 << FMC_STAT_ERASEBUSY_Pos)

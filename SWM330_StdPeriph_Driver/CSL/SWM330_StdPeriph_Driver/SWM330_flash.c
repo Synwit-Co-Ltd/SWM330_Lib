@@ -17,24 +17,24 @@
 #include "SWM330_flash.h"
 
 
-const IAP_Cache_Reset_t IAP_Cache_Reset = (IAP_Cache_Reset_t)0x01000401;
-const IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x01000431;
-const IAP_Flash_Erase_t IAP_Flash_Erase = (IAP_Flash_Erase_t)0x01000471;
-const IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x010004C1;
+const IAP_Cache_Reset_t IAP_Cache_Reset = (IAP_Cache_Reset_t)0x01000621;
+const IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x01000521;
+const IAP_Flash_Erase_t IAP_Flash_Erase = (IAP_Flash_Erase_t)0x01000401;
+const IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x01000481;
 
 
 /*******************************************************************************************************************************
 * @brief	Flash sector erase
-* @param	addr is address of sector to erase, must be 4KB aligned, i.e. addr % 4096 == 0
+* @param	addr is address of sector to erase, must be 1KB aligned, i.e. addr % 1024 == 0
 * @return	FLASH_RES_OK, FLASH_RES_TO, FLASH_RES_ERR
 *******************************************************************************************************************************/
 uint32_t FLASH_Erase(uint32_t addr)
 {
-	if(addr % 4096 != 0) return FLASH_RES_ERR;
+	if(addr % 1024 != 0) return FLASH_RES_ERR;
 	
 	__disable_irq();
 	
-	IAP_Flash_Erase(addr/4096, 0x0B11FFAC);
+	IAP_Flash_Erase(addr/1024, 0x0B11FFAC);
 	
 	IAP_Cache_Reset((FMC->CACHE | FMC_CACHE_CCLR_Msk), 0x0B11FFAC);	// Cache Clear
 	
