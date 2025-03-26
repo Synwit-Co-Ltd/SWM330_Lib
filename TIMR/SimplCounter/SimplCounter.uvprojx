@@ -14,7 +14,7 @@
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>SWM330xE</Device>
+          <Device>SWM330xG</Device>
           <Vendor>Synwit</Vendor>
           <PackID>Synwit.SWM32_New.0.2.5</PackID>
           <PackURL>http://www.synwit.com/pack</PackURL>

@@ -34,7 +34,7 @@
 #define SYS_CLK   SYS_CLK_40MHz
 
 
-#define __HSI		(20000000UL)	// high speed internal clock
+#define __HSI		(50000000UL)	// high speed internal clock
 #define __LSI		(   32000UL)	// low speed internal clock
 #define __HSE		(12000000UL)	// high speed external clock
 #define __LSE		(   32768UL)	// low speed external clock
@@ -130,7 +130,7 @@ void SystemCoreClockUpdate(void)
 * @return
 *******************************************************************************************************************************/
 void SystemInit(void)
-{
+{return;
 	SYS->CLKEN1 |= (1 << SYS_CLKEN1_ANAC_Pos);
 	
 	Flash_Param_at_xMHz(150);
