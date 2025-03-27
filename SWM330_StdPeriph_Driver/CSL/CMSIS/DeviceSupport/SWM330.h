@@ -101,7 +101,9 @@ typedef struct {
 	
 	__IO uint32_t CLKEN1;
 	
-		 uint32_t RESERVED[5];
+	__IO uint32_t MODE;
+	
+		 uint32_t RESERVED[4];
 	
 	__IO uint32_t RSTSR;					// Reset Status
 	
@@ -261,6 +263,9 @@ typedef struct {
 #define SYS_CLKEN1_ANAC_Msk			(0x01 << SYS_CLKEN1_ANAC_Pos)
 #define SYS_CLKEN1_GPIOE_Pos		11
 #define SYS_CLKEN1_GPIOE_Msk		(0x01 << SYS_CLKEN1_GPIOE_Pos)
+
+#define SYS_MODE_WKEDGE_Pos			0		// Wakeup edge: 0 falling edge, 1 rising edge
+#define SYS_MODE_WKEDGE_Msk			(0x01 << SYS_MODE_WKEDGE_Pos)
 
 #define SYS_RSTSR_POR_Pos			0		// POR reset happened, write 1 to clear
 #define SYS_RSTSR_POR_Msk			(0x01 << SYS_RSTSR_POR_Pos)
@@ -2265,6 +2270,8 @@ typedef struct {
 
 
 
+#ifndef PSRAM_XCCELA
+
 typedef struct {
 	__IO uint32_t CSR;
 	
@@ -2363,6 +2370,109 @@ typedef struct {
 #define PSRAMC_PWDNTR_CSDPD_Msk		(0xFF << PSRAMC_PWDNTR_CSDPD_Pos)
 #define PSRAMC_PWDNTR_DPDIN_Pos		24		// tDPDIN, Deep Power Down CR0[15]=0 register write to DPD power level in us
 #define PSRAMC_PWDNTR_DPDIN_Msk		(0xFF << PSRAMC_PWDNTR_DPDIN_Pos)
+
+#else
+
+typedef struct {
+    __IO uint32_t CSR;
+	
+	__IO uint32_t TR;						// timing register
+	
+	__I  uint32_t IR01;						// ID Register read from PSRAM
+	
+	__I  uint32_t IR23;
+	
+	__I  uint32_t IR48;
+	
+	__IO uint32_t SLPCR;					// 写 0xF0 进入半睡眠模式， 写 0xC0 进入深度睡眠模式，写其他值唤醒
+	
+	__IO uint32_t INITTR;					// tPU, Device Initialization in us
+	
+	__IO uint32_t RSTTR;					// reset timing register
+	
+	__IO uint32_t SLPTR;					// sleep timing register
+	
+	__IO uint32_t PWDNTR;					// power-down timing register
+	
+	__IO uint32_t MR0;						// Configuration Register 0 what will be written to PSRAM
+	
+	__IO uint32_t MR4;						// Configuration Register 1 what will be written to PSRAM
+	
+	__IO uint32_t MR8;
+	
+	__IO uint32_t TR1US;					// the number of clock cycles in 1uS at the current frequency
+} PSRAMC_TypeDef;
+
+
+#define PSRAMC_CSR_ROWSZ_Pos		0		// row size, 0 512-byte, 1 1kbyte, 2 2kbyte, 3 4kbyte
+#define PSRAMC_CSR_ROWSZ_Msk		(0x03 << PSRAMC_CSR_ROWSZ_Pos)
+#define PSRAMC_CSR_MODE_Pos			2		// 0 default mode, 1 extended mode, 3 standard mode
+#define PSRAMC_CSR_MODE_Msk			(0x03 << PSRAMC_CSR_MODE_Pos)
+#define PSRAMC_CSR_RESET_Pos		16
+#define PSRAMC_CSR_RESET_Msk		(0x01 << PSRAMC_CSR_RESET_Pos)
+#define PSRAMC_CSR_IRREN_Pos		18		// IR read enable
+#define PSRAMC_CSR_IRREN_Msk		(0x01 << PSRAMC_CSR_IRREN_Pos)
+#define PSRAMC_CSR_WRBUSY_Pos		20		// write busy
+#define PSRAMC_CSR_WRBUSY_Msk		(0x01 << PSRAMC_CSR_WRBUSY_Pos)
+#define PSRAMC_CSR_ISPWDN_Pos		21		// is in power-down?
+#define PSRAMC_CSR_ISPWDN_Msk		(0x01 << PSRAMC_CSR_ISPWDN_Pos)
+#define PSRAMC_CSR_ISSLEEP_Pos		22		// is in sleep?
+#define PSRAMC_CSR_ISSLEEP_Msk		(0x01 << PSRAMC_CSR_ISSLEEP_Pos)
+#define PSRAMC_CSR_INITDONE_Pos		23		// init done?
+#define PSRAMC_CSR_INITDONE_Msk		(0x01 << PSRAMC_CSR_INITDONE_Pos)
+#define PSRAMC_CSR_CKEDGE_Pos		24
+#define PSRAMC_CSR_CKEDGE_Msk		(0x01 << PSRAMC_CSR_CKEDGE_Pos)
+#define PSRAMC_CSR_RDBUSY_Pos		25		// read busy
+#define PSRAMC_CSR_RDBUSY_Msk		(0x01 << PSRAMC_CSR_RDBUSY_Pos)
+
+#define PSRAMC_TR_CPH_Pos			8		// tCPH, CE# HIGH between subsequent burst operations in tHCLK
+#define PSRAMC_TR_CPH_Msk			(0xFF << PSRAMC_TR_CPH_Pos)
+#define PSRAMC_TR_CEM_Pos			16		// tCEM, CE# low pulse width in us
+#define PSRAMC_TR_CEM_Msk			(0xFF << PSRAMC_TR_CEM_Pos)
+#define PSRAMC_TR_RC_Pos			24		// tRC, Write/Read Cycle in tHCLK
+#define PSRAMC_TR_RC_Msk			(0xFFu<< PSRAMC_TR_RC_Pos)
+
+#define PSRAMC_RSTTR_RPH_Pos		0		// tRPH, RESET# Low to CS# Low time in us
+#define PSRAMC_RSTTR_RPH_Msk		(0xFFFF<< PSRAMC_RSTTR_RPH_Pos)
+#define PSRAMC_RSTTR_RST_Pos		16		// tRST, RESET# High to CS# Low time in us
+#define PSRAMC_RSTTR_RST_Msk		(0xFF << PSRAMC_RSTTR_RST_Pos)
+#define PSRAMC_RSTTR_RP_Pos			24		// tRP, RESET# low pulse width in us
+#define PSRAMC_RSTTR_RP_Msk			(0xFF << PSRAMC_RSTTR_RP_Pos)
+
+#define PSRAMC_SLPTR_EXTHS_Pos		0		// tEXTHS, CS# Exit Hybrid Sleep to Standby wakeup time in us
+#define PSRAMC_SLPTR_EXTHS_Msk		(0xFFFF<< PSRAMC_SLPTR_EXTHS_Pos)
+#define PSRAMC_SLPTR_CSHS_Pos		16		// tCSHS, CS# Pulse Width to Exit Hybrid Sleep in tHCLK
+#define PSRAMC_SLPTR_CSHS_Msk		(0xFF << PSRAMC_SLPTR_CSHS_Pos)
+#define PSRAMC_SLPTR_HSIN_Pos		24		// tHSIN, Hybrid Sleep CR1[5]=1 register write to Hybrid Sleep power level time in us
+#define PSRAMC_SLPTR_HSIN_Msk		(0xFF << PSRAMC_SLPTR_HSIN_Pos)
+
+#define PSRAMC_PWDNTR_EXTDPD_Pos	0		// tEXTDPD, CS# Exit Deep Power Down to Standby wakeup time in us
+#define PSRAMC_PWDNTR_EXTDPD_Msk	(0xFFFF<< PSRAMC_PWDNTR_EXTDPD_Pos)
+#define PSRAMC_PWDNTR_CSDPD_Pos		16		// tCSDPD, CS# Pulse Width to Exit Deep Power Down in tHCLK
+#define PSRAMC_PWDNTR_CSDPD_Msk		(0xFF << PSRAMC_PWDNTR_CSDPD_Pos)
+#define PSRAMC_PWDNTR_DPDIN_Pos		24		// tDPDIN, Deep Power Down CR0[15]=0 register write to DPD power level in us
+#define PSRAMC_PWDNTR_DPDIN_Msk		(0xFF << PSRAMC_PWDNTR_DPDIN_Pos)
+
+#define PSRAMC_MR0_DRVST_Pos		0		// 驱动强度
+#define PSRAMC_MR0_DRVST_Msk		(0x03 << PSRAMC_MR0_DRVST_Pos)
+#define PSRAMC_MR0_RDLatency_Pos	2
+#define PSRAMC_MR0_RDLatency_Msk	(0x07 << PSRAMC_MR0_RDLatency_Pos)
+#define PSRAMC_MR0_FixLatency_Pos	5		// Fixed Latency Enable, 0 Variable Latency depending on RWDS during CA cycles, 1 Fixed 2 times Initial Latency
+#define PSRAMC_MR0_FixLatency_Msk	(0x01 << PSRAMC_MR0_FixLatency_Pos)
+
+#define PSRAMC_MR4_PartialRef_Pos	0		// Partial Array Refresh, 0 Full Array
+#define PSRAMC_MR4_PartialRef_Msk	(0x07 << PSRAMC_MR4_PartialRef_Pos)
+#define PSRAMC_MR4_FastRef_Pos		3		// 0 快速刷新， 1 温度允许时启动慢速刷新
+#define PSRAMC_MR4_FastRef_Msk		(0x01 << PSRAMC_MR4_FastRef_Pos)
+#define PSRAMC_MR4_WRLatency_Pos	5
+#define PSRAMC_MR4_WRLatency_Msk	(0x07 << PSRAMC_MR4_WRLatency_Pos)
+
+#define PSRAMC_MR8_BurstType_Pos	0		// Burst Type
+#define PSRAMC_MR8_BurstType_Msk	(0x07 << PSRAMC_MR8_BurstType_Pos)
+#define PSRAMC_MR8_BUS16b_Pos		6		// Bus Width
+#define PSRAMC_MR8_BUS16b_Msk		(0x01 << PSRAMC_MR8_BUS16b_Pos)
+
+#endif
 
 
 

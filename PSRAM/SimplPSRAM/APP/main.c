@@ -37,6 +37,7 @@ int main(void)
 	PORT_Init(PORTE, PIN6,  PORTE_PIN6_PSRAM_D6,  1);
 	PORT_Init(PORTE, PIN7,  PORTE_PIN7_PSRAM_D7,  1);
 	
+#ifndef PSRAM_XCCELA
 	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
 	PSRAM_initStruct.tRWR = 50;
 	PSRAM_initStruct.tACC = 50;
@@ -45,7 +46,12 @@ int main(void)
 	
 	printf("HyperRAM ID0 = 0x%04X, ID1 = 0x%04X\n", (PSRAMC->IR & PSRAMC_IR_ID0_Msk) >> PSRAMC_IR_ID0_Pos,
 													(PSRAMC->IR & PSRAMC_IR_ID1_Msk) >> PSRAMC_IR_ID1_Pos);
-   	
+#else
+	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
+	PSRAM_initStruct.tRC = 60;
+	PSRAM_initStruct.tCEM = 8;
+	PSRAM_Init(&PSRAM_initStruct);
+#endif
 	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
 	WordTest(PSRAMM_BASE+0x100000, WordBuffer, sizeof(WordBuffer)/4);
 	WordTest(PSRAMM_BASE+0x110001, WordBuffer, sizeof(WordBuffer)/4);
