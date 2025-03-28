@@ -44,7 +44,7 @@ void RDMA_Init(RDMA_InitStructure * initStruct);
 void RDMA_memcpy(void * destin, const void * source, uint8_t unit_size, uint32_t unit_count);
 
 
-static inline uint32_t RDMA_GetRemaining(void)
+static inline uint32_t RDMA_Remaining(void)
 {
 	return (RDMA->LEN & RDMA_LEN_SIZE_Msk);
 }

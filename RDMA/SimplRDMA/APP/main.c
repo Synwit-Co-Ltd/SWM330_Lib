@@ -56,17 +56,21 @@ void PSRAM_RAM_Copy(void)
 	printf("HyperRAM ID0 = 0x%04X, ID1 = 0x%04X\n", (PSRAMC->IR & PSRAMC_IR_ID0_Msk) >> PSRAMC_IR_ID0_Pos,
 													(PSRAMC->IR & PSRAMC_IR_ID1_Msk) >> PSRAMC_IR_ID1_Pos);
 	
-	for(int i = 0; i < 1024 * 64 / 4; i++)
+#define N_WORD	(1024 * 64 / 4)
+
+	for(int i = 0; i < N_WORD; i++)
 		RAM_Buf[i] = i | (i << 16);
 	
-	RDMA_memcpy(PSRAM_Buf, RAM_Buf, RDMA_UNIT_WORD, 1024 * 64 / 4);
+	RDMA_memcpy(PSRAM_Buf, RAM_Buf, RDMA_UNIT_WORD, N_WORD);
+	while(RDMA_Remaining()) __NOP();
 	
-	for(int i = 0; i < 1024 * 64 / 4; i++)
+	for(int i = 0; i < N_WORD; i++)
 		RAM_Buf[i] = 0;
 	
-	RDMA_memcpy(RAM_Buf, PSRAM_Buf, RDMA_UNIT_WORD, 1024 * 64 / 4);
+	RDMA_memcpy(RAM_Buf, PSRAM_Buf, RDMA_UNIT_WORD, N_WORD);
+	while(RDMA_Remaining()) __NOP();
 	
-	for(int i = 0; i < 1024 * 64 / 4; i++)
+	for(int i = 0; i < N_WORD; i++)
 	{
 		if((RAM_Buf[i] != PSRAM_Buf[i]) || (RAM_Buf[i] != (i | (i << 16))))
 		{
