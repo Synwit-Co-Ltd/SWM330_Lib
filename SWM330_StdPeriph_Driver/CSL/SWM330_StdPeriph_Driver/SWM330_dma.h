@@ -82,10 +82,12 @@ typedef struct {
 #define DMA_CH2_UART3RX		(0 | DMA_HS_MWR)
 #define DMA_CH2_QSPI1RX		(1 | DMA_HS_MWR)
 #define DMA_CH2_SPI0RX		(2 | DMA_HS_MWR)
+#define DMA_CH2_ADC0SEQ2	(3 | DMA_HS_MWR)
 
 #define DMA_CH3_UART2RX		(0 | DMA_HS_MWR)
 #define DMA_CH3_QSPI0RX		(1 | DMA_HS_MWR)
 #define DMA_CH3_I2S0RX		(2 | DMA_HS_MWR)
+#define DMA_CH3_ADC0SEQ3	(3 | DMA_HS_MWR)
 
 
 // external handshake signal

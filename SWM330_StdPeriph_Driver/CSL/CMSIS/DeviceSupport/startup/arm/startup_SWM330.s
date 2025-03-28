@@ -110,6 +110,7 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
                 DCD    EXTI8_11_Handler
                 DCD    EXTI12_15_Handler
 				DCD	   XTALSTOP_Handler
+				DCD	   RDMA_Handler
 
 __Vectors_End
 
@@ -385,7 +386,12 @@ EXTI12_15_Handler  PROC
                 ENDP
 
 XTALSTOP_Handler  PROC
-                EXPORT  XTALSTOP_Handler  [WEAK]
+                EXPORT  XTALSTOP_Handler   [WEAK]
+                B       .
+                ENDP
+
+RDMA_Handler  PROC
+                EXPORT  RDMA_Handler	   [WEAK]
                 B       .
                 ENDP
 

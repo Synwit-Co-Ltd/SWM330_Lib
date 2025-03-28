@@ -62,6 +62,7 @@ typedef enum IRQn
   EXTI8_11_IRQn           = 40,
   EXTI12_15_IRQn          = 41,
   XTALSTOP_IRQn			  = 42,
+  RDMA_IRQn				  = 43,
 } IRQn_Type;
 
 /*
@@ -238,6 +239,8 @@ typedef struct {
 #define SYS_CLKEN0_DVP_Msk			(0x01 << SYS_CLKEN0_DVP_Pos)
 #define SYS_CLKEN0_PSRAM_Pos		20
 #define SYS_CLKEN0_PSRAM_Msk		(0x01 << SYS_CLKEN0_PSRAM_Pos)
+#define SYS_CLKEN0_RDMA_Pos			21
+#define SYS_CLKEN0_RDMA_Msk			(0x01 << SYS_CLKEN0_RDMA_Pos)
 
 #define SYS_CLKEN1_WDT_Pos			0
 #define SYS_CLKEN1_WDT_Msk			(0x01 << SYS_CLKEN1_WDT_Pos)
@@ -326,6 +329,8 @@ typedef struct {
 #define SYS_PRSTR0_DVP_Msk			(0x01 << SYS_PRSTR0_DVP_Pos)
 #define SYS_PRSTR0_PSRAM_Pos		20
 #define SYS_PRSTR0_PSRAM_Msk		(0x01 << SYS_PRSTR0_PSRAM_Pos)
+#define SYS_PRSTR0_RDMA_Pos			21
+#define SYS_PRSTR0_RDMA_Msk			(0x01 << SYS_PRSTR0_RDMA_Pos)
 
 #define SYS_PRSTR1_WDT_Pos			0
 #define SYS_PRSTR1_WDT_Msk			(0x01 << SYS_PRSTR1_WDT_Pos)
@@ -1755,6 +1760,67 @@ typedef struct {
 #define DMA_NDT_LEN_Msk				(0xFFFF << DMA_NDT_LEN_Pos)
 #define DMA_NDT_HALF_Pos			16		// After the specified number of data is transmitted by HALF, set the DMA->IF.HALF interrupt flag bit
 #define DMA_NDT_HALF_Msk			(0xFFFF << DMA_NDT_HALF_Pos)
+
+
+
+
+typedef struct {
+	__IO uint32_t IF;
+	
+	__IO uint32_t IE;
+	
+	__IO uint32_t CR;
+	
+	__IO uint32_t SRC;
+	
+	__IO uint32_t DES;
+	
+	__IO uint32_t LEN;
+	
+	__IO uint32_t SR;
+} RDMA_TypeDef;
+
+
+#define RDMA_IF_DONE_Pos			0		// transfer done
+#define RDMA_IF_DONE_Msk			(0x01 << RDMA_IF_DONE_Pos)
+#define RDMA_IF_PART_Pos			1		// transfer part done
+#define RDMA_IF_PART_Msk			(0x01 << RDMA_IF_PART_Pos)
+#define RDMA_IF_ERROR_Pos			2		// transfer configure error
+#define RDMA_IF_ERROR_Msk			(0x01 << RDMA_IF_ERROR_Pos)
+
+#define RDMA_IE_DONE_Pos			0
+#define RDMA_IE_DONE_Msk			(0x01 << RDMA_IE_DONE_Pos)
+#define RDMA_IE_PART_Pos			1
+#define RDMA_IE_PART_Msk			(0x01 << RDMA_IE_PART_Pos)
+#define RDMA_IE_ERROR_Pos			2
+#define RDMA_IE_ERROR_Msk			(0x01 << RDMA_IE_ERROR_Pos)
+
+#define RDMA_CR_START_Pos			0		// clear when transfer done or error
+#define RDMA_CR_START_Msk			(0x01 << RDMA_CR_START_Pos)
+#define RDMA_CR_BURST_Pos			1		// 0 Incr16, 1 Incr8, 2 Incr4, 3 Single
+#define RDMA_CR_BURST_Msk			(0x03 << RDMA_CR_BURST_Pos)
+#define RDMA_CR_RSIZE_Pos			3		// Read size: 0 Byte, 1 Half Word, 2 Wrod
+#define RDMA_CR_RSIZE_Msk			(0x03 << RDMA_CR_RSIZE_Pos)
+#define RDMA_CR_WSIZE_Pos			5		// Write size: 0 Byte, 1 Half Word, 2 Wrod
+#define RDMA_CR_WSIZE_Msk			(0x03 << RDMA_CR_WSIZE_Pos)
+#define RDMA_CR_BLKSZ_Pos			7		// Block Size, RDMA can insert WAIT clock cycles for each BLKSZ word transported, 0 16   1 32   2 64   3 128
+#define RDMA_CR_BLKSZ_Msk			(0x03 << RDMA_CR_BLKSZ_Pos)
+#define RDMA_CR_RHSEN_Pos			9		// Read handshake enable, source address fix
+#define RDMA_CR_RHSEN_Msk			(0x01 << RDMA_CR_RHSEN_Pos)
+#define RDMA_CR_WHSEN_Pos			10		// Write handshake enable, destination address fix
+#define RDMA_CR_WHSEN_Msk			(0x01 << RDMA_CR_WHSEN_Pos)
+#define RDMA_CR_WAIT_Pos			16		// data block transfer interval in unit of HCLK period
+#define RDMA_CR_WAIT_Msk			(0xFFFFu<<RDMA_CR_WAIT_Pos)
+
+#define RDMA_LEN_SIZE_Pos			0		// Transfer_size - 1
+#define RDMA_LEN_SIZE_Msk			(0xFFFFFF << RDMA_LEN_SIZE_Pos)
+#define RDMA_LEN_PART_Pos			24		// 8: left 8/16
+#define RDMA_LEN_PART_Msk			(0xFFu<< RDMA_LEN_PART_Pos)
+
+#define RDMA_SR_SRCERR_Pos			0		// Ð´ 1 ÇåÁã
+#define RDMA_SR_SRCERR_Msk			(0x01 << RDMA_SR_SRCERR_Pos)
+#define RDMA_SR_DESERR_Pos			1
+#define RDMA_SR_DESERR_Msk			(0x01 << RDMA_SR_DESERR_Pos)
 
 
 
@@ -3663,6 +3729,8 @@ typedef struct {
 
 #define JPEG_BASE			(AHB_BASE + 0x04000)
 
+#define RDMA_BASE			(AHB_BASE + 0x05000)
+
 
 /* APB Peripheral memory map */
 #define GPIOA_BASE			(APB1_BASE + 0x00000)
@@ -3770,6 +3838,8 @@ typedef struct {
 
 #define DMA 				((DMA_TypeDef  *) DMA_BASE)
 
+#define RDMA 				((RDMA_TypeDef *) RDMA_BASE)
+
 #define CAN0 				((CAN_TypeDef  *) CAN0_BASE)
 
 #define QSPI0				((QSPI_TypeDef *) QSPI0_BASE)
@@ -3809,6 +3879,7 @@ typedef struct {
 #include "SWM330_adc.h"
 #include "SWM330_pwm.h"
 #include "SWM330_dma.h"
+#include "SWM330_rdma.h"
 #include "SWM330_can.h"
 #include "SWM330_qspi.h"
 #include "SWM330_sdio.h"

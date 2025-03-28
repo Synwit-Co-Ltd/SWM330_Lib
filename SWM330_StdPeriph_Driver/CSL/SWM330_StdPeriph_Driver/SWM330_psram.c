@@ -29,7 +29,7 @@ void PSRAM_Init(PSRAM_InitStructure * initStruct)
 	uint16_t ns_per_cycle = 1000 / CyclesPerUs;
 	
 #ifndef PSRAM_XCCELA
-	*((__IO uint32_t *)(PSRAMC_BASE + 0x80)) = 0;	__ISB(); __NOP();
+	*((__IO uint32_t *)(PSRAMC_BASE + 0x80)) = 0 | (1 << 16);	__ISB(); __NOP();
 	
 	uint16_t acc_cycles = initStruct->tACC / ns_per_cycle + 1;
 	if(acc_cycles < 8)		// when 4 Clock Latency, 4 * tPSRAM_CLK = 8 * tSYS_CLK
@@ -78,7 +78,7 @@ void PSRAM_Init(PSRAM_InitStructure * initStruct)
 	__NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP();
 	while((PSRAMC->CSR & PSRAMC_CSR_INITDONE_Msk) == 0) __NOP();
 #else
-	*((__IO uint32_t *)(PSRAMC_BASE + 0x80)) = 1;	__ISB(); __NOP();
+	*((__IO uint32_t *)(PSRAMC_BASE + 0x80)) = 1 | (1 << 16);	__ISB(); __NOP();
 	
 	PSRAMC->TR1US = CyclesPerUs;
 	
