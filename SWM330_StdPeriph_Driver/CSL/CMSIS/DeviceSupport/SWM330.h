@@ -435,7 +435,15 @@ typedef struct {
 
 	__IO uint32_t OPEND;              		// open-drain enable
 	
-		 uint32_t RESERVED5[127];
+		 uint32_t RESERVED5[63];
+	
+	__IO uint32_t DRVS;
+	
+		 uint32_t RESERVED6[63];
+	
+	__IO uint32_t SLEW;
+	
+		 uint32_t RESERVED7[63];
 	
 	__IO uint32_t FUNMUX0;
 	
