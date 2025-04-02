@@ -17,7 +17,7 @@ typedef struct {
 	uint8_t  TXThreshold;		// 0--7
 	uint8_t  TXThresholdIEn;	// transmit threshold interrupt enable, triggered when data count in TX FIFO <= TXThreshold
 	
-	uint16_t  TimeoutTime;		// 0-4095
+	uint16_t TimeoutTime;		// 0-4095
 	uint8_t  TimeoutIEn;		// timeout interrupt enable, triggered when no data is received on the RX line for more than TimeoutTime/(Baudrate/10) seconds
 } UART_InitStructure;
 
