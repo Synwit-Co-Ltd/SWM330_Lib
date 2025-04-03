@@ -34,6 +34,7 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTA_PIN6_GPIO			0
 #define PORTA_PIN6_FUNMUX0		1
 #define PORTA_PIN6_LCD_B7		2
+#define PORTA_PIN6_DVP_D10		3
 
 #define PORTA_PIN7_GPIO			0
 #define PORTA_PIN7_FUNMUX1		1
@@ -193,7 +194,6 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 
 #define PORTC_PIN4_GPIO			0
 #define PORTC_PIN4_FUNMUX0		1
-#define PORTC_PIN4_DVP_D7		2
 #define PORTC_PIN4_DAC_OUT		7
 
 #define PORTC_PIN5_GPIO			0
@@ -202,19 +202,19 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTC_PIN6_GPIO			0
 #define PORTC_PIN6_FUNMUX0		1
 #define PORTC_PIN6_LCD_B4		2
-#define PORTC_PIN6_DVP_D8		3
+#define PORTC_PIN6_DVP_D7		3
 #define PORTC_PIN6_ADC0_CH6		7
 
 #define PORTC_PIN7_GPIO			0
 #define PORTC_PIN7_FUNMUX1		1
 #define PORTC_PIN7_LCD_B5		2
-#define PORTC_PIN7_DVP_D9		3
+#define PORTC_PIN7_DVP_D8		3
 #define PORTC_PIN7_ADC0_CH5		7
 
 #define PORTC_PIN8_GPIO			0
 #define PORTC_PIN8_FUNMUX0		1
 #define PORTC_PIN8_LCD_B6		2
-#define PORTC_PIN8_DVP_D10		3
+#define PORTC_PIN8_DVP_D9		3
 #define PORTC_PIN8_ADC0_CH4		7
 
 #define PORTC_PIN9_GPIO			0
