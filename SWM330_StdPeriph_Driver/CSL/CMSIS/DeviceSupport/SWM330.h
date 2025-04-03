@@ -114,15 +114,15 @@ typedef struct {
 	
 	__IO uint32_t RTCWKSR;
 	
-	__IO uint32_t EMCADJ;
+	__IO uint32_t PSDLLADJ;					// PSRAM DLL ADJ
 	
 		 uint32_t RESERVED3[17];
 	
 	__I  uint32_t CHIPID[4];
 	
-	__IO uint32_t BACKUP[4];				// Data Backup Register
+	__IO uint32_t BACKUP[6];				// Data Backup Register
 	
-		 uint32_t RESERVED4[24];
+		 uint32_t RESERVED4[22];
 	
 	__IO uint32_t PAWKEN;				    // PORTA Wakeup Enable
 	__IO uint32_t PBWKEN;
