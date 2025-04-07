@@ -2046,6 +2046,8 @@ typedef struct {
 #define QSPI_CR_FFTHR_Pos			8		// FIFO Threshold, in indirect read  mode, when the number of data  in FIFO >= CR.FFTHR+1, SR.FFTHR set
 											//				   in indirect write mode, when the number of space in FIFO >= CR.FFTHR+1, SR.FFTHR set
 #define QSPI_CR_FFTHR_Msk			(0x1F << QSPI_CR_FFTHR_Pos)
+#define QSPI_CR_SLAVE_Pos			15
+#define QSPI_CR_SLAVE_Msk			(0x01 << QSPI_CR_SLAVE_Pos)
 #define QSPI_CR_ERRIE_Pos			16		// Transfer Error Interrupt Enable
 #define QSPI_CR_ERRIE_Msk			(0x01 << QSPI_CR_ERRIE_Pos)
 #define QSPI_CR_DONEIE_Pos			17		// Transfer Done/Complete Interrupt Enable
@@ -2056,6 +2058,8 @@ typedef struct {
 #define QSPI_CR_PSMATIE_Msk			(0x01 << QSPI_CR_PSMATIE_Pos)
 #define QSPI_CR_TOIE_Pos			20		// Time-Out Interrupt Enable
 #define QSPI_CR_TOIE_Msk			(0x01 << QSPI_CR_TOIE_Pos)
+#define QSPI_CR_MSBF_Pos			21		// MSB First in half-word write
+#define QSPI_CR_MSBF_Msk			(0x01 << QSPI_CR_MSBF_Pos)
 #define QSPI_CR_PSSTPMOD_Pos		22		// Polling Status Stop Mode, 0 always polling until abort or QSPI disabled, 1 stop polling as soon as match
 #define QSPI_CR_PSSTPMOD_Msk		(0x01 << QSPI_CR_PSSTPMOD_Pos)
 #define QSPI_CR_PSMATMOD_Pos		23		// Polling Status Match Mode, 0 AND, match when all unmasked bits received from Flash match PSMAT register; 1 OR
@@ -2114,6 +2118,8 @@ typedef struct {
 #define QSPI_CCR_MODE_Msk			(0x03 << QSPI_CCR_MODE_Pos)
 #define QSPI_CCR_SIOO_Pos			28		// Send Instruction Only Once
 #define QSPI_CCR_SIOO_Msk			(0x01 << QSPI_CCR_SIOO_Pos)
+#define QSPI_CCR_FRCM_Pos			29		// Free run clock mode, continuously output the clock for test and calibration purposes
+#define QSPI_CCR_FRCM_Msk			(0x01 << QSPI_CCR_FRCM_Pos)
 
 
 
