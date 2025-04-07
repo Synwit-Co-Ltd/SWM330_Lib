@@ -172,9 +172,9 @@ void DMA2D_memcpy(void * destin, const void * source, uint8_t unit_size, uint16_
 	DMA2D->L[DMA2D_LAYER_OUT].MAR = (uint32_t)destin;
 	DMA2D->L[DMA2D_LAYER_OUT].PFCCR = unit_size;
 	
-	DMA2D->NLR = ((unit_count - 1) << DMA2D_NLR_NLINE_Pos) |
-				 ((unit_count / 2) << DMA2D_NLR_NPIXEL_Pos);
+	DMA2D->NLR = ((unit_count - 1) << 0) | (8 << 23);
 	
+	DMA2D->CR &= ~(DMA2D_CR_MODE_Msk | DMA2D_CR_GPDMA_Msk);
 	DMA2D->CR |= (1 << DMA2D_CR_GPDMA_Pos) |
 				 (1 << DMA2D_CR_START_Pos);
 }

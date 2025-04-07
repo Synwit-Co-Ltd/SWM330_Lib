@@ -225,7 +225,7 @@ void RGBLCDInit(void)
 	PORT_Init(PORTD, PIN6,  PORTD_PIN6_LCD_R6,  0);
 	PORT_Init(PORTD, PIN7,  PORTD_PIN7_LCD_R7,  0);
 	
-	LCD_initStruct.ClkDiv = 12;
+	LCD_initStruct.ClkDiv = 6;
 	LCD_initStruct.Format = LCD_FMT_RGB565;
 	LCD_initStruct.HnPixel = LCD_HDOT;
 	LCD_initStruct.VnPixel = LCD_VDOT;
