@@ -1707,6 +1707,22 @@ typedef struct {
 #define DMA_IF_HALF1_Msk			(0x01 << DMA_IF_HALF1_Pos)
 #define DMA_IF_ERR1_Pos				7
 #define DMA_IF_ERR1_Msk				(0x01 << DMA_IF_ERR1_Pos)
+#define DMA_IF_GLB2_Pos				8
+#define DMA_IF_GLB2_Msk				(0x01 << DMA_IF_GLB2_Pos)
+#define DMA_IF_DONE2_Pos			9
+#define DMA_IF_DONE2_Msk			(0x01 << DMA_IF_DONE2_Pos)
+#define DMA_IF_HALF2_Pos			10
+#define DMA_IF_HALF2_Msk			(0x01 << DMA_IF_HALF2_Pos)
+#define DMA_IF_ERR2_Pos				11
+#define DMA_IF_ERR2_Msk				(0x01 << DMA_IF_ERR2_Pos)
+#define DMA_IF_GLB3_Pos				12
+#define DMA_IF_GLB3_Msk				(0x01 << DMA_IF_GLB3_Pos)
+#define DMA_IF_DONE3_Pos			13
+#define DMA_IF_DONE3_Msk			(0x01 << DMA_IF_DONE3_Pos)
+#define DMA_IF_HALF3_Pos			14
+#define DMA_IF_HALF3_Msk			(0x01 << DMA_IF_HALF3_Pos)
+#define DMA_IF_ERR3_Pos				15
+#define DMA_IF_ERR3_Msk				(0x01 << DMA_IF_ERR3_Pos)
 
 #define DMA_IFC_GLB0_Pos			0
 #define DMA_IFC_GLB0_Msk			(0x01 << DMA_IFC_GLB0_Pos)
@@ -1724,6 +1740,22 @@ typedef struct {
 #define DMA_IFC_HALF1_Msk			(0x01 << DMA_IFC_HALF1_Pos)
 #define DMA_IFC_ERR1_Pos			7
 #define DMA_IFC_ERR1_Msk			(0x01 << DMA_IFC_ERR1_Pos)
+#define DMA_IFC_GLB2_Pos			8
+#define DMA_IFC_GLB2_Msk			(0x01 << DMA_IFC_GLB2_Pos)
+#define DMA_IFC_DONE2_Pos			9
+#define DMA_IFC_DONE2_Msk			(0x01 << DMA_IFC_DONE2_Pos)
+#define DMA_IFC_HALF2_Pos			10
+#define DMA_IFC_HALF2_Msk			(0x01 << DMA_IFC_HALF2_Pos)
+#define DMA_IFC_ERR2_Pos			11
+#define DMA_IFC_ERR2_Msk			(0x01 << DMA_IFC_ERR2_Pos)
+#define DMA_IFC_GLB3_Pos			12
+#define DMA_IFC_GLB3_Msk			(0x01 << DMA_IFC_GLB3_Pos)
+#define DMA_IFC_DONE3_Pos			13
+#define DMA_IFC_DONE3_Msk			(0x01 << DMA_IFC_DONE3_Pos)
+#define DMA_IFC_HALF3_Pos			14
+#define DMA_IFC_HALF3_Msk			(0x01 << DMA_IFC_HALF3_Pos)
+#define DMA_IFC_ERR3_Pos			15
+#define DMA_IFC_ERR3_Msk			(0x01 << DMA_IFC_ERR3_Pos)
 
 #define DMA_MUX_MRDHSSIG_Pos		0		// memory read  handshake signal
 #define DMA_MUX_MRDHSSIG_Msk		(0x03 << DMA_MUX_MRDHSSIG_Pos)
@@ -1765,9 +1797,10 @@ typedef struct {
 
 #define DMA_NDT_LEN_Pos				0		// When the channel is closed, write the number of data to be transferred; 
 											// After the channel is enabled, indicates the number of data remaining to be transferred
-#define DMA_NDT_LEN_Msk				(0xFFFF << DMA_NDT_LEN_Pos)
-#define DMA_NDT_HALF_Pos			16		// After the specified number of data is transmitted by HALF, set the DMA->IF.HALF interrupt flag bit
-#define DMA_NDT_HALF_Msk			(0xFFFF << DMA_NDT_HALF_Pos)
+#define DMA_NDT_LEN_Msk				(0xFFFFFF << DMA_NDT_LEN_Pos)
+#define DMA_NDT_HALF_Pos			24		// After the specified number of data is transmitted, set the DMA->IF.HALF interrupt flag bit
+											// 1 1/8 * LEN, 2 2/8 * LEN, ...
+#define DMA_NDT_HALF_Msk			(0x07 << DMA_NDT_HALF_Pos)
 
 
 
@@ -2045,7 +2078,7 @@ typedef struct {
 #define QSPI_CR_BANK_Msk			(0x01 << QSPI_CR_BANK_Pos)
 #define QSPI_CR_FFTHR_Pos			8		// FIFO Threshold, in indirect read  mode, when the number of data  in FIFO >= CR.FFTHR+1, SR.FFTHR set
 											//				   in indirect write mode, when the number of space in FIFO >= CR.FFTHR+1, SR.FFTHR set
-#define QSPI_CR_FFTHR_Msk			(0x1F << QSPI_CR_FFTHR_Pos)
+#define QSPI_CR_FFTHR_Msk			(0x0F << QSPI_CR_FFTHR_Pos)
 #define QSPI_CR_SLAVE_Pos			15
 #define QSPI_CR_SLAVE_Msk			(0x01 << QSPI_CR_SLAVE_Pos)
 #define QSPI_CR_ERRIE_Pos			16		// Transfer Error Interrupt Enable

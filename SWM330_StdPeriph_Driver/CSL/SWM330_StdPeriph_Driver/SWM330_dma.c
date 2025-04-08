@@ -34,8 +34,8 @@ void DMA_CH_Init(uint32_t chn, DMA_InitStructure * initStruct)
 					  (initStruct->PeripheralAddrInc << DMA_CR_PINC_Pos) |
 					  (initStruct->Priority			 << DMA_CR_PL_Pos);
 	
-	DMA->CH[chn].NDT = ( initStruct->Count 		<< DMA_NDT_LEN_Pos) |
-					   ((initStruct->Count / 2) << DMA_NDT_HALF_Pos);
+	DMA->CH[chn].NDT = (initStruct->Count << DMA_NDT_LEN_Pos) |
+					   (4				  << DMA_NDT_HALF_Pos);
 	
 	DMA->CH[chn].MAR = initStruct->MemoryAddr;
 	DMA->CH[chn].PAR = initStruct->PeripheralAddr;

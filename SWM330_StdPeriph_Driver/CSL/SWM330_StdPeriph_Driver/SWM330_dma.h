@@ -121,8 +121,8 @@ void DMA_CH_Close(uint32_t chn);
 
 static inline void DMA_CH_SetCount(uint32_t chn, uint32_t count)
 {
-	DMA->CH[chn].NDT = ( count 		<< DMA_NDT_LEN_Pos) |
-					   ((count / 2) << DMA_NDT_HALF_Pos);
+	DMA->CH[chn].NDT = (count << DMA_NDT_LEN_Pos) |
+					   (4	  << DMA_NDT_HALF_Pos);
 }
 
 
