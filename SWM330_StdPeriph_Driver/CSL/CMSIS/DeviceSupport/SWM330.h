@@ -2056,6 +2056,8 @@ typedef struct {
 		 uint32_t RESERVED[3];
 	
 	__IO uint32_t SSHIFT;					// Sample Shift in System clock cycles, actual sampling delay is the sum of this register and the delay set by CR.SSHIFT
+	
+	__IO uint32_t CACHE;
 } QSPI_TypeDef;
 
 
@@ -2153,6 +2155,11 @@ typedef struct {
 #define QSPI_CCR_SIOO_Msk			(0x01 << QSPI_CCR_SIOO_Pos)
 #define QSPI_CCR_FRCM_Pos			29		// Free run clock mode, continuously output the clock for test and calibration purposes
 #define QSPI_CCR_FRCM_Msk			(0x01 << QSPI_CCR_FRCM_Pos)
+
+#define QSPI_CACHE_CLR_Pos			0
+#define QSPI_CACHE_CLR_Msk			(0x01 << QSPI_CACHE_CLR_Pos)
+#define QSPI_CACHE_ENA_Pos			4
+#define QSPI_CACHE_ENA_Msk			(0x01 << QSPI_CACHE_ENA_Pos)
 
 
 

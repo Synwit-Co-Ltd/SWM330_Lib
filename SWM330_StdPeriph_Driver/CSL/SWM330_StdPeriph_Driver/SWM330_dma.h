@@ -7,7 +7,7 @@ typedef struct {
 	
 	uint8_t  Unit;				// DMA_UNIT_BYTE, DMA_UNIT_HALFWORD, DMA_UNIT_WORD
 	
-	uint32_t Count;				// Number of transmission count. can be 1--0xFFFF
+	uint32_t Count;				// Number of transmission count. can be 1--0xFFFFFF
 	
 	uint32_t MemoryAddr;
 	

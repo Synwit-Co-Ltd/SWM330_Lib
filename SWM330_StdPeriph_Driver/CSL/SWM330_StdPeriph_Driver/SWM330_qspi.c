@@ -395,6 +395,11 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 *******************************************************************************************************************************/
 void QSPI_MemoryMap(QSPI_TypeDef * QSPIx, uint8_t addr_width, uint8_t data_width)
 {
+	while(QSPI_Busy(QSPIx)) __NOP();
+	
+	QSPIx->CACHE |= QSPI_CACHE_CLR_Msk;
+	for(int i = 0; i < CyclesPerUs; i++) __NOP();
+	
 	uint8_t instruction, addressMode, dataMode, dummyCycles;
 	uint8_t alternateBytesMode, alternateBytesSize, alternateBytes;
 	switch((addr_width << 4) | data_width)
