@@ -169,7 +169,7 @@ static inline uint32_t QSPI_FIFOCount(QSPI_TypeDef * QSPIx)
 
 static inline uint32_t QSPI_FIFOSpace(QSPI_TypeDef * QSPIx)
 {
-	return 32 - QSPI_FIFOCount(QSPIx);
+	return 16 - QSPI_FIFOCount(QSPIx);
 }
 
 static inline bool QSPI_FIFOEmpty(QSPI_TypeDef * QSPIx)
