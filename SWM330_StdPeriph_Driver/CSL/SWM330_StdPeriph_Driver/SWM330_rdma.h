@@ -7,8 +7,6 @@ typedef struct {
 	uint8_t  BlockSize;		// RDMA_BLOCK_16, RDMA_BLOCK_32, RDMA_BLOCK_64, RDMA_BLOCK_128
 	uint16_t Interval;		// data block transfer interval in unit of HCLK period, can be 1--65536
 	
-	uint8_t  Handshake;		// RDMA_HANDSHAKE_NO, RDMA_HANDSHAKE_QSPI0_READ, RDMA_HANDSHAKE_QSPI0_WRITE
-	
 	uint32_t INTEn;			// interrupt enable, can be RDMA_IT_DONE, RDMA_IT_HALF, RDMA_IT_ERROR and their '|' operation
 } RDMA_InitStructure;
 
@@ -22,10 +20,6 @@ typedef struct {
 #define RDMA_BLOCK_32		1
 #define RDMA_BLOCK_64		2
 #define RDMA_BLOCK_128		3
-
-#define RDMA_HANDSHAKE_NO	0
-#define RDMA_HANDSHAKE_QSPI0_READ	1
-#define RDMA_HANDSHAKE_QSPI0_WRITE	2
 
 #define RDMA_UNIT_BYTE		0
 #define RDMA_UNIT_HALFWORD	1

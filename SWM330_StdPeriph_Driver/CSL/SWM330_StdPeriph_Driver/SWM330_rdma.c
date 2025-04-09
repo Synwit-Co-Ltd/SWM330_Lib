@@ -29,7 +29,6 @@ void RDMA_Init(RDMA_InitStructure * initStruct)
 	
 	RDMA->CR = (initStruct->BurstSize << RDMA_CR_BURST_Pos) |
 			   (initStruct->BlockSize << RDMA_CR_BLKSZ_Pos) |
-			   (initStruct->Handshake << RDMA_CR_RHSEN_Pos) |
 			   (initStruct->Interval  << RDMA_CR_WAIT_Pos);
 	
 	RDMA_INTClr(initStruct->INTEn);
@@ -53,9 +52,20 @@ void RDMA_memcpy(void * destin, const void * source, uint8_t unit_size, uint32_t
 	RDMA->LEN = (unit_count << RDMA_LEN_SIZE_Pos) |
 				(8			<< RDMA_LEN_PART_Pos);		// half
 	
+	uint8_t rd_hs_en = 0, wr_hs_en = 0, hs_sel = 0;
+	if(((uint32_t)source == (uint32_t)&QSPI0->DRW) || ((uint32_t)source == (uint32_t)&QSPI1->DRW))
+		rd_hs_en = 1;
+	if(((uint32_t)destin == (uint32_t)&QSPI0->DRW) || ((uint32_t)destin == (uint32_t)&QSPI1->DRW))
+		wr_hs_en = 1;
+	if(((uint32_t)source == (uint32_t)&QSPI1->DRW) || ((uint32_t)destin == (uint32_t)&QSPI1->DRW))
+		hs_sel = 1;
+	
 	RDMA->CR &= ~(RDMA_CR_RSIZE_Msk | RDMA_CR_WSIZE_Msk);
 	RDMA->CR |= (unit_size << RDMA_CR_RSIZE_Pos) |
-				(unit_size << RDMA_CR_WSIZE_Pos) | RDMA_CR_START_Msk;
+				(unit_size << RDMA_CR_WSIZE_Pos) | 
+				(rd_hs_en  << RDMA_CR_RHSEN_Pos) |
+				(wr_hs_en  << RDMA_CR_WHSEN_Pos) |
+				(hs_sel	   << RDMA_CR_HSSEL_Pos) | RDMA_CR_START_Msk;
 }
 
 /*******************************************************************************************************************************
