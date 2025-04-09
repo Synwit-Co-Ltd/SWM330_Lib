@@ -114,7 +114,7 @@ typedef struct {
 	
 	__IO uint32_t RTCWKSR;
 	
-	__IO uint32_t PSDLLADJ;					// PSRAM DLL ADJ
+	__IO uint32_t PSDLYADJ;					// PSRAM Delay ADJ
 	
 		 uint32_t RESERVED3[17];
 	
@@ -147,31 +147,25 @@ typedef struct {
     //Analog Control: 0x400A5800
          uint32_t RESERVED7[(0x400A5800-0x40000728)/4-1];
 	
-	__IO uint32_t HRCCR;					// High speed RC Control Register
-		 uint32_t RESERVED8[3];
+	__IO uint32_t RCCR;						// High speed RC Control Register
+		 uint32_t RESERVED8;
     
-    __IO uint32_t BODCR;
-	__IO uint32_t BODSR;
-	
-		 uint32_t RESERVED9[2];
-	
 	__IO uint32_t XTALCR;
 	__IO uint32_t XTALSR;
 	
-		 uint32_t RESERVED10[6];
-	
 	__IO uint32_t PLLCR;
     __IO uint32_t PLLDIV;
-		 uint32_t RESERVED11;
-    __IO uint32_t PLLLOCK;                  // [0] 1 PLL locked
+		 uint32_t RESERVED9;
+    __IO uint32_t PLLSSCG;
 	
-    __IO uint32_t LRCCR;					// Low speed RC Control Register
-   
-         uint32_t RESERVED12[15];
+    __IO uint32_t BODCR;
+	__IO uint32_t BODSR;
 	
-	__IO uint32_t DACCR;
+	__IO uint32_t ADCCR;
 	
-		 uint32_t RESERVED13;
+	__IO uint32_t PWRCR;
+	
+		 uint32_t RESERVED10[3];
 	
 	__IO uint32_t TEMPCR;					// Temperature Sensor
 } SYS_TypeDef;
@@ -287,6 +281,15 @@ typedef struct {
 #define SYS_RTCWKSR_FLAG_Pos		0		// RTC wakeup flag, write 1 to clear
 #define SYS_RTCWKSR_FLAG_Msk		(0x01 << SYS_RTCWKSR_FLAG_Pos)
 
+#define SYS_PSDLYADJ_DQS100_Pos		0		// DQS signal delay fine-tuned, 100ps step
+#define SYS_PSDLYADJ_DQS100_Msk		(0x03 << SYS_PSDLYADJ_DQS100_Pos)
+#define SYS_PSDLYADJ_DQS400_Pos		2		// DQS signal delay coarse adjustment, 400ps step
+#define SYS_PSDLYADJ_DQS400_Msk		(0x03 << SYS_PSDLYADJ_DQS400_Pos)
+#define SYS_PSDLYADJ_CLK100_Pos		8
+#define SYS_PSDLYADJ_CLK100_Msk		(0x03 << SYS_PSDLYADJ_CLK100_Pos)
+#define SYS_PSDLYADJ_CLK400_Pos		10
+#define SYS_PSDLYADJ_CLK400_Msk		(0x03 << SYS_PSDLYADJ_CLK400_Pos)
+
 #define SYS_PRSTR0_GPIOA_Pos		0
 #define SYS_PRSTR0_GPIOA_Msk		(0x01 << SYS_PRSTR0_GPIOA_Pos)
 #define SYS_PRSTR0_GPIOB_Pos		1
@@ -357,34 +360,24 @@ typedef struct {
 #define SYS_PRSTR1_GPIOE_Pos		11
 #define SYS_PRSTR1_GPIOE_Msk		(0x01 << SYS_PRSTR1_GPIOE_Pos)
 
-#define SYS_HRCCR_ON_Pos			0		// High speed RC ON
-#define SYS_HRCCR_ON_Msk			(0x01 << SYS_HRCCR_ON_Pos)
-#define SYS_HRCCR_DBL_Pos		    1		// Double Frequency, 0 20MHz, 1 40MHz
-#define SYS_HRCCR_DBL_Msk		    (0x01 << SYS_HRCCR_DBL_Pos)
+#define SYS_RCCR_HON_Pos			0		// High speed RC ON
+#define SYS_RCCR_HON_Msk			(0x01 << SYS_RCCR_HON_Pos)
+#define SYS_RCCR_LON_Pos			1		// Low  speed RC ON
+#define SYS_RCCR_LON_Msk			(0x01 << SYS_RCCR_LON_Pos)
 
-#define SYS_BODCR_IE_Pos		    1		// Interrupt Enable
-#define SYS_BODCR_IE_Msk		    (0x01 << SYS_BODCR_IE_Pos)
-#define SYS_BODCR_INTLVL_Pos		4		// BOD interrupt trigger level
-#define SYS_BODCR_INTLVL_Msk		(0x07 << SYS_BODCR_INTLVL_Pos)
-
-#define SYS_BODSR_IF_Pos			0		// interrupt flag, write 1 to clear
-#define SYS_BODSR_IF_Msk			(0x01 << SYS_BODSR_IF_Pos)
-#define SYS_BODSR_ST_Pos			1		// BOD Status
-#define SYS_BODSR_ST_Msk			(0x01 << SYS_BODSR_ST_Pos)
-
-#define SYS_XTALCR_ON_Pos			1		// XTAL On
+#define SYS_XTALCR_ON_Pos			0		// XTAL On
 #define SYS_XTALCR_ON_Msk			(0x01 << SYS_XTALCR_ON_Pos)
-#define SYS_XTALCR_32KDET_Pos		4		// XTAL_32K Stop Detect
-#define SYS_XTALCR_32KDET_Msk		(0x01 << SYS_XTALCR_32KDET_Pos)
-#define SYS_XTALCR_DET_Pos			5		// XTAL Stop Detect
-#define SYS_XTALCR_DET_Msk			(0x01 << SYS_XTALCR_DET_Pos)
-#define SYS_XTALCR_DRV_Pos			16		// XTAL drive capability
-#define SYS_XTALCR_DRV_Msk			(0x1F << SYS_XTALCR_DRV_Pos)
+#define SYS_XTALCR_BYPASS_Pos		1
+#define SYS_XTALCR_BYPASS_Msk		(0x01 << SYS_XTALCR_BYPASS_Pos)
 
-#define SYS_XTALSR_32KSTOP_Pos		0		// XTAL_32K Stop, write 1 to clear
+#define SYS_XTALSR_32KSTOP_Pos		0		// XTAL_32K Stop flag, write 1 to clear
 #define SYS_XTALSR_32KSTOP_Msk		(0x01 << SYS_XTALSR_32KSTOP_Pos)
-#define SYS_XTALSR_STOP_Pos			1		// XTAL Stop, write 1 to clear
+#define SYS_XTALSR_STOP_Pos			1		// XTAL Stop flag, write 1 to clear
 #define SYS_XTALSR_STOP_Msk			(0x01 << SYS_XTALSR_STOP_Pos)
+#define SYS_XTALSR_32KSTOPDET_Pos	2		// XTAL_32K Stop Detect enable
+#define SYS_XTALSR_32KSTOPDET_Msk	(0x01 << SYS_XTALSR_32KSTOPDET_Pos)
+#define SYS_XTALSR_STOPDET_Pos		3		// XTAL Stop Detect enable
+#define SYS_XTALSR_STOPDET_Msk		(0x01 << SYS_XTALSR_STOPDET_Pos)
 
 #define SYS_PLLCR_OUTEN_Pos		    0       // can only be set after LOCK
 #define SYS_PLLCR_OUTEN_Msk		    (0x01 << SYS_PLLCR_OUTEN_Pos)
@@ -392,21 +385,49 @@ typedef struct {
 #define SYS_PLLCR_INSEL_Msk		    (0x01 << SYS_PLLCR_INSEL_Pos)
 #define SYS_PLLCR_OFF_Pos		    2
 #define SYS_PLLCR_OFF_Msk		    (0x01 << SYS_PLLCR_OFF_Pos)
-#define SYS_PLLCR_RST_Pos			3
-#define SYS_PLLCR_RST_Msk			(0x01 << SYS_PLLCR_RST_Pos)
+#define SYS_PLLCR_LOCK_Pos			3
+#define SYS_PLLCR_LOCK_Msk			(0x01 << SYS_PLLCR_LOCK_Pos)
+#define SYS_PLLCR_SSCG_Pos			4		// Spread Spectrum Clock Generator, 0 off
+#define SYS_PLLCR_SSCG_Msk			(0x03 << SYS_PLLCR_SSCG_Pos)
+#define SYS_PLLCR_SDMMOD_Pos		6		// SDM module
+#define SYS_PLLCR_SDMMOD_Msk		(0xFFF<< SYS_PLLCR_SDMMOD_Pos)
+#define SYS_PLLCR_FBDIVFP_Pos		18		// PLL FeedBack divider fractional part
+#define SYS_PLLCR_FBDIVFP_Msk		(0xFFF<< SYS_PLLCR_FBDIVFP_Pos)
 
-#define SYS_PLLDIV_FBDIV_Pos		0       // PLL FeedBack divider
-#define SYS_PLLDIV_FBDIV_Msk		(0x1FF << SYS_PLLDIV_FBDIV_Pos)
-#define SYS_PLLDIV_INDIV_Pos		16      // PLL input clock divider
-#define SYS_PLLDIV_INDIV_Msk		(0x1F << SYS_PLLDIV_INDIV_Pos)
-#define SYS_PLLDIV_OUTDIV_Pos		24      // PLL output clock divider, 0 div8, 1 div4, 0 div2
-#define SYS_PLLDIV_OUTDIV_Msk		(0x03 << SYS_PLLDIV_OUTDIV_Pos)
+#define SYS_PLLDIV_OUTDIV_Pos		0      	// PLL output clock divider, 0 div1, 1 div2, ..., 7 div8
+#define SYS_PLLDIV_OUTDIV_Msk		(0x07 << SYS_PLLDIV_OUTDIV_Pos)
+#define SYS_PLLDIV_FBDIV_Pos		8       // PLL FeedBack divider
+#define SYS_PLLDIV_FBDIV_Msk		(0x3F << SYS_PLLDIV_FBDIV_Pos)
+#define SYS_PLLDIV_INDIV_Pos		16      // PLL input clock divider, 0 div1, 1 div2, ..., 7 div8
+#define SYS_PLLDIV_INDIV_Msk		(0x07 << SYS_PLLDIV_INDIV_Pos)
 
-#define SYS_LRCCR_ON_Pos			0		// Low Speed RC On
-#define SYS_LRCCR_ON_Msk			(0x01 << SYS_LRCCR_ON_Pos)
+#define SYS_PLLSSCG_PFDDIV_Pos		0		// phase discriminator divider
+#define SYS_PLLSSCG_PFDDIV_Msk		(0x7F << SYS_PLLSSCG_PFDDIV_Pos)
+#define SYS_PLLSSCG_NSTEP_Pos		8		// Number of steps of triangular wave modulation
+#define SYS_PLLSSCG_NSTEP_Msk		(0x1FF<< SYS_PLLSSCG_NSTEP_Pos)
+#define SYS_PLLSSCG_FRACSTEP_Pos	24
+#define SYS_PLLSSCG_FRACSTEP_Msk	(0xFFu<< SYS_PLLSSCG_FRACSTEP_Pos)
 
-#define SYS_DACCR_VRADJ_Pos			0		// Vref Adjust
-#define SYS_DACCR_VRADJ_Msk			(0x1F << SYS_DACCR_VRADJ_Pos)
+#define SYS_BODCR_EN_Pos			0
+#define SYS_BODCR_EN_Msk			(0x01 << SYS_BODCR_EN_Pos)
+#define SYS_BODCR_IE_Pos		    1		// Interrupt Enable
+#define SYS_BODCR_IE_Msk		    (0x01 << SYS_BODCR_IE_Pos)
+#define SYS_BODCR_LVL_Pos			8		// BOD threshold level
+#define SYS_BODCR_LVL_Msk			(0x03 << SYS_BODCR_LVL_Pos)
+#define SYS_BODCR_VDDSW_Pos			10		// 1: use BOD output to control the VDDSW switch
+#define SYS_BODCR_VDDSW_Msk			(0x01 << SYS_BODCR_VDDSW_Pos)
+
+#define SYS_BODSR_IF_Pos			0		// interrupt flag, write 1 to clear
+#define SYS_BODSR_IF_Msk			(0x01 << SYS_BODSR_IF_Pos)
+#define SYS_BODSR_ST_Pos			1		// BOD Status
+#define SYS_BODSR_ST_Msk			(0x01 << SYS_BODSR_ST_Pos)
+
+#define SYS_ADCCR_IVREN_Pos			0		// ADC Internal Vref Enable
+#define SYS_ADCCR_IVREN_Msk			(0x01 << SYS_ADCCR_IVREN_Pos)
+#define SYS_ADCCR_IVRSEL_Pos		1		// ADC Internal Vref Select
+#define SYS_ADCCR_IVRSEL_Msk		(0x01 << SYS_ADCCR_IVRSEL_Pos)
+#define SYS_ADCCR_IVRTRIM_Pos		8		// ADC Internal Vref Level Trimming
+#define SYS_ADCCR_IVRTRIM_Msk		(0x1F << SYS_ADCCR_IVRTRIM_Pos)
 
 #define SYS_TEMPCR_EN_Pos			0
 #define SYS_TEMPCR_EN_Msk			(0x01 << SYS_TEMPCR_EN_Pos)
@@ -1850,6 +1871,8 @@ typedef struct {
 #define RDMA_CR_RHSEN_Msk			(0x01 << RDMA_CR_RHSEN_Pos)
 #define RDMA_CR_WHSEN_Pos			10		// Write handshake enable, destination address fix
 #define RDMA_CR_WHSEN_Msk			(0x01 << RDMA_CR_WHSEN_Pos)
+#define RDMA_CR_HSSEL_Pos			11		// Handshake signal select, 0 QSPI0, 1 QSPI1
+#define RDMA_CR_HSSEL_Msk			(0x01 << RDMA_CR_HSSEL_Pos)
 #define RDMA_CR_WAIT_Pos			16		// data block transfer interval in unit of HCLK period
 #define RDMA_CR_WAIT_Msk			(0xFFFFu<<RDMA_CR_WAIT_Pos)
 

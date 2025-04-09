@@ -36,7 +36,7 @@ void RTC_Init(RTC_TypeDef * RTCx, RTC_InitStructure * initStruct)
 	}
 	else
 	{
-		SYS->LRCCR |= SYS_LRCCR_ON_Msk;
+		SYS->RCCR |= SYS_RCCR_LON_Msk;
 	}
 	
 	RTC->PWRCR &= ~RTC_PWRCR_CLKSRC_Msk;

@@ -20,38 +20,36 @@
 /*******************************************************************************************************************************
  * system clock setting
  ******************************************************************************************************************************/
-#define SYS_CLK_20MHz		0	 	// 0 internal 20MHz
-#define SYS_CLK_2M5Hz		1		// 1 internal 2.5MHz
-#define SYS_CLK_40MHz		2		// 2 internal 40MHz
-#define SYS_CLK_5MHz		3		// 3 internal  5MHz
-#define SYS_CLK_XTAL		4		// 4 external XTAL (4-32MHz)
-#define SYS_CLK_XTAL_DIV8	5		// 5 external XTAL (4-32MHz) divide by 8
-#define SYS_CLK_PLL			6		// 6 PLL output
-#define SYS_CLK_PLL_DIV8	7		// 7 PLL output divide by 8
-#define SYS_CLK_32KHz		8		// 8 internal 32KHz
-#define SYS_CLK_XTAL_32K	9		// 9 exteranl 32KHz XTAL
+#define SYS_CLK_8MHz		0	 	// 0 internal 8MHz
+#define SYS_CLK_1MHz		1		// 1 internal 1MHz
+#define SYS_CLK_XTAL		2		// 4 external XTAL (4-32MHz)
+#define SYS_CLK_XTAL_DIV8	3		// 5 external XTAL (4-32MHz) divide by 8
+#define SYS_CLK_PLL			4		// 6 PLL output
+#define SYS_CLK_PLL_DIV8	5		// 7 PLL output divide by 8
+#define SYS_CLK_32KHz		6		// 8 internal 32KHz
+#define SYS_CLK_XTAL_32K	7		// 9 exteranl 32KHz XTAL
 
-#define SYS_CLK   SYS_CLK_40MHz
+#define SYS_CLK   SYS_CLK_PLL
 
 
-#define __HSI		(50000000UL)	// high speed internal clock
+#define __HSI		( 8000000UL)	// high speed internal clock
 #define __LSI		(   32000UL)	// low speed internal clock
 #define __HSE		(12000000UL)	// high speed external clock
 #define __LSE		(   32768UL)	// low speed external clock
 
 
 /********************************** PLL setting ********************************************************************************
- * VCO output frequency = PLL input frequency / INDIV * 4 * FBDIV
- * PLL output frequency = PLL input frequency / INDIV * 4 * FBDIV / OUTDIV = VCO output frequency / OUTDIV
- * note: VCO output frequency shoud be in range [600MHz, 1400MHz]
+ * VCO output frequency = PLL input frequency / INDIV * FBDIV
+ * PLL output frequency = PLL input frequency / INDIV * FBDIV / OUTDIV = VCO output frequency / OUTDIV
+ * note: VCO output frequency shoud be in range [80MHz, 240MHz]
  ******************************************************************************************************************************/ 
-#define SYS_PLL_SRC   	SYS_CLK_XTAL	// SYS_CLK_20MHz or SYS_CLK_XTAL
+#define SYS_PLL_SRC   	SYS_CLK_8MHz	// SYS_CLK_8MHz or SYS_CLK_XTAL
 
-#define PLL_IN_DIV		3
+#define PLL_IN_DIV		2
 
-#define PLL_FB_DIV		60
+#define PLL_FB_DIV		30
 
-#define PLL_OUT_DIV		PLL_OUT_DIV8
+#define PLL_OUT_DIV		2
 
 
 
@@ -69,14 +67,7 @@ void SystemCoreClockUpdate(void)
 {
 	if(SYS->CLKSEL & SYS_CLKSEL_SYS_Msk)			//SYS  <= HRC
 	{
-		if(SYS->HRCCR & SYS_HRCCR_DBL_Msk)				//HRC = 40MHz
-		{
-			SystemCoreClock = __HSI*2;
-		}
-		else											//HRC = 20MHz
-		{
-			SystemCoreClock = __HSI;
-		}
+		SystemCoreClock = __HSI;
 	}
 	else											//SYS  <= CLK
 	{
@@ -87,20 +78,20 @@ void SystemCoreClockUpdate(void)
 			break;
 		
 		case 1:
-			if(SYS->PLLCR & SYS_PLLCR_INSEL_Msk)			//PLL_IN <= HRC
-			{
-				SystemCoreClock = __HSI;
-			}
-			else											//PLL_IN <= XTAL
+			if(SYS->PLLCR & SYS_PLLCR_INSEL_Msk)			//PLL_IN <= XTAL
 			{
 				SystemCoreClock = __HSE;
 			}
+			else											//PLL_IN <= HRC
+			{
+				SystemCoreClock = __HSI;
+			}
 			
-			uint32_t indiv  = (SYS->PLLDIV & SYS_PLLDIV_INDIV_Msk)  >> SYS_PLLDIV_INDIV_Pos;
-			uint32_t fbdiv  = (SYS->PLLDIV & SYS_PLLDIV_FBDIV_Msk)  >> SYS_PLLDIV_FBDIV_Pos;
-			uint32_t outdiv = (SYS->PLLDIV & SYS_PLLDIV_OUTDIV_Msk) >> SYS_PLLDIV_OUTDIV_Pos;
+			uint32_t indiv  = ((SYS->PLLDIV & SYS_PLLDIV_INDIV_Msk)  >> SYS_PLLDIV_INDIV_Pos) + 1;
+			uint32_t fbdiv  = ((SYS->PLLDIV & SYS_PLLDIV_FBDIV_Msk)  >> SYS_PLLDIV_FBDIV_Pos);
+			uint32_t outdiv = ((SYS->PLLDIV & SYS_PLLDIV_OUTDIV_Msk) >> SYS_PLLDIV_OUTDIV_Pos) + 1;
 			
-			SystemCoreClock = SystemCoreClock / indiv * fbdiv * 4 / (2 << (2 - outdiv));
+			SystemCoreClock = SystemCoreClock / indiv * fbdiv / outdiv;
 			break;
 		
 		case 2:
@@ -113,7 +104,6 @@ void SystemCoreClockUpdate(void)
 		
 		case 4:
 			SystemCoreClock = __HSI;
-			if(SYS->HRCCR & SYS_HRCCR_DBL_Msk)  SystemCoreClock *= 2;
 			break;
 		}
 		
@@ -121,6 +111,9 @@ void SystemCoreClockUpdate(void)
 	}
 	
 	CyclesPerUs = SystemCoreClock / 1000000;
+	
+	if(CyclesPerUs == 0)
+		CyclesPerUs = 1;
 }
 
 /*******************************************************************************************************************************
@@ -130,27 +123,19 @@ void SystemCoreClockUpdate(void)
 * @return
 *******************************************************************************************************************************/
 void SystemInit(void)
-{return;
+{
 	SYS->CLKEN1 |= (1 << SYS_CLKEN1_ANAC_Pos);
 	
 	Flash_Param_at_xMHz(150);
 	
 	switch(SYS_CLK)
 	{
-		case SYS_CLK_20MHz:
-			switchTo20MHz();
+		case SYS_CLK_8MHz:
+			switchTo8MHz();
 			break;
 		
-		case SYS_CLK_2M5Hz:
-			switchTo2M5Hz();
-			break;
-		
-		case SYS_CLK_40MHz:
-			switchTo40MHz();
-			break;
-		
-		case SYS_CLK_5MHz:
-			switchTo5MHz();
+		case SYS_CLK_1MHz:
+			switchTo1MHz();
 			break;
 		
 		case SYS_CLK_XTAL:
@@ -201,45 +186,18 @@ static void delay_3ms(void)
 }
 
 
-void switchTo20MHz(void)
+void switchTo8MHz(void)
 {
-	SYS->HRCCR = (1 << SYS_HRCCR_ON_Pos) |
-				 (0 << SYS_HRCCR_DBL_Pos);			//HRC = 20Hz
+	SYS->RCCR = (1 << SYS_RCCR_HON_Pos);
 	
 	delay_3ms();
 	
 	SYS->CLKSEL |= (1 << SYS_CLKSEL_SYS_Pos);		//SYS <= HRC
 }
 
-void switchTo2M5Hz(void)
+void switchTo1MHz(void)
 {
-	switchTo20MHz();
-	
-	SYS->CLKDIVx_ON = 1;
-	
-	SYS->CLKSEL &= ~SYS_CLKSEL_CLK_Msk;
-	SYS->CLKSEL |= (4 << SYS_CLKSEL_CLK_Pos);		//CLK <= HRC
-
-	SYS->CLKSEL |= (1 << SYS_CLKSEL_CLK_DIVx_Pos);
-	
-	delay_3ms();
-	
-	SYS->CLKSEL &=~(1 << SYS_CLKSEL_SYS_Pos);		//SYS <= HRC/8
-}
-
-void switchTo40MHz(void)
-{
-	SYS->HRCCR = (1 << SYS_HRCCR_ON_Pos) |
-				 (1 << SYS_HRCCR_DBL_Pos);			//HRC = 40MHz
-	
-	delay_3ms();
-	
-	SYS->CLKSEL |= (1 << SYS_CLKSEL_SYS_Pos);		//SYS <= HRC
-}
-
-void switchTo5MHz(void)
-{
-	switchTo40MHz();
+	switchTo8MHz();
 	
 	SYS->CLKDIVx_ON = 1;
 	
@@ -255,11 +213,11 @@ void switchTo5MHz(void)
 
 void switchToXTAL(uint32_t div8)
 {
-	switchTo20MHz();
+	switchTo8MHz();
 	
 	PORT_Init(PORTA, PIN3, PORTA_PIN3_XTAL_IN,  0);
 	PORT_Init(PORTA, PIN4, PORTA_PIN4_XTAL_OUT, 0);
-	SYS->XTALCR |= (1 << SYS_XTALCR_ON_Pos) | (15 << SYS_XTALCR_DRV_Pos) | (1 << SYS_XTALCR_DET_Pos);
+	SYS->XTALCR |= (1 << SYS_XTALCR_ON_Pos);
 	
 	SYS->CLKDIVx_ON = 1;
 	
@@ -276,34 +234,33 @@ void switchToXTAL(uint32_t div8)
 
 void switchToPLL(uint32_t clksrc_xtal, uint32_t indiv, uint32_t fbdiv, uint32_t outdiv, uint32_t div8)
 {
-	switchTo20MHz();
+	switchTo8MHz();
 	
 	if(clksrc_xtal == 0)
 	{
-		SYS->HRCCR = (1 << SYS_HRCCR_ON_Pos) |
-					 (0 << SYS_HRCCR_DBL_Pos);		//HRC = 20Hz
+		SYS->RCCR = (1 << SYS_RCCR_HON_Pos);
 		
-		SYS->PLLCR |= (1 << SYS_PLLCR_INSEL_Pos);	//PLL_SRC <= HRC
+		SYS->PLLCR &= ~(1 << SYS_PLLCR_INSEL_Pos);	//PLL_SRC <= HRC
 	}
 	else
 	{
 		PORT_Init(PORTA, PIN3, PORTA_PIN3_XTAL_IN,  0);
 		PORT_Init(PORTA, PIN4, PORTA_PIN4_XTAL_OUT, 0);
-		SYS->XTALCR |= (1 << SYS_XTALCR_ON_Pos) | (15 << SYS_XTALCR_DRV_Pos) | (1 << SYS_XTALCR_DET_Pos);
+		SYS->XTALCR |= (1 << SYS_XTALCR_ON_Pos);
 		
-		SYS->PLLCR &= ~(1 << SYS_PLLCR_INSEL_Pos);	//PLL_SRC <= XTAL
+		SYS->PLLCR |= (1 << SYS_PLLCR_INSEL_Pos);	//PLL_SRC <= XTAL
 	}
 	
 	SYS->PLLDIV &= ~(SYS_PLLDIV_INDIV_Msk |
 					 SYS_PLLDIV_FBDIV_Msk |
 					 SYS_PLLDIV_OUTDIV_Msk);
-	SYS->PLLDIV |= (indiv  << SYS_PLLDIV_INDIV_Pos) |
-				   (fbdiv  << SYS_PLLDIV_FBDIV_Pos) |
-				   (outdiv << SYS_PLLDIV_OUTDIV_Pos);
+	SYS->PLLDIV |= ((indiv - 1)  << SYS_PLLDIV_INDIV_Pos) |
+				   ( fbdiv		 << SYS_PLLDIV_FBDIV_Pos) |
+				   ((outdiv - 1) << SYS_PLLDIV_OUTDIV_Pos);
 	
 	SYS->PLLCR &= ~(1 << SYS_PLLCR_OFF_Pos);
 	
-	while(SYS->PLLLOCK == 0);		// wait for PLL to lock
+	while((SYS->PLLCR & SYS_PLLCR_LOCK_Msk) == 0) __NOP();	// wait for PLL to lock
 	
 	SYS->PLLCR |= (1 << SYS_PLLCR_OUTEN_Pos);
 	
@@ -320,9 +277,9 @@ void switchToPLL(uint32_t clksrc_xtal, uint32_t indiv, uint32_t fbdiv, uint32_t 
 
 void switchTo32KHz(void)
 {
-	switchTo20MHz();
+	switchTo8MHz();
 	
-	SYS->LRCCR = (1 << SYS_LRCCR_ON_Pos);
+	SYS->RCCR = (1 << SYS_RCCR_LON_Pos);
 	
 	SYS->CLKDIVx_ON = 1;
 	
@@ -338,9 +295,12 @@ void switchTo32KHz(void)
 
 void switchToXTAL_32K(void)
 {
-	switchTo20MHz();
+	switchTo8MHz();
 	
-//	SYS->XTALCR |= (1 << SYS_XTALCR_32KON_Pos) | (7 << SYS_XTALCR_32KDRV_Pos) | (1 << SYS_XTALCR_32KDET_Pos);
+	SYS->CLKEN0 |= SYS_CLKEN1_RTC_Msk;
+	RTC_unlock(RTC);
+	RTC->X32KCR |= RTC_X32KCR_ON_Msk;
+	RTC_lock(RTC);
 	
 	SYS->CLKDIVx_ON = 1;
 	
