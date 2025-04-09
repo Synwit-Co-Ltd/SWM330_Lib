@@ -49,8 +49,8 @@ void RDMA_memcpy(void * destin, const void * source, uint8_t unit_size, uint32_t
 {
 	RDMA->SRC = (uint32_t)source;
 	RDMA->DES = (uint32_t)destin;
-	RDMA->LEN = (unit_count << RDMA_LEN_SIZE_Pos) |
-				(8			<< RDMA_LEN_PART_Pos);		// half
+	RDMA->LEN = ((unit_count-1) << RDMA_LEN_SIZE_Pos) |
+				(8				<< RDMA_LEN_PART_Pos);		// half
 	
 	uint8_t rd_hs_en = 0, wr_hs_en = 0, hs_sel = 0;
 	if(((uint32_t)source == (uint32_t)&QSPI0->DRW) || ((uint32_t)source == (uint32_t)&QSPI1->DRW))
