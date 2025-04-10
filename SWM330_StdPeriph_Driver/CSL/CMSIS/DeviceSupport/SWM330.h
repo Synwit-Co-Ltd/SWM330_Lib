@@ -1131,27 +1131,21 @@ typedef struct {
 	__IO uint32_t SEQCOV;					// Sequencer conversion times
 	
 	__IO uint32_t SEQSMP;					// Sequencer sample time
-	
-	     uint32_t RESERVED2[4];
-	
-	__IO uint32_t CR2;
-	
-		 uint32_t RESERVED3[15];
-	
-	__IO uint32_t CALIB;
 } ADC_TypeDef;
 
 
-#define ADC_CR_EN_Pos				0
-#define ADC_CR_EN_Msk				(0x01 << ADC_CR_EN_Pos)
+#define ADC_CR_PWD_Pos				0		// analog circuit power-down
+#define ADC_CR_PWD_Msk				(0x01 << ADC_CR_PWD_Pos)
 #define ADC_CR_AVG_Pos				1
 #define ADC_CR_AVG_Msk				(0x03 << ADC_CR_AVG_Pos)
-#define ADC_CR_RESET_Pos			3
+#define ADC_CR_RESET_Pos			3		// hardware automatically clear
 #define ADC_CR_RESET_Msk			(0x01 << ADC_CR_RESET_Pos)
 #define ADC_CR_DMAEN_Pos			4		// Sequencer DMA enable, 1-bit per Sequencer
 #define ADC_CR_DMAEN_Msk			(0x0F << ADC_CR_DMAEN_Pos)
 #define ADC_CR_FFCLR_Pos			8		// FIFO Clear, 1-bit per Sequencer
 #define ADC_CR_FFCLR_Msk			(0x0F << ADC_CR_FFCLR_Pos)
+#define ADC_CR_CKDIV_Pos			12		// 0 div2, 1 div3, ..., 15 div17
+#define ADC_CR_CKDIV_Msk			(0x0F << ADC_CR_CKDIV_Pos)
 
 #define ADC_GO_SEQ0_Pos				0
 #define ADC_GO_SEQ0_Msk				(0x01 << ADC_GO_SEQ0_Pos)
@@ -1272,8 +1266,8 @@ typedef struct {
 #define ADC_SR_FULL_Msk				(0x01 << ADC_SR_FULL_Pos)
 #define ADC_SR_EMPTY_Pos			4		// FIFO Empty
 #define ADC_SR_EMPTY_Msk			(0x01 << ADC_SR_EMPTY_Pos)
-#define ADC_SR_LEVEL_Pos			5		// the number of data in FIFO, value 0 indicates 0 or 8 data
-#define ADC_SR_LEVEL_Msk			(0x07 << ADC_SR_LEVEL_Pos)
+#define ADC_SR_LEVEL_Pos			5		// the number of data in FIFO, value 0 indicates 0 or 16 data
+#define ADC_SR_LEVEL_Msk			(0x0F << ADC_SR_LEVEL_Pos)
 
 #define ADC_DR_VALUE_Pos			0
 #define ADC_DR_VALUE_Msk			(0xFFF<< ADC_DR_VALUE_Pos)
@@ -1286,16 +1280,16 @@ typedef struct {
 #define ADC_CMP_MIN_Msk				(0xFFF<< ADC_CMP_MIN_Pos)
 
 #define ADC_SEQCHN0_SEQ0_Pos		0		// Sequencer 0 channel select, one bit per channel
-#define ADC_SEQCHN0_SEQ0_Msk		(0xFFF << ADC_SEQCHN0_SEQ0_Pos)
+#define ADC_SEQCHN0_SEQ0_Msk		(0xFFFF << ADC_SEQCHN0_SEQ0_Pos)
 #define ADC_SEQCHN0_SEQ1_Pos		16
-#define ADC_SEQCHN0_SEQ1_Msk		(0xFFF << ADC_SEQCHN0_SEQ1_Pos)
+#define ADC_SEQCHN0_SEQ1_Msk		(0xFFFF << ADC_SEQCHN0_SEQ1_Pos)
 
 #define ADC_SEQCHN1_SEQ2_Pos		0
-#define ADC_SEQCHN1_SEQ2_Msk		(0xFFF << ADC_SEQCHN1_SEQ2_Pos)
+#define ADC_SEQCHN1_SEQ2_Msk		(0xFFFF << ADC_SEQCHN1_SEQ2_Pos)
 #define ADC_SEQCHN1_SEQ3_Pos		16
-#define ADC_SEQCHN1_SEQ3_Msk		(0xFFF << ADC_SEQCHN1_SEQ3_Pos)
+#define ADC_SEQCHN1_SEQ3_Msk		(0xFFFF << ADC_SEQCHN1_SEQ3_Pos)
 
-#define ADC_SEQTRG_SEQ0_Pos			0		// Sequencer 0 trigger select, 0x01 CPU, 0x02 TIMR2, 0x03 TIMR3, 0x04-07 ADC_TRIG0-3 pin, 0x10-1F PWM0A-PWM7B
+#define ADC_SEQTRG_SEQ0_Pos			0		// Sequencer 0 trigger select, 0x01 CPU, 0x02 TIMR0, 0x03 TIMR1, 0x04 ADC_TRIG0 pin, 0x05 ADC_TRIG1 pin, 0x10 PWM0, 0x11 PWM1
 #define ADC_SEQTRG_SEQ0_Msk			(0x1F << ADC_SEQTRG_SEQ0_Pos)
 #define ADC_SEQTRG_SEQ1_Pos			8
 #define ADC_SEQTRG_SEQ1_Msk			(0x1F << ADC_SEQTRG_SEQ1_Pos)
@@ -1313,7 +1307,7 @@ typedef struct {
 #define ADC_SEQCOV_SEQ3_Pos			24
 #define ADC_SEQCOV_SEQ3_Msk			(0xFF << ADC_SEQCOV_SEQ3_Pos)
 
-#define ADC_SEQSMP_SEQ0_Pos			0		// Sequencer 0 sample time, 0/1/2/3 indicates 1/2/4/8 sample clock period respectively
+#define ADC_SEQSMP_SEQ0_Pos			0		// Sequencer 0 sample time, 0 4-clock period, 1 5-clock period, ..., 7 11-clock period
 #define ADC_SEQSMP_SEQ0_Msk			(0x07 << ADC_SEQSMP_SEQ0_Pos)
 #define ADC_SEQSMP_SEQ1_Pos			4
 #define ADC_SEQSMP_SEQ1_Msk			(0x07 << ADC_SEQSMP_SEQ1_Pos)
@@ -1321,24 +1315,6 @@ typedef struct {
 #define ADC_SEQSMP_SEQ2_Msk			(0x07 << ADC_SEQSMP_SEQ2_Pos)
 #define ADC_SEQSMP_SEQ3_Pos			12
 #define ADC_SEQSMP_SEQ3_Msk			(0x07 << ADC_SEQSMP_SEQ3_Pos)
-
-#define ADC_CR2_ENLDO_Pos			2		// LDO enable
-#define ADC_CR2_ENLDO_Msk			(0x01 << ADC_CR2_ENLDO_Pos)
-#define ADC_CR2_BITS_Pos			6		// the number of bits of ADC result, 0 6-bit, 1 8-bit, 2 10-bit, 3 12-bit
-#define ADC_CR2_BITS_Msk			(0x03 << ADC_CR2_BITS_Pos)
-
-#define ADC_CALIB_RESET_Pos			0		// calibration block reset, keep at least 2 sampling cycles
-#define ADC_CALIB_RESET_Msk			(0x01 << ADC_CALIB_RESET_Pos)
-#define ADC_CALIB_START_Pos			1		// write 1 starts calibration, automatically clear when calibration done
-#define ADC_CALIB_START_Msk			(0x01 << ADC_CALIB_START_Pos)
-#define ADC_CALIB_BUSY_Pos			2		// 1 calibration in process
-#define ADC_CALIB_BUSY_Msk			(0x01 << ADC_CALIB_BUSY_Pos)
-#define ADC_CALIB_LOAD_Pos			3		// write 1 to load calibration result to ADC, automatically clear
-#define ADC_CALIB_LOAD_Msk			(0x01 << ADC_CALIB_LOAD_Pos)
-#define ADC_CALIB_BYPASS_Pos		4		// 1 calibration block bypass
-#define ADC_CALIB_BYPASS_Msk		(0x01 << ADC_CALIB_BYPASS_Pos)
-#define ADC_CALIB_RESULT_Pos		8
-#define ADC_CALIB_RESULT_Msk		(0x7F << ADC_CALIB_RESULT_Pos)
 
 
 

@@ -30,23 +30,22 @@ int main(void)
 	PORT_Init(PORTB, PIN0,  PORTB_PIN0_ADC0_CH13, 0);
 	PORT_Init(PORTE, PIN15, PORTE_PIN15_ADC0_CH14,0);
 	
-	ADC_initStruct.clk_src = ADC_CLKSRC_HRC_DIV8;
+	ADC_initStruct.clkdiv = 10;
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
 	ADC_initStruct.EOC_IEn = ADC_SEQ0;	
 	ADC_initStruct.HalfIEn = 0;
 	ADC_Init(ADC0, &ADC_initStruct);
 	
 	ADC_SEQ_initStruct.channels = ADC_CH5;
-	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_BTIMER2;
+	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_TIMER0;
 	ADC_SEQ_initStruct.conv_cnt = 1;
 	ADC_SEQ_initStruct.samp_tim = ADC_SAMPLE_1CLOCK;
 	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
 	
 	ADC_Open(ADC0);
-	ADC_Calibrate(ADC0);
 	
-	TIMR_Init(BTIMR2, TIMR_MODE_TIMER, CyclesPerUs, 10000, 0);	// Whenever TIMR2 overflows, ADC starts a conversion
-	TIMR_Start(BTIMR2);
+	TIMR_Init(TIMR0, TIMR_MODE_TIMER, CyclesPerUs, 10000, 0);	// Whenever TIMR0 overflows, ADC starts a conversion
+	TIMR_Start(TIMR0);
 	
 	while(1==1)
 	{

@@ -29,7 +29,7 @@ int main(void)
 	PORT_Init(PORTB, PIN0,  PORTB_PIN0_ADC0_CH13, 0);
 	PORT_Init(PORTE, PIN15, PORTE_PIN15_ADC0_CH14,0);
 	
-	ADC_initStruct.clk_src = ADC_CLKSRC_HRC_DIV8;
+	ADC_initStruct.clkdiv = 10;
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
 	ADC_initStruct.EOC_IEn = ADC_SEQ0;	
 	ADC_initStruct.HalfIEn = 0;
@@ -42,7 +42,6 @@ int main(void)
 	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
 	
 	ADC_Open(ADC0);
-	ADC_Calibrate(ADC0);
 	
 	PORT_Init(PORTA, PIN8, FUNMUX0_ADC0_TRIG0, 1);	// Whenever a rising edge appears on this pin, ADC starts a conversion
 	

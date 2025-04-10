@@ -30,9 +30,6 @@ void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct)
 	switch((uint32_t)ADCx)
 	{
 	case ((uint32_t)ADC0):
-		SYS->CLKSEL &= ~(SYS_CLKSEL_ADC0_Msk | SYS_CLKSEL_ADC0DIV_Msk);
-		SYS->CLKSEL |= (initStruct->clk_src << SYS_CLKSEL_ADC0_Pos);
-		
 		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_ADC0_Pos);
 		break;
 	}
@@ -46,8 +43,9 @@ void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct)
 	ADCx->CR |= (0xF << ADC_CR_FFCLR_Pos);
 	ADCx->CR &= ~(0xF << ADC_CR_FFCLR_Pos);
 	
-	ADCx->CR &= ~ADC_CR_AVG_Msk;
-	ADCx->CR |= (initStruct->samplAvg << ADC_CR_AVG_Pos);
+	ADCx->CR &= ~(ADC_CR_AVG_Msk | ADC_CR_CKDIV_Msk);
+	ADCx->CR |= (initStruct->samplAvg     << ADC_CR_AVG_Pos) |
+				((initStruct->clkdiv - 2) << ADC_CR_CKDIV_Pos);
 	
 	ADCx->IE = 0;
 	ADCx->IF = 0x3F3F3F3F;	// clear interrupt flag
@@ -159,32 +157,9 @@ void ADC_CMP_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_CMP_InitStructure * init
 *******************************************************************************************************************************/
 void ADC_Open(ADC_TypeDef * ADCx)
 {
-	uint32_t i;
+	ADCx->CR &= ~(0x01 << ADC_CR_PWD_Pos);
 	
-	ADCx->CR2 |= (1 << ADC_CR2_ENLDO_Pos);
-	for(i = 0; i < 64*20; i++) __NOP();
-	
-	ADCx->CR |= (0x01 << ADC_CR_EN_Pos);
-}
-
-/*******************************************************************************************************************************
-* @brief	ADC calibrate
-* @param	ADCx is the ADC to calibrate
-* @return
-*******************************************************************************************************************************/
-void ADC_Calibrate(ADC_TypeDef * ADCx)
-{
-	uint32_t i;	
-	
-	ADCx->CALIB |= (1 << ADC_CALIB_RESET_Pos);
-	for(i = 0; i < 120 * 20; i++) __NOP();			// at least 2 sampling clock cycles
-	
-	ADCx->CALIB |= (1 << ADC_CALIB_START_Pos);
-	for(i = 0; i < 120 * 10; i++) __NOP();
-	ADCx->CALIB &=~(1 << ADC_CALIB_START_Pos);
-	while(ADCx->CALIB & ADC_CALIB_BUSY_Msk) __NOP();
-	
-	ADCx->CALIB |= (1 << ADC_CALIB_LOAD_Pos);
+	for(int i = 0; i < 32 * CyclesPerUs; i++) __NOP();	// at least 32 clock cycles
 }
 
 /*******************************************************************************************************************************
@@ -194,7 +169,7 @@ void ADC_Calibrate(ADC_TypeDef * ADCx)
 *******************************************************************************************************************************/
 void ADC_Close(ADC_TypeDef * ADCx)
 {
-	ADCx->CR &= ~(0x01 << ADC_CR_EN_Pos);
+	ADCx->CR |= (0x01 << ADC_CR_PWD_Pos);
 }
 
 /*******************************************************************************************************************************
@@ -215,7 +190,7 @@ void ADC_Start(ADC_TypeDef * ADCx, uint32_t seq)
 * @return
 *******************************************************************************************************************************/
 void ADC_Stop(ADC_TypeDef * ADCx, uint32_t seq)
-{									 
+{
 	ADCx->GO &= ~(seq << ADC_GO_SEQ0_Pos);
 }
 
