@@ -130,7 +130,7 @@ void PSRAM_SPIFlash_Copy(void)
 	
 	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectRead);
 	
-	QSPI_Read_(QSPI0, QSPI_DATA_BASE, (uint8_t *)PSRAM_Buf, sizeof(FlashData), QSPI_PhaseMode_1bit, QSPI_PhaseMode_1bit, 0);
+	QSPI_Read_(QSPI0, QSPI_DATA_BASE, (uint8_t *)PSRAM_Buf, sizeof(FlashData), 1, 4, 0);
 	
 	RDMA_memcpy(PSRAM_Buf, (void *)&QSPI0->DRW, RDMA_UNIT_WORD, sizeof(FlashData)/4);
 	while(RDMA_Remaining()) __NOP();
