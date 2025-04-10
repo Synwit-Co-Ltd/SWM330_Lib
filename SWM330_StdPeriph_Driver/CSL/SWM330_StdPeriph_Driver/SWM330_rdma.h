@@ -3,9 +3,9 @@
 
 
 typedef struct {
-	uint8_t  BurstSize;		// RDMA_BURST_INC16, RDMA_BURST_INC8, RDMA_BURST_INC4, RDMA_BURST_INC1
-	uint8_t  BlockSize;		// RDMA_BLOCK_16, RDMA_BLOCK_32, RDMA_BLOCK_64, RDMA_BLOCK_128
-	uint16_t Interval;		// data block transfer interval in unit of HCLK period, can be 1--65536
+	uint8_t  BurstSize;		// RDMA_BURST_INC16, RDMA_BURST_INC8, RDMA_BURST_INC4, RDMA_BURST_SINGLE
+	uint8_t  BlockSize;		// RDMA_BLOCK_16, RDMA_BLOCK_32, RDMA_BLOCK_64, RDMA_BLOCK_128, in unit of number of HREADY
+	uint16_t Interval;		// data block transfer interval in unit of HCLK period, can be 1--65535
 	
 	uint32_t INTEn;			// interrupt enable, can be RDMA_IT_DONE, RDMA_IT_HALF, RDMA_IT_ERROR and their '|' operation
 } RDMA_InitStructure;
@@ -14,7 +14,7 @@ typedef struct {
 #define RDMA_BURST_INC16	0
 #define RDMA_BURST_INC8		1
 #define RDMA_BURST_INC4		2
-#define RDMA_BURST_INC1		3
+#define RDMA_BURST_SINGLE	3
 
 #define RDMA_BLOCK_16		0
 #define RDMA_BLOCK_32		1

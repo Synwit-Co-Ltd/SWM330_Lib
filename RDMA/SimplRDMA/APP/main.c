@@ -19,7 +19,7 @@ int main(void)
 	SerialInit();
 	
 	RDMA_InitStructure RDMA_initStruct;
-	RDMA_initStruct.BurstSize = RDMA_BURST_INC16;
+	RDMA_initStruct.BurstSize = RDMA_BURST_INC8;	// PSRAM Burst len is 32-byte, so word INC8
 	RDMA_initStruct.BlockSize = RDMA_BLOCK_64;
 	RDMA_initStruct.Interval  = CyclesPerUs;
 	RDMA_initStruct.INTEn = 0;
