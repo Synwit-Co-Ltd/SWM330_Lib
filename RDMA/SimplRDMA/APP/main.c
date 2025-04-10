@@ -90,27 +90,6 @@ void PSRAM_RAM_Copy(void)
 }
 
 
-void PSRAM_Flash_Copy(void)
-{
-	RDMA_memcpy(PSRAM_Buf, FlashData, RDMA_UNIT_WORD, sizeof(FlashData)/4);
-	while(RDMA_Remaining()) __NOP();
-	
-#define PSRAM_HPtr	((uint16_t *)PSRAM_Buf)
-	
-	for(int i = 0; i < sizeof(FlashData)/2; i++)
-	{
-		if(PSRAM_HPtr[i] != FlashData[i])
-		{
-			printf("PSRAM_Flash_Copy fail: expected=0x%04X, PSRAM=0x%04X\n", FlashData[i], PSRAM_HPtr[i]);
-			
-			return;
-		}
-	}
-	
-	printf("PSRAM_Flash_Copy pass!\n");
-}
-
-
 void PSRAM_SPIFlash_Copy(void)
 {
 	PORT_Init(PORTB, PIN5, PORTB_PIN5_QSPI0_CK, 0);
@@ -135,6 +114,7 @@ void PSRAM_SPIFlash_Copy(void)
 	QSPI_QuadSwitch(QSPI0, 1);
 	
 #define QSPI_DATA_BASE	0x000000
+#define PSRAM_HPtr	((uint16_t *)PSRAM_Buf)
 	
 	for(int addr = 0; addr < sizeof(FlashData); addr += 1024*64)
 	{
