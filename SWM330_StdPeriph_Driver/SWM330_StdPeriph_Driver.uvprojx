@@ -523,6 +523,11 @@
               <FileType>1</FileType>
               <FilePath>.\CSL\SWM330_StdPeriph_Driver\SWM330_dvp.c</FilePath>
             </File>
+            <File>
+              <FileName>SWM330_rdma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CSL\SWM330_StdPeriph_Driver\SWM330_rdma.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

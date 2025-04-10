@@ -32,9 +32,6 @@ void DAC_Init(DAC_TypeDef * DACx, uint32_t format)
 		break;
 	}
 	
-	SYS->DACCR &= ~SYS_DACCR_VRADJ_Msk;
-	SYS->DACCR |= ((SYS->BACKUP[2] & 0x1F) << SYS_DACCR_VRADJ_Pos);
-	
 	DACx->CR = (format << DAC_CR_DHRFMT_Pos);
 }
 
