@@ -25,10 +25,11 @@
 void DMA2D_Init(DMA2D_InitStructure * initStruct)
 {
 	SYS->CLKEN0 |= (1 << SYS_CLKEN0_DMA2D_Pos);
+	__NOP(); __NOP(); __NOP(); __NOP(); __NOP();
 	
-	DMA2D->CR = (2					  << DMA2D_CR_BURST_Pos) |		// Incr4
-				(0					  << DMA2D_CR_BLKSZ_Pos) |		// 16 word
-				(initStruct->Interval << DMA2D_CR_WAIT_Pos);
+	DMA2D->CR = (initStruct->BurstSize << DMA2D_CR_BURST_Pos) |
+				(initStruct->BlockSize << DMA2D_CR_BLKSZ_Pos) |
+				(initStruct->Interval  << DMA2D_CR_WAIT_Pos);
 	
 	DMA2D_INTClr(initStruct->IntEn);
 	DMA2D_INTEn(initStruct->IntEn);

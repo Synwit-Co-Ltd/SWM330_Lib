@@ -38,6 +38,8 @@ int main(void)
 	
 	LCD_Start(LCD);
 	
+	DMA2D_initStruct.BurstSize = DMA2D_BURST_INC8;	// PSRAM Burst len is 32-byte, so word INC8
+	DMA2D_initStruct.BlockSize = DMA2D_BLOCK_32;
 	DMA2D_initStruct.Interval = CyclesPerUs;
 	DMA2D_initStruct.IntEn = DMA2D_IT_DONE;
 	DMA2D_Init(&DMA2D_initStruct);

@@ -5,9 +5,22 @@
 
 
 typedef struct {
-	uint16_t Interval;			// data block transfer interval in unit of HCLK period, can be 1--65536
+	uint8_t  BurstSize;			// RDMA_BURST_INC16, RDMA_BURST_INC8, RDMA_BURST_INC4, RDMA_BURST_SINGLE
+	uint8_t  BlockSize;			// RDMA_BLOCK_16, RDMA_BLOCK_32, RDMA_BLOCK_64, RDMA_BLOCK_128, in unit of number of HREADY
+	uint16_t Interval;			// data block transfer interval in unit of HCLK period, can be 1--65535
+	
 	uint8_t  IntEn;				// Interrupt Enable, can be DMA2D_IT_DONE, DMA2D_IT_HALF, DMA2D_IT_ERROR and their '|' operation
 } DMA2D_InitStructure;
+
+#define DMA2D_BURST_INC16	0
+#define DMA2D_BURST_INC8	1
+#define DMA2D_BURST_INC4	2
+#define DMA2D_BURST_SINGLE	3
+
+#define DMA2D_BLOCK_16		0
+#define DMA2D_BLOCK_32		1
+#define DMA2D_BLOCK_64		2
+#define DMA2D_BLOCK_128		3
 
 
 typedef struct {
