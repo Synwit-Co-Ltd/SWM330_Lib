@@ -177,15 +177,11 @@ typedef struct {
 #define SYS_CLKSEL_CLK_DIVx_Msk		(0x01 << SYS_CLKSEL_CLK_DIVx_Pos)
 #define SYS_CLKSEL_CLK_Pos			2		// Clock Source, 0 LRC, 1 PLL, 2 XTAL_32K, 3 XTAL, 4 HRC
 #define SYS_CLKSEL_CLK_Msk			(0x07 << SYS_CLKSEL_CLK_Pos)
-#define SYS_CLKSEL_SDIO_Pos			10		// SDIO clock select, 0 SYSCLK/2, 1 SYSCLK/8, 2 SYSCLK/4, 3 SYSCLK
+#define SYS_CLKSEL_SDIO_Pos			7		// SDIO clock select, 0 SYSCLK/2, 1 SYSCLK/8, 2 SYSCLK/4, 3 SYSCLK
 #define SYS_CLKSEL_SDIO_Msk			(0x03 << SYS_CLKSEL_SDIO_Pos)
-#define SYS_CLKSEL_WDT_Pos			12		// WDT clock select, 0 HRC, 1 XTAL, 2 LRC, 3 XTAL_32K
+#define SYS_CLKSEL_WDT_Pos			9		// WDT clock select, 0 HRC, 1 XTAL, 2 LRC, 3 XTAL_32K
 #define SYS_CLKSEL_WDT_Msk			(0x03 << SYS_CLKSEL_WDT_Pos)
-#define SYS_CLKSEL_ADC0_Pos			16		// ADC0 clock select, 0 HRC, 1 XTAL, 2 PLL
-#define SYS_CLKSEL_ADC0_Msk			(0x03 << SYS_CLKSEL_ADC0_Pos)
-#define SYS_CLKSEL_ADC0DIV_Pos		18		// ADC0 clock divider, 0 div1, 1 div2, 2 div4, 3 div8
-#define SYS_CLKSEL_ADC0DIV_Msk		(0x03 << SYS_CLKSEL_ADC0DIV_Pos)
-#define SYS_CLKSEL_SLEEP_Pos		24		// sleep clock, 0 LRC, 1 XTAL_32K
+#define SYS_CLKSEL_SLEEP_Pos		11		// sleep clock, 0 LRC, 1 XTAL_32K
 #define SYS_CLKSEL_SLEEP_Msk		(0x01 << SYS_CLKSEL_SLEEP_Pos)
 
 #define SYS_CLKDIV_ON_Pos           0
@@ -275,8 +271,6 @@ typedef struct {
 #define SYS_RTCWKCR_EN_Msk			(0x01 << SYS_RTCWKCR_EN_Pos)
 #define SYS_RTCWKCR_WREN_Pos		1		// RTC register write enable
 #define SYS_RTCWKCR_WREN_Msk		(0x01 << SYS_RTCWKCR_WREN_Pos)
-#define SYS_RTCWKCR_IOFUNC_Pos		2		// RTC IO pad function, 0 PA7 used as RTC IO, 1 PA7 used as GPIO
-#define SYS_RTCWKCR_IOFUNC_Msk		(0x01 << SYS_RTCWKCR_IOFUNC_Pos)
 
 #define SYS_RTCWKSR_FLAG_Pos		0		// RTC wakeup flag, write 1 to clear
 #define SYS_RTCWKSR_FLAG_Msk		(0x01 << SYS_RTCWKSR_FLAG_Pos)
