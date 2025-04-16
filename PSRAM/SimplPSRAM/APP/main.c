@@ -39,10 +39,6 @@ int main(void)
 	PORT_Init(PORTE, PIN6,  PORTE_PIN6_PSRAM_D6,  1);
 	PORT_Init(PORTE, PIN7,  PORTE_PIN7_PSRAM_D7,  1);
 	
-#ifdef PSRAM_XCCELA
-	PORTE->PULLD |= (1 << PIN8);
-#endif
-	
 #ifndef PSRAM_XCCELA
 	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
 	PSRAM_initStruct.tRWR = 50;
@@ -200,7 +196,7 @@ void ByteTest(uint32_t addr, uint8_t  *buff, uint32_t size)
 
 void SleepTest(void)
 {
-	printf("\n\nSleep Test:\n");
+	printf("\n\nSleep Test:\n\n");
 	
 	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
 	
@@ -216,8 +212,9 @@ void SleepTest(void)
 	
 	printf("Is in Sleep: %s\n", PSRAM_IsSleep() ? "Yes" : "No");
 	
-	printf("After Sleep: \n");
+	printf("\nAfter Sleep: \n");
 	for(int i = 0; i < sizeof(WordBuffer)/4; i++)  printf("0x%08X, ",  ((volatile uint32_t *)PSRAMM_BASE)[i]);
+	printf("\n\n");
 	
 	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
 }
@@ -225,7 +222,7 @@ void SleepTest(void)
 
 void PowerDownTest(void)
 {
-	printf("\n\nPowerDown Test:\n");
+	printf("\n\nPowerDown Test:\n\n");
 	
 	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
 	
@@ -241,8 +238,9 @@ void PowerDownTest(void)
 	
 	printf("Is in PowerDown: %s\n", PSRAM_IsPowerDown() ? "Yes" : "No");
 	
-	printf("After PowerDown: \n");
+	printf("\nAfter PowerDown: \n");
 	for(int i = 0; i < sizeof(WordBuffer)/4; i++)  printf("0x%08X, ",  ((volatile uint32_t *)PSRAMM_BASE)[i]);
+	printf("\n\n");
 	
 	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
 }

@@ -2537,6 +2537,8 @@ typedef struct {
 #define PSRAMC_CSR_CKEDGE_Msk		(0x01 << PSRAMC_CSR_CKEDGE_Pos)
 #define PSRAMC_CSR_RDBUSY_Pos		25		// read busy
 #define PSRAMC_CSR_RDBUSY_Msk		(0x01 << PSRAMC_CSR_RDBUSY_Pos)
+#define PSRAMC_CSR_DQSDLY_Pos		26		// After Cmd/Addr sent, how many cycles waiting before detect DQS signal
+#define PSRAMC_CSR_DQSDLY_Msk		(0x07 << PSRAMC_CSR_DQSDLY_Pos)
 
 #define PSRAMC_TR_CPH_Pos			8		// tCPH, CE# HIGH between subsequent burst operations in tHCLK
 #define PSRAMC_TR_CPH_Msk			(0xFF << PSRAMC_TR_CPH_Pos)
