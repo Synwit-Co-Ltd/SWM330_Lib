@@ -37,6 +37,10 @@ int main(void)
 	PORT_Init(PORTE, PIN6,  PORTE_PIN6_PSRAM_D6,  1);
 	PORT_Init(PORTE, PIN7,  PORTE_PIN7_PSRAM_D7,  1);
 	
+#ifdef PSRAM_XCCELA
+	PORTE->PULLD |= (1 << PIN8);
+#endif
+	
 #ifndef PSRAM_XCCELA
 	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
 	PSRAM_initStruct.tRWR = 50;
