@@ -36,10 +36,14 @@ typedef struct {
 void PSRAM_Init(PSRAM_InitStructure * initStruct);
 uint32_t PSRAM_ReadIR(__I uint32_t * ir);
 
+bool PSRAM_Busy(void);
+
 void PSRAM_Sleep(void);
+void PSRAM_SleepExit(void);
 bool PSRAM_IsSleep(void);
 
 void PSRAM_PowerDown(void);
+void PSRAM_PowerDownExit(void);
 bool PSRAM_IsPowerDown(void);
 
 

@@ -135,6 +135,18 @@ uint32_t PSRAM_ReadIR(__I uint32_t * ir)
 
 
 /*******************************************************************************************************************************
+* @brief	PSRAM busy state query
+* @param
+* @return
+* @note		true: busy, false: idle
+*******************************************************************************************************************************/
+bool PSRAM_Busy(void)
+{
+	return PSRAMC->CSR & (PSRAMC_CSR_RDBUSY_Msk | PSRAMC_CSR_WRBUSY_Msk);
+}
+
+
+/*******************************************************************************************************************************
 * @brief	PSRAM sleep
 * @param
 * @return
@@ -146,6 +158,19 @@ void PSRAM_Sleep(void)
 #else
 	PSRAMC->SLPCR = 0xF0;
 #endif
+	
+	while(!PSRAM_IsSleep()) __NOP();
+}
+
+void PSRAM_SleepExit(void)
+{
+#ifndef PSRAM_XCCELA
+	PSRAMC->CR1 &= ~PSRAMC_CR1_Sleep_Msk;
+#else
+	PSRAMC->SLPCR = 0x00;
+#endif
+	
+	while(PSRAM_IsSleep()) __NOP();
 }
 
 /*******************************************************************************************************************************
@@ -166,10 +191,23 @@ bool PSRAM_IsSleep(void)
 void PSRAM_PowerDown(void)
 {
 #ifndef PSRAM_XCCELA
-	PSRAMC->CR0 |= PSRAMC_CR0_PowerDown_Msk;
+	PSRAMC->CR0 &= ~PSRAMC_CR0_PowerDown_Msk;
 #else
 	PSRAMC->SLPCR = 0xC0;
 #endif
+	
+	while(!PSRAM_IsPowerDown()) __NOP();
+}
+
+void PSRAM_PowerDownExit(void)
+{
+#ifndef PSRAM_XCCELA
+	PSRAMC->CR0 |= PSRAMC_CR0_PowerDown_Msk;
+#else
+	PSRAMC->SLPCR = 0x00;
+#endif
+	
+	while(PSRAM_IsPowerDown()) __NOP();
 }
 
 /*******************************************************************************************************************************

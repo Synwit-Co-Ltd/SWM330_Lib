@@ -13,6 +13,8 @@ uint8_t  ByteBuffer[20] = {0x14,       0x15,       0x16,       0x17,       0x18,
 void WordTest(uint32_t addr, uint32_t *buff, uint32_t size);
 void HalfTest(uint32_t addr, uint16_t *buff, uint32_t size);
 void ByteTest(uint32_t addr, uint8_t  *buff, uint32_t size);
+void SleepTest(void);
+void PowerDownTest(void);
 void SerialInit(void);
 
 int main(void)
@@ -56,6 +58,11 @@ int main(void)
 	PSRAM_initStruct.tCEM = 8;
 	PSRAM_Init(&PSRAM_initStruct);
 #endif
+	
+	SleepTest();
+	
+	PowerDownTest();
+	
 	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
 	WordTest(PSRAMM_BASE+0x100000, WordBuffer, sizeof(WordBuffer)/4);
 	WordTest(PSRAMM_BASE+0x110001, WordBuffer, sizeof(WordBuffer)/4);
@@ -188,6 +195,56 @@ void ByteTest(uint32_t addr, uint8_t  *buff, uint32_t size)
 	for(i = 0; i < size; i++)  printf("0x%02X, ",  SDRB[i]);
 	
 	printf("\r\n\r\n\r\n");
+}
+
+
+void SleepTest(void)
+{
+	printf("\n\nSleep Test:\n");
+	
+	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
+	
+	while(PSRAM_Busy()) __NOP();
+	
+	PSRAM_Sleep();
+	
+	printf("Is in Sleep: %s\n", PSRAM_IsSleep() ? "Yes" : "No");
+	
+	for(int i = 0; i < SystemCoreClock; i++) __NOP();
+	
+	PSRAM_SleepExit();
+	
+	printf("Is in Sleep: %s\n", PSRAM_IsSleep() ? "Yes" : "No");
+	
+	printf("After Sleep: \n");
+	for(int i = 0; i < sizeof(WordBuffer)/4; i++)  printf("0x%08X, ",  ((volatile uint32_t *)PSRAMM_BASE)[i]);
+	
+	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
+}
+
+
+void PowerDownTest(void)
+{
+	printf("\n\nPowerDown Test:\n");
+	
+	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
+	
+	while(PSRAM_Busy()) __NOP();
+	
+	PSRAM_PowerDown();
+	
+	printf("Is in PowerDown: %s\n", PSRAM_IsPowerDown() ? "Yes" : "No");
+	
+	for(int i = 0; i < SystemCoreClock; i++) __NOP();
+	
+	PSRAM_PowerDownExit();
+	
+	printf("Is in PowerDown: %s\n", PSRAM_IsPowerDown() ? "Yes" : "No");
+	
+	printf("After PowerDown: \n");
+	for(int i = 0; i < sizeof(WordBuffer)/4; i++)  printf("0x%08X, ",  ((volatile uint32_t *)PSRAMM_BASE)[i]);
+	
+	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
 }
 
 
