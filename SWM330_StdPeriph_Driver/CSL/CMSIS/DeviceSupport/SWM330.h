@@ -2563,9 +2563,9 @@ typedef struct {
 
 #define PSRAMC_PWDNTR_EXTDPD_Pos	0		// tEXTDPD, CS# Exit Deep Power Down to Standby wakeup time in us
 #define PSRAMC_PWDNTR_EXTDPD_Msk	(0xFFFF<< PSRAMC_PWDNTR_EXTDPD_Pos)
-#define PSRAMC_PWDNTR_CSDPD_Pos		16		// tCSDPD, CS# Pulse Width to Exit Deep Power Down in tHCLK
+#define PSRAMC_PWDNTR_CSDPD_Pos		8		// tCSDPD, CS# Pulse Width to Exit Deep Power Down in tHCLK
 #define PSRAMC_PWDNTR_CSDPD_Msk		(0xFF << PSRAMC_PWDNTR_CSDPD_Pos)
-#define PSRAMC_PWDNTR_DPDIN_Pos		24		// tDPDIN, Deep Power Down CR0[15]=0 register write to DPD power level in us
+#define PSRAMC_PWDNTR_DPDIN_Pos		16		// tDPDIN, Deep Power Down CR0[15]=0 register write to DPD power level in us
 #define PSRAMC_PWDNTR_DPDIN_Msk		(0xFF << PSRAMC_PWDNTR_DPDIN_Pos)
 
 #define PSRAMC_MR0_DRVST_Pos		0		// Çý¶¯Ç¿¶È
