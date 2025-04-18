@@ -2542,7 +2542,7 @@ typedef struct {
 
 #define PSRAMC_TR_CPH_Pos			8		// tCPH, CE# HIGH between subsequent burst operations in tHCLK
 #define PSRAMC_TR_CPH_Msk			(0xFF << PSRAMC_TR_CPH_Pos)
-#define PSRAMC_TR_CEM_Pos			16		// tCEM, CE# low pulse width in us
+#define PSRAMC_TR_CEM_Pos			16		// tCEM, CE# low pulse width in tHCLK
 #define PSRAMC_TR_CEM_Msk			(0xFF << PSRAMC_TR_CEM_Pos)
 #define PSRAMC_TR_RC_Pos			24		// tRC, Write/Read Cycle in tHCLK
 #define PSRAMC_TR_RC_Msk			(0xFFu<< PSRAMC_TR_RC_Pos)
