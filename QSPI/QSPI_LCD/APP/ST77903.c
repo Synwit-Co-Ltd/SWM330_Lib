@@ -103,23 +103,16 @@ int ST77903_Init(void)
             ST77903_WriteCmd(init->cmd, init->dat, init->len);
         }
     }
-
+	
 	
 	QSPI1->CR |= QSPI_CR_DMAEN_Msk;
 	
-	DMA_InitStructure DMA_initStruct;
-	
-	DMA_initStruct.Mode = DMA_MODE_SINGLE;
-	DMA_initStruct.Unit = DMA_UNIT_HALFWORD;
-	DMA_initStruct.Count = 0;
-	DMA_initStruct.MemoryAddr = 0;
-	DMA_initStruct.MemoryAddrInc = 1;
-	DMA_initStruct.PeripheralAddr = (uint32_t)&QSPI1->DRH;
-	DMA_initStruct.PeripheralAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_CH1_QSPI1TX;
-	DMA_initStruct.Priority = DMA_PRI_LOW;
-	DMA_initStruct.INTEn = 0;
-	DMA_CH_Init(DMA_CH1, &DMA_initStruct);
+	RDMA_InitStructure RDMA_initStruct;
+	RDMA_initStruct.BurstSize = RDMA_BURST_INC8;	// PSRAM Burst len is 32-byte, so word INC8
+	RDMA_initStruct.BlockSize = RDMA_BLOCK_64;
+	RDMA_initStruct.Interval  = CyclesPerUs;
+	RDMA_initStruct.INTEn = 0;
+	RDMA_Init(&RDMA_initStruct);
 	
 	float dotsPerUs = (CyclesPerUs / QSPI_initStruct.ClkDiv / (16 / 4.0));
 	
@@ -204,9 +197,7 @@ void ST77903_SendLine(uint16_t data[])
 	
 	QSPI_Command(QSPI1, QSPI_Mode_IndirectWrite, &cmdStruct);
 	
-	DMA_CH_SetAddrAndCount(DMA_CH1, (uint32_t)data, LCD_HDOT);
-	
-	DMA_CH_Open(DMA_CH1);
+	RDMA_memcpy((void *)&QSPI1->DRW, data, RDMA_UNIT_WORD, LCD_HDOT/2);
 }
 
 
@@ -223,8 +214,6 @@ void ST77903_Start(uint16_t data[])
 void ST77903_Stop(void)
 {
 	TIMR_Stop(BTIMR3);
-	
-	DMA_CH_Close(DMA_CH1);
 	
 	QSPI1->CR |= QSPI_CR_ABORT_Msk;
 }
