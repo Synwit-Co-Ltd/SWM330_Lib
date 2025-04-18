@@ -2559,14 +2559,14 @@ typedef struct {
 #define PSRAMC_SLPTR_CSHS_Pos		16		// tCSHS, CS# Pulse Width to Exit Hybrid Sleep in tHCLK
 #define PSRAMC_SLPTR_CSHS_Msk		(0xFF << PSRAMC_SLPTR_CSHS_Pos)
 #define PSRAMC_SLPTR_HSIN_Pos		24		// tHSIN, Hybrid Sleep CR1[5]=1 register write to Hybrid Sleep power level time in us
-#define PSRAMC_SLPTR_HSIN_Msk		(0xFF << PSRAMC_SLPTR_HSIN_Pos)
+#define PSRAMC_SLPTR_HSIN_Msk		(0xFFu<< PSRAMC_SLPTR_HSIN_Pos)
 
 #define PSRAMC_PWDNTR_EXTDPD_Pos	0		// tEXTDPD, CS# Exit Deep Power Down to Standby wakeup time in us
-#define PSRAMC_PWDNTR_EXTDPD_Msk	(0xFFFF<< PSRAMC_PWDNTR_EXTDPD_Pos)
+#define PSRAMC_PWDNTR_EXTDPD_Msk	(0xFF << PSRAMC_PWDNTR_EXTDPD_Pos)
 #define PSRAMC_PWDNTR_CSDPD_Pos		8		// tCSDPD, CS# Pulse Width to Exit Deep Power Down in tHCLK
 #define PSRAMC_PWDNTR_CSDPD_Msk		(0xFF << PSRAMC_PWDNTR_CSDPD_Pos)
 #define PSRAMC_PWDNTR_DPDIN_Pos		16		// tDPDIN, Deep Power Down CR0[15]=0 register write to DPD power level in us
-#define PSRAMC_PWDNTR_DPDIN_Msk		(0xFF << PSRAMC_PWDNTR_DPDIN_Pos)
+#define PSRAMC_PWDNTR_DPDIN_Msk		(0xFFFFu<< PSRAMC_PWDNTR_DPDIN_Pos)
 
 #define PSRAMC_MR0_DRVST_Pos		0		// Çý¶¯Ç¿¶È
 #define PSRAMC_MR0_DRVST_Msk		(0x03 << PSRAMC_MR0_DRVST_Pos)
