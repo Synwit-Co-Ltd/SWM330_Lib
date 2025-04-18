@@ -83,7 +83,7 @@ void PSRAM_Init(PSRAM_InitStructure * initStruct)
 	PSRAMC->TR1US = CyclesPerUs;
 	
 	PSRAMC->TR = ((4 - 1)							   << PSRAMC_TR_CPH_Pos) |
-				 ((initStruct->tCEM - 1)			   << PSRAMC_TR_CEM_Pos) |
+				 ((initStruct->tCEM - 1) * CyclesPerUs << PSRAMC_TR_CEM_Pos) |
 				 ((initStruct->tRC / ns_per_cycle - 1) << PSRAMC_TR_RC_Pos);
 	
 	/* APS6408L		tPU 	tRP		tRH		tRPH	tHSIN	tCSHS	tEXTHS	tDPDIN	tCSDPD	tEXTDPD

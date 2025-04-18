@@ -2519,7 +2519,7 @@ typedef struct {
 
 #define PSRAMC_CSR_ROWSZ_Pos		0		// row size, 0 512-byte, 1 1kbyte, 2 2kbyte, 3 4kbyte
 #define PSRAMC_CSR_ROWSZ_Msk		(0x03 << PSRAMC_CSR_ROWSZ_Pos)
-#define PSRAMC_CSR_MODE_Pos			2		// 0 default mode, 1 extended mode, 3 standard mode
+#define PSRAMC_CSR_MODE_Pos			2		// 0 default mode, 2 extended mode, 3 standard mode. TR.CEM, SLPTR.CSHS unit is HCLK (when MODE == 0) or us (when MODE == 2/3)
 #define PSRAMC_CSR_MODE_Msk			(0x03 << PSRAMC_CSR_MODE_Pos)
 #define PSRAMC_CSR_RESET_Pos		16
 #define PSRAMC_CSR_RESET_Msk		(0x01 << PSRAMC_CSR_RESET_Pos)
