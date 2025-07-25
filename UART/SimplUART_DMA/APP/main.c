@@ -14,12 +14,8 @@ const char TX_String[8][32] = {
 };
 
 #define RX_LEN	256					// It is recommended to use an integer power of 2 to convert the remainder operation into an and operation to speed up the operation
-int  RX_Buffer[RX_LEN] = { 0 };		// When using DMA to move the data received by UART to the memory, the unit must be words.
-									// Otherwise, the data may temporarily exist in the DMA internal and cannot be read out by the program.
+char RX_Buffer[RX_LEN] = { 0 };
 char TX_Buffer[RX_LEN] = { 0 };
-
-
-volatile uint32_t RX_Start = 0;
 
 
 void SerialInit(void);
@@ -50,8 +46,8 @@ int main(void)
 	
 	DMA_InitStructure DMA_initStruct;
 	
-	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
-	DMA_initStruct.Unit = DMA_UNIT_WORD;
+	DMA_initStruct.Mode = DMA_MODE_SINGLE;
+	DMA_initStruct.Unit = DMA_UNIT_BYTE;
 	DMA_initStruct.Count = RX_LEN;
 	DMA_initStruct.MemoryAddr = (uint32_t)RX_Buffer;
 	DMA_initStruct.MemoryAddrInc = 1;
@@ -98,14 +94,14 @@ void UART1_Handler(void)
 	{
 		UART_INTClr(UART1, UART_IT_RX_TOUT);
 		
-		int str_len = (RX_LEN + RX_LEN - DMA_CH_GetRemaining(DMA_CH0) - RX_Start) % RX_LEN;
-		for(int i = 0; i < str_len; i++)
-			TX_Buffer[i] = RX_Buffer[(RX_Start + i) % RX_LEN];
-		
-		RX_Start += str_len;
+		int str_len = RX_LEN - DMA_CH_GetRemaining(DMA_CH0);
+		memcpy(TX_Buffer, RX_Buffer, str_len);
 		
 		DMA_CH_SetAddrAndCount(DMA_CH1, (uint32_t)TX_Buffer, str_len);
 		DMA_CH_Open(DMA_CH1);
+		
+		DMA_CH_Close(DMA_CH0);
+		DMA_CH_Open(DMA_CH0);	// Receive the next frame of data
 	}
 }
 
