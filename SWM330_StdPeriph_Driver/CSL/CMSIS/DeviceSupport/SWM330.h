@@ -2074,7 +2074,7 @@ typedef struct {
 #define QSPI_CR_FFTHR_Pos			8		// FIFO Threshold, in indirect read  mode, when the number of data  in FIFO >= CR.FFTHR+1, SR.FFTHR set
 											//				   in indirect write mode, when the number of space in FIFO >= CR.FFTHR+1, SR.FFTHR set
 #define QSPI_CR_FFTHR_Msk			(0x0F << QSPI_CR_FFTHR_Pos)
-#define QSPI_CR_SLAVE_Pos			15
+#define QSPI_CR_SLAVE_Pos			15		// only QSPI0 support slave mode
 #define QSPI_CR_SLAVE_Msk			(0x01 << QSPI_CR_SLAVE_Pos)
 #define QSPI_CR_ERRIE_Pos			16		// Transfer Error Interrupt Enable
 #define QSPI_CR_ERRIE_Msk			(0x01 << QSPI_CR_ERRIE_Pos)
