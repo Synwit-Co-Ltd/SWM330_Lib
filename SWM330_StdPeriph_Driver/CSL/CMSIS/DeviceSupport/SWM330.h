@@ -2447,8 +2447,8 @@ typedef struct {
 #define PSRAMC_CR0_FixLatency_Msk	(0x01 << PSRAMC_CR0_FixLatency_Pos)
 #define PSRAMC_CR0_InitLatency_Pos	4		// Initial Latency
 #define PSRAMC_CR0_InitLatency_Msk	(0x0F << PSRAMC_CR0_InitLatency_Pos)
-#define PSRAMC_CR0_MustBe1_Pos		8
-#define PSRAMC_CR0_MustBe1_Msk		(0x0F << PSRAMC_CR0_MustBe1_Pos)
+#define PSRAMC_CR0_MustAllBe1_Pos	8
+#define PSRAMC_CR0_MustAllBe1_Msk	(0x0F << PSRAMC_CR0_MustAllBe1_Pos)
 #define PSRAMC_CR0_PowerDown_Pos	15		// 1 Normal operation, 0 Writing 0 causes the device to enter Deep Power Down
 #define PSRAMC_CR0_PowerDown_Msk	(0x01 << PSRAMC_CR0_PowerDown_Pos)
 
