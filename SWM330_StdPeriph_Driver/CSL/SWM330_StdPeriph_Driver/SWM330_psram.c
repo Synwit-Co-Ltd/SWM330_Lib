@@ -24,6 +24,10 @@
 *******************************************************************************************************************************/
 void PSRAM_Init(PSRAM_InitStructure * initStruct)
 {
+	PSRAM_1V8_On(RTC_CLKSRC_LRC32K);
+	
+	for(int i = 0; i < CyclesPerUs * 1000; i++) __NOP();
+	
 	SYS->CLKEN0 |= SYS_CLKEN0_PSRAM_Msk;
 	
 	uint16_t ns_per_cycle = 1000 / CyclesPerUs;
@@ -219,4 +223,28 @@ void PSRAM_PowerDownExit(void)
 bool PSRAM_IsPowerDown(void)
 {
 	return PSRAMC->CSR & PSRAMC_CSR_ISPWDN_Msk;
+}
+
+
+/*******************************************************************************************************************************
+* @brief	PSRAM 1.8V LDO turn on
+* @param	clksrc is RTC clock source, can be RTC_CLKSRC_LRC32K or RTC_CLKSRC_XTAL32K
+* @return
+*******************************************************************************************************************************/
+void PSRAM_1V8_On(uint32_t clksrc)
+{
+	SYS->CLKEN1 |= SYS_CLKEN1_RTC_Msk;
+	
+	if(clksrc == RTC_CLKSRC_XTAL32K)
+	{
+		RTC->X32KCR |= RTC_X32KCR_ON_Msk;
+	}
+	else
+	{
+		SYS->RCCR |= SYS_RCCR_LON_Msk;
+	}
+	
+	for(int i = 0; i < CyclesPerUs * 10; i++) __NOP();
+	
+	RTC->PWRCR |= RTC_PWRCR_LDO1V8_Msk;
 }

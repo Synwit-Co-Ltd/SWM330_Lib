@@ -3708,8 +3708,10 @@ typedef struct {
 #define RTC_PWRCR_STOP_Msk          (0x01 << RTC_PWRCR_STOP_Pos)
 #define RTC_PWRCR_DEEPSLP_Pos       2
 #define RTC_PWRCR_DEEPSLP_Msk       (0x01 << RTC_PWRCR_DEEPSLP_Pos)
-#define RTC_PWRCR_CLKSRC_Pos        3
+#define RTC_PWRCR_CLKSRC_Pos        3		// 0 LRC 32KHz, 1 XTAL 32KHz
 #define RTC_PWRCR_CLKSRC_Msk        (0x01 << RTC_PWRCR_CLKSRC_Pos)
+#define RTC_PWRCR_LDO1V8_Pos		5		// 1.8V LDO enable
+#define RTC_PWRCR_LDO1V8_Msk		(0x01 << RTC_PWRCR_LDO1V8_Pos)
 #define RTC_PWRCR_BGTRIM_Pos        24
 #define RTC_PWRCR_BGTRIM_Msk        (0x1F << RTC_PWRCR_BGTRIM_Pos)
 

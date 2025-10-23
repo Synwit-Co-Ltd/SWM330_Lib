@@ -34,7 +34,7 @@
 
 #define __HSI		( 8000000UL)	// high speed internal clock
 #define __LSI		(   32000UL)	// low speed internal clock
-#define __HSE		(12000000UL)	// high speed external clock
+#define __HSE		( 8000000UL)	// high speed external clock
 #define __LSE		(   32768UL)	// low speed external clock
 
 
@@ -43,7 +43,7 @@
  * PLL output frequency = PLL input frequency / INDIV * FBDIV / OUTDIV = VCO output frequency / OUTDIV
  * note: VCO output frequency shoud be in range [80MHz, 240MHz]
  ******************************************************************************************************************************/ 
-#define SYS_PLL_SRC   	SYS_CLK_8MHz	// SYS_CLK_8MHz or SYS_CLK_XTAL
+#define SYS_PLL_SRC   	SYS_CLK_XTAL	// SYS_CLK_8MHz or SYS_CLK_XTAL
 
 #define PLL_IN_DIV		2
 

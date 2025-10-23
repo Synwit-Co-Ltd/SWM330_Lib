@@ -25,7 +25,7 @@
 
 
 typedef struct {
-	uint8_t  clksrc;		// RTC_CLKSRC_RC32K, RTC_CLKSRC_XTAL32K
+	uint8_t  clksrc;		// RTC_CLKSRC_LRC32K, RTC_CLKSRC_XTAL32K
 	uint16_t Year;
 	uint8_t  Month;			// 1--12
 	uint8_t  Date;			// 1--31

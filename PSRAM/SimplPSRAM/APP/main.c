@@ -55,10 +55,6 @@ int main(void)
 	PSRAM_Init(&PSRAM_initStruct);
 #endif
 	
-	SleepTest();
-	
-	PowerDownTest();
-	
 	WordTest(PSRAMM_BASE, WordBuffer, sizeof(WordBuffer)/4);
 	WordTest(PSRAMM_BASE+0x100000, WordBuffer, sizeof(WordBuffer)/4);
 	WordTest(PSRAMM_BASE+0x110001, WordBuffer, sizeof(WordBuffer)/4);
@@ -70,6 +66,11 @@ int main(void)
 	ByteTest(PSRAMM_BASE, ByteBuffer, sizeof(ByteBuffer)/1);
 	ByteTest(PSRAMM_BASE+0x3210, ByteBuffer, sizeof(ByteBuffer)/1);
 	ByteTest(PSRAMM_BASE+0x1235, ByteBuffer, sizeof(ByteBuffer)/1);
+	
+	
+	SleepTest();
+	
+	PowerDownTest();
 	
 
 #if 1  // PSRAM Chip Test
