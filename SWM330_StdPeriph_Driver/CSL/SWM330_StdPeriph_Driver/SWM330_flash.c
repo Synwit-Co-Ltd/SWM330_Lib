@@ -18,9 +18,10 @@
 
 
 const IAP_Cache_Reset_t IAP_Cache_Reset = (IAP_Cache_Reset_t)0x01000621;
-const IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x01000521;
 const IAP_Flash_Erase_t IAP_Flash_Erase = (IAP_Flash_Erase_t)0x01000401;
 const IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x01000481;
+const IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x01000521;
+const IAP_Flash_Param_t IAP_Flash_ParamTAC = (IAP_Flash_Param_t)0x01000561;
 
 
 /*******************************************************************************************************************************
@@ -77,7 +78,18 @@ void Flash_Param_at_xMHz(uint32_t xMHz)
 {
 	__disable_irq();
 	
+	IAP_Flash_ParamTAC(4, 0x0B11FFAC);
+	
 	IAP_Flash_Param(1000 / xMHz, 0x0B11FFAC);
+	
+	if(xMHz < 48)
+		IAP_Flash_ParamTAC(0, 0x0B11FFAC);
+	else if(xMHz < 76)
+		IAP_Flash_ParamTAC(1, 0x0B11FFAC);
+	else if(xMHz < 102)
+		IAP_Flash_ParamTAC(2, 0x0B11FFAC);
+	else if(xMHz < 128)
+		IAP_Flash_ParamTAC(3, 0x0B11FFAC);
 	
 	__enable_irq();
 }
