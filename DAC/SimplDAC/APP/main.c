@@ -23,7 +23,7 @@ int main(void)
 	
 	SerialInit();
 	
-	PORT_Init(PORTD, PIN2, PORTC_PIN4_DAC_OUT, 0);
+	PORT_Init(PORTC, PIN4, PORTC_PIN4_DAC_OUT, 0);
 	
 	DAC_Init(DAC0, DAC_FORMAT_LSB12B);
 	DAC_Open(DAC0);
