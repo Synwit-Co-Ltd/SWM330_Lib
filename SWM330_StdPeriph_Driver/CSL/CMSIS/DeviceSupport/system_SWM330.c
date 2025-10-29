@@ -188,7 +188,7 @@ static void delay_3ms(void)
 
 void switchTo8MHz(void)
 {
-	SYS->RCCR = (1 << SYS_RCCR_HON_Pos);
+	SYS->RCCR |= (1 << SYS_RCCR_HON_Pos);
 	
 	delay_3ms();
 	
@@ -238,7 +238,7 @@ void switchToPLL(uint32_t clksrc_xtal, uint32_t indiv, uint32_t fbdiv, uint32_t 
 	
 	if(clksrc_xtal == 0)
 	{
-		SYS->RCCR = (1 << SYS_RCCR_HON_Pos);
+		SYS->RCCR |= (1 << SYS_RCCR_HON_Pos);
 		
 		SYS->PLLCR &= ~(1 << SYS_PLLCR_INSEL_Pos);	//PLL_SRC <= HRC
 	}
@@ -279,7 +279,7 @@ void switchTo32KHz(void)
 {
 	switchTo8MHz();
 	
-	SYS->RCCR = (1 << SYS_RCCR_LON_Pos);
+	SYS->RCCR |= (1 << SYS_RCCR_LON_Pos);
 	
 	SYS->CLKDIVx_ON = 1;
 	
