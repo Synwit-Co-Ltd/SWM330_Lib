@@ -15,35 +15,33 @@ int main(void)
 	
 	SerialInit();
 	
-	DMA_initStruct.Mode = DMA_MODE_SINGLE;
+	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
 	DMA_initStruct.Unit = DMA_UNIT_BYTE;
 	DMA_initStruct.Count = strlen(str_hi);
 	DMA_initStruct.MemoryAddr = (uint32_t)str_hi;
 	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.PeripheralAddr = (uint32_t)&UART0->DATA;
 	DMA_initStruct.PeripheralAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_EXMRD_BTIMR0;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
+	
+#if 1
+	DMA_initStruct.Handshake = DMA_EXMRD_BTIMR0;
+	
+	TIMR_Init(BTIMR0, TIMR_MODE_TIMER, CyclesPerUs, 100000, 0);	// each time TIMR's counter overflows, DMA transfer a data to UART0->DATA register
+	TIMR_Start(BTIMR0);
+#else
+	DMA_initStruct.Handshake = DMA_EXMRD_TRIG0;
+	
+	PORT_Init(PORTA, PIN8, FUNMUX0_DMA_TRIG0, 1);	// each time a rising edge appears on PA8 pin, DMA transfer a data to UART0->DATA register
+	PORTA->PULLD |= (1 << PIN8);
+#endif
+
 	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 	DMA_CH_Open(DMA_CH0);
 	
-	TIMR_Init(BTIMR0, TIMR_MODE_TIMER, CyclesPerUs, 500000, 0);	// each time TIMR's counter overflows, DMA transfer a data to UART0->DATA register
-	TIMR_Start(BTIMR0);
-	
 	while(1==1)
 	{
-	}
-}
-
-
-void DMA_Handler(void)
-{
-	if(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE))
-	{
-		DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
-		
-		DMA->CH[0].MUX &= ~DMA_MUX_EXTHSEN_Msk;
 	}
 }
 

@@ -409,6 +409,7 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define FUNMUX0_SPI0_SCLK		126
 #define FUNMUX0_SPI0_MOSI		127
 #define FUNMUX0_ADC0_TRIG0		128
+#define FUNMUX0_DMA_TRIG0		129
 
 #define FUNMUX1_UART0_RXD		100
 #define FUNMUX1_UART1_RXD		101
@@ -438,6 +439,8 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define FUNMUX1_SPI0_SSEL		126
 #define FUNMUX1_SPI0_MISO		127
 #define FUNMUX1_ADC0_TRIG1		128
+#define FUNMUX1_DMA_TRIG1		129
+#define FUNMUX1_RTC_PULSE		130
 
 
 #endif
