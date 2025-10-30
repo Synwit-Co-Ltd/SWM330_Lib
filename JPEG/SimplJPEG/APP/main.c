@@ -83,7 +83,7 @@ void MemoryInit(void)
 	PORT_Init(PORTE, PIN5,  PORTE_PIN5_PSRAM_D5,  1);
 	PORT_Init(PORTE, PIN6,  PORTE_PIN6_PSRAM_D6,  1);
 	PORT_Init(PORTE, PIN7,  PORTE_PIN7_PSRAM_D7,  1);
-
+	
 	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
 	PSRAM_initStruct.tRWR = 50;
 	PSRAM_initStruct.tACC = 50;
@@ -94,15 +94,14 @@ void MemoryInit(void)
 
 void RGBLCDInit(void)
 {
-	uint32_t i;
 	LCD_InitStructure LCD_initStruct;
 	
-	GPIO_Init(GPIOA, PIN6, 1, 0, 0, 0);		// LCD backlight switch
-	GPIO_SetBit(GPIOA, PIN6);
-	GPIO_Init(GPIOC, PIN6, 1, 0, 0, 0);		// LCD hardware reset
-	GPIO_ClrBit(GPIOC, PIN6);
-	for(i = 0; i < 1000000; i++) __NOP();
-	GPIO_SetBit(GPIOC, PIN6);
+	GPIO_Init(GPIOC, PIN13, 1, 0, 0, 0);	// LCD backlight switch
+	GPIO_SetBit(GPIOC, PIN13);
+	GPIO_Init(GPIOD, PIN14, 1, 0, 0, 0);	// LCD hardware reset
+	GPIO_ClrBit(GPIOD, PIN14);
+	for(int i = 0; i < 1000000; i++) __NOP();
+	GPIO_SetBit(GPIOD, PIN14);
 	
 	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_VS,  0);
 	PORT_Init(PORTB, PIN6,  PORTB_PIN6_LCD_HS,  0);

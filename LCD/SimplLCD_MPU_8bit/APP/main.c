@@ -60,15 +60,14 @@ void LCD_Handler(void)
 
 void MPULCDInit(void)
 {
-	uint32_t i;
 	MPULCD_InitStructure MPULCD_initStruct;
 	
-	GPIO_Init(GPIOA, PIN6, 1, 0, 0, 0);		// LCD backlight switch
-	GPIO_SetBit(GPIOA, PIN6);
-	GPIO_Init(GPIOC, PIN6, 1, 0, 0, 0);		// LCD hardware reset
-	GPIO_ClrBit(GPIOC, PIN6);
-	for(i = 0; i < 1000000; i++) __NOP();
-	GPIO_SetBit(GPIOC, PIN6);
+	GPIO_Init(GPIOC, PIN13, 1, 0, 0, 0);	// LCD backlight switch
+	GPIO_SetBit(GPIOC, PIN13);
+	GPIO_Init(GPIOD, PIN14, 1, 0, 0, 0);	// LCD hardware reset
+	GPIO_ClrBit(GPIOD, PIN14);
+	for(int i = 0; i < 1000000; i++) __NOP();
+	GPIO_SetBit(GPIOD, PIN14);
 	
 	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_CS,  0);
 	PORT_Init(PORTB, PIN6,  PORTB_PIN6_LCD_WR,  0);

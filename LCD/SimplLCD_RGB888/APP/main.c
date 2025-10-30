@@ -36,7 +36,7 @@ int main(void)
 	SystemInit();
 	
 	SerialInit();
-		
+	
 	MemoryInit();
 	
 	RGBLCDInit();
@@ -49,7 +49,7 @@ int main(void)
 	UG_Init(&gui,(void(*)(UG_S16,UG_S16,UG_COLOR))_HW_DrawPoint, LCD_VDOT, LCD_HDOT);
 #endif
 	
-	UG_FillScreen(C_WHITE);
+	UG_FillScreen(C_RED);
 	
 	UG_DrawLine(40, 50, 240, 50, C_GREEN);
 	
@@ -58,7 +58,7 @@ int main(void)
 	UG_DrawCircle(200, 210, 50, C_GREEN);
 	UG_DrawCircle(200, 210, 51, C_GREEN);
 	UG_DrawCircle(200, 210, 52, C_GREEN);
-
+	
 	while(1==1)
 	{		
 		for(i = 0; i < 3; i++)
@@ -73,15 +73,14 @@ int main(void)
 
 void RGBLCDInit(void)
 {
-	uint32_t i;
 	LCD_InitStructure LCD_initStruct;
 	
-	GPIO_Init(GPIOA, PIN6, 1, 0, 0, 0);		// LCD backlight switch
-	GPIO_SetBit(GPIOA, PIN6);
-	GPIO_Init(GPIOC, PIN6, 1, 0, 0, 0);		// LCD hardware reset
-	GPIO_ClrBit(GPIOC, PIN6);
-	for(i = 0; i < 1000000; i++) __NOP();
-	GPIO_SetBit(GPIOC, PIN6);
+	GPIO_Init(GPIOC, PIN13, 1, 0, 0, 0);	// LCD backlight switch
+	GPIO_SetBit(GPIOC, PIN13);
+	GPIO_Init(GPIOD, PIN14, 1, 0, 0, 0);	// LCD hardware reset
+	GPIO_ClrBit(GPIOD, PIN14);
+	for(int i = 0; i < 1000000; i++) __NOP();
+	GPIO_SetBit(GPIOD, PIN14);
 	
 	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_VS,  0);
 	PORT_Init(PORTB, PIN6,  PORTB_PIN6_LCD_HS,  0);
@@ -112,7 +111,7 @@ void RGBLCDInit(void)
 	PORT_Init(PORTD, PIN6,  PORTD_PIN6_LCD_R6,  0);
 	PORT_Init(PORTD, PIN7,  PORTD_PIN7_LCD_R7,  0);
 	
-	LCD_initStruct.ClkDiv = 8;
+	LCD_initStruct.ClkDiv = 10;
 	LCD_initStruct.Format = LCD_FMT_RGB888;
 	LCD_initStruct.HnPixel = LCD_HDOT;
 	LCD_initStruct.VnPixel = LCD_VDOT;

@@ -47,7 +47,7 @@
 
 #define PLL_IN_DIV		2
 
-#define PLL_FB_DIV		30
+#define PLL_FB_DIV		50
 
 #define PLL_OUT_DIV		2
 

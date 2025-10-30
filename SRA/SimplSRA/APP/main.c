@@ -143,12 +143,12 @@ void RGBLCDInit(void)
 {
 	LCD_InitStructure LCD_initStruct;
 	
-	GPIO_Init(GPIOD, PIN2, 1, 0, 0, 0);    	//ÆÁÄ»±³¹â
-    GPIO_SetBit(GPIOD, PIN2);
-    GPIO_Init(GPIOD, PIN11, 1, 0, 0, 0);    //ÆÁÄ»¸´Î»
-    GPIO_ClrBit(GPIOD, PIN11);
-    for(int i = 0; i < 1000000; i++) __NOP();
-    GPIO_SetBit(GPIOD, PIN11);
+	GPIO_Init(GPIOC, PIN13, 1, 0, 0, 0);	// LCD backlight switch
+	GPIO_SetBit(GPIOC, PIN13);
+	GPIO_Init(GPIOD, PIN14, 1, 0, 0, 0);	// LCD hardware reset
+	GPIO_ClrBit(GPIOD, PIN14);
+	for(int i = 0; i < 1000000; i++) __NOP();
+	GPIO_SetBit(GPIOD, PIN14);
 	
 	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_VS,  0);
 	PORT_Init(PORTB, PIN6,  PORTB_PIN6_LCD_HS,  0);
