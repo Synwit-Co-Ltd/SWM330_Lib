@@ -24,10 +24,6 @@
 *******************************************************************************************************************************/
 void PSRAM_Init(PSRAM_InitStructure * initStruct)
 {
-	PSRAM_1V8_On(RTC_CLKSRC_LRC32K);
-	
-	for(int i = 0; i < CyclesPerUs * 1000; i++) __NOP();
-	
 	SYS->CLKEN0 |= SYS_CLKEN0_PSRAM_Msk;
 	
 	uint16_t ns_per_cycle = 1000 / CyclesPerUs;
