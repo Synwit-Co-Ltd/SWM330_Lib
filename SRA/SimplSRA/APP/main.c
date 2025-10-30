@@ -127,10 +127,6 @@ void test_SRA(uint16_t img_width, uint16_t img_height, uint16_t scl_width, uint1
 	SRA->CFG |= SRA_CFG_BLENDBG_Msk;
 #endif
 	
-	for(int i = 0; i < 18; i++)
-		printf("%08X, ", ((uint32_t *)SRA_BASE)[i]);
-	printf("\n\n");
-	
 	SRA_Start();
 	
 	while(SRA_Busy() != 0) __NOP();

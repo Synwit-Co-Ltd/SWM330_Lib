@@ -297,7 +297,7 @@ void switchToXTAL_32K(void)
 {
 	switchTo8MHz();
 	
-	SYS->CLKEN0 |= SYS_CLKEN1_RTC_Msk;
+	SYS->CLKEN1 |= SYS_CLKEN1_RTC_Msk;
 	RTC_unlock(RTC);
 	RTC->X32KCR |= RTC_X32KCR_ON_Msk;
 	RTC_lock(RTC);
