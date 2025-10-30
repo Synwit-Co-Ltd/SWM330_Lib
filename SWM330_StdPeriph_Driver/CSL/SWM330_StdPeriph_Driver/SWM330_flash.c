@@ -17,11 +17,11 @@
 #include "SWM330_flash.h"
 
 
-const IAP_Cache_Reset_t IAP_Cache_Reset = (IAP_Cache_Reset_t)0x01000621;
 const IAP_Flash_Erase_t IAP_Flash_Erase = (IAP_Flash_Erase_t)0x01000401;
 const IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x01000481;
 const IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x01000521;
 const IAP_Flash_Param_t IAP_Flash_ParamTAC = (IAP_Flash_Param_t)0x01000561;
+const IAP_Cache_Config_t IAP_Cache_Config = (IAP_Cache_Config_t)0x01000621;
 
 
 /*******************************************************************************************************************************
@@ -37,7 +37,7 @@ uint32_t FLASH_Erase(uint32_t addr)
 	
 	IAP_Flash_Erase(addr/1024, 0x0B11FFAC);
 	
-	IAP_Cache_Reset((FMC->CACHE | FMC_CACHE_CCLR_Msk), 0x0B11FFAC);	// Cache Clear
+	FLASH_CacheClear();
 	
 	__enable_irq();
 	
@@ -61,7 +61,7 @@ uint32_t FLASH_Write(uint32_t addr, uint32_t buff[], uint32_t count)
 	
 	IAP_Flash_Write(addr, (uint32_t)buff, count/4, 0x0B11FFAC);
 	
-	IAP_Cache_Reset((FMC->CACHE | FMC_CACHE_CCLR_Msk), 0x0B11FFAC);	// Cache Clear
+	FLASH_CacheClear();
 	
 	__enable_irq();
 	
