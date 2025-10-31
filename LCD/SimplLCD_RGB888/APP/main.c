@@ -75,12 +75,10 @@ void RGBLCDInit(void)
 {
 	LCD_InitStructure LCD_initStruct;
 	
-	GPIO_Init(GPIOC, PIN13, 1, 0, 0, 0);	// LCD backlight switch
-	GPIO_SetBit(GPIOC, PIN13);
-	GPIO_Init(GPIOD, PIN14, 1, 0, 0, 0);	// LCD hardware reset
-	GPIO_ClrBit(GPIOD, PIN14);
-	for(int i = 0; i < 1000000; i++) __NOP();
-	GPIO_SetBit(GPIOD, PIN14);
+	GPIO_Init(GPIOE, PIN15, 1, 0, 0, 0);	// LCD hardware reset
+	GPIO_ClrBit(GPIOE, PIN15);
+	for(int i = 0; i < CyclesPerUs*1000; i++) __NOP();
+	GPIO_SetBit(GPIOE, PIN15);
 	
 	PORT_Init(PORTB, PIN7,  PORTB_PIN7_LCD_VS,  0);
 	PORT_Init(PORTB, PIN6,  PORTB_PIN6_LCD_HS,  0);
@@ -153,11 +151,18 @@ void MemoryInit(void)
 	PORT_Init(PORTE, PIN6,  PORTE_PIN6_PSRAM_D6,  1);
 	PORT_Init(PORTE, PIN7,  PORTE_PIN7_PSRAM_D7,  1);
 	
+#ifndef PSRAM_XCCELA
 	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
 	PSRAM_initStruct.tRWR = 50;
 	PSRAM_initStruct.tACC = 50;
 	PSRAM_initStruct.tCSM = 4;
 	PSRAM_Init(&PSRAM_initStruct);
+#else
+	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
+	PSRAM_initStruct.tRC = 60;
+	PSRAM_initStruct.tCEM = 8;
+	PSRAM_Init(&PSRAM_initStruct);
+#endif
 }
 
 

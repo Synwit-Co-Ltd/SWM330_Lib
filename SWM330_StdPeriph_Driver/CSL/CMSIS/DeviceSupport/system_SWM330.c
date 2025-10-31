@@ -116,6 +116,7 @@ void SystemCoreClockUpdate(void)
 		CyclesPerUs = 1;
 }
 
+
 /*******************************************************************************************************************************
 * @brief	The necessary initializaiton of systerm
 * @param
@@ -126,7 +127,7 @@ void SystemInit(void)
 {
 	SYS->CLKEN1 |= (1 << SYS_CLKEN1_ANAC_Pos);
 	
-	PSRAM_1V8_On(RTC_CLKSRC_LRC32K);	// Power for PSRAM and PE0-11, PE14, PA5 pin
+	LDO_1V8_On(RTC_CLKSRC_LRC32K);	// Power for PSRAM and PE0-11, PE14, PA5 pin
 	
 	Flash_Param_at_xMHz(150);
 	
@@ -314,4 +315,28 @@ void switchToXTAL_32K(void)
 	delay_3ms();
 
 	SYS->CLKSEL &=~(1 << SYS_CLKSEL_SYS_Pos);		//SYS <= XTAL_32K
+}
+
+
+/*******************************************************************************************************************************
+* @brief	1.8V LDO (Power for PSRAM and PE0-11, PE14, PA5 pin) turn on
+* @param	clksrc is RTC clock source, can be RTC_CLKSRC_LRC32K or RTC_CLKSRC_XTAL32K
+* @return
+*******************************************************************************************************************************/
+void LDO_1V8_On(uint32_t clksrc)
+{
+	SYS->CLKEN1 |= SYS_CLKEN1_RTC_Msk;
+	
+	if(clksrc == RTC_CLKSRC_XTAL32K)
+	{
+		RTC->X32KCR |= RTC_X32KCR_ON_Msk;
+	}
+	else
+	{
+		SYS->RCCR |= SYS_RCCR_LON_Msk;
+	}
+	
+	for(int i = 0; i < CyclesPerUs * 10; i++) __NOP();
+	
+	RTC->PWRCR |= RTC_PWRCR_LDO1V8_Msk;
 }

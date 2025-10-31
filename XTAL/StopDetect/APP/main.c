@@ -29,10 +29,10 @@ int main(void)
 
 void XTALSTOP_Handler(void)
 {
-	/*	If switchTo20MHz() is not executed, the system clock will automatically switch back to the external crystal when the crystal oscillator recovers.
+	/*	If switchTo8MHz() is not executed, the system clock will automatically switch back to the external crystal when the crystal oscillator recovers.
 	 *	If the external crystal oscillator is unstable, the system clock will switch back and forth between the internal clock and the external clock.
 	 */
-	switchTo20MHz();
+	switchTo8MHz();
 	SystemCoreClockUpdate();
 	
 	SYS->XTALCR = 0;							// External crystal oscillator is not working properly, shut down

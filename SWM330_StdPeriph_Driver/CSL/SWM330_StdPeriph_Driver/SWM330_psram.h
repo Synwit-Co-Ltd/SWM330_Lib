@@ -46,6 +46,5 @@ void PSRAM_PowerDown(void);
 void PSRAM_PowerDownExit(void);
 bool PSRAM_IsPowerDown(void);
 
-void PSRAM_1V8_On(uint32_t clksrc);
 
 #endif

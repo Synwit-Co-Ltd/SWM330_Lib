@@ -72,11 +72,18 @@ void MemoryInit(void)
 	PORT_Init(PORTE, PIN6,  PORTE_PIN6_PSRAM_D6,  1);
 	PORT_Init(PORTE, PIN7,  PORTE_PIN7_PSRAM_D7,  1);
 	
+#ifndef PSRAM_XCCELA
 	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
 	PSRAM_initStruct.tRWR = 50;
 	PSRAM_initStruct.tACC = 50;
 	PSRAM_initStruct.tCSM = 4;
 	PSRAM_Init(&PSRAM_initStruct);
+#else
+	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
+	PSRAM_initStruct.tRC = 60;
+	PSRAM_initStruct.tCEM = 8;
+	PSRAM_Init(&PSRAM_initStruct);
+#endif
 }
 
 

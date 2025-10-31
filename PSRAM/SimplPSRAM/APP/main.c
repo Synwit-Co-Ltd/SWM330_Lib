@@ -45,9 +45,6 @@ int main(void)
 	PSRAM_initStruct.tACC = 50;
 	PSRAM_initStruct.tCSM = 4;
 	PSRAM_Init(&PSRAM_initStruct);
-	
-	printf("HyperRAM ID0 = 0x%04X, ID1 = 0x%04X\n", (PSRAMC->IR & PSRAMC_IR_ID0_Msk) >> PSRAMC_IR_ID0_Pos,
-													(PSRAMC->IR & PSRAMC_IR_ID1_Msk) >> PSRAMC_IR_ID1_Pos);
 #else
 	PSRAM_initStruct.RowSize = PSRAM_RowSize_1KB;
 	PSRAM_initStruct.tRC = 60;
