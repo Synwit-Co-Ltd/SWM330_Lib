@@ -169,6 +169,8 @@ void SystemInit(void)
 	SystemCoreClockUpdate();
 	
 	Flash_Param_at_xMHz(CyclesPerUs);
+	
+	IAP_Cache_Config(FMC->CACHE | FMC_CACHE_CEN_Msk | FMC_CACHE_CCLR_Msk, 0x0B11FFAC);	// Cache enable
 }
 
 
