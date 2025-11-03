@@ -176,7 +176,8 @@ void test_DMA2D_memcpy(void)
 	DMA2D_memcpy(Img_Buffer, LCD_Buffer, DMA2D_UNIT_WORD, LCD_VDOT * LCD_HDOT * 2 / 4);
 	while(DMA2D_IsBusy()) __NOP();
 	
-	memset(LCD_Buffer, 0xAA, LCD_VDOT * LCD_HDOT * 2);
+	for(int i = 0; i < LCD_VDOT * LCD_HDOT; i++)
+		LCD_Buffer[i] = 0xAAAA;
 	
 	for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
 	
