@@ -46,7 +46,7 @@ void SystemInit_80MHz(void)
 {
 	Flash_Param_at_xMHz(150);
 	
-	switchToPLL(0, 5, 40, PLL_OUT_DIV8, 0);
+	switchToPLL(0, 2, 40, 2, 0);
 	
 	SystemCoreClockUpdate();
 	
