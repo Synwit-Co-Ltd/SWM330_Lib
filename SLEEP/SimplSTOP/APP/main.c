@@ -18,12 +18,12 @@ int main(void)
 	
 	SerialInit();
 	
-	SYS->LRCCR |= (1 << SYS_LRCCR_ON_Pos);			// Turn on 32KHz LRC oscillator
+	SYS->RCCR |= (1 << SYS_RCCR_LON_Pos);			// Turn on 32KHz LRC oscillator
 	
 	printf("BACKUP[0]: %08X\r\n", SYS->BACKUP[0]);	// Note: do not have data retention function
 	SYS->BACKUP[0] += 1;
 	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);				// output, connect a LED
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);			// output, connect a LED
 	
 //	PORT_Init(PORTD, PIN6, PORTD_PIN6_WAKEUP, 1);
 //	PORTD->PULLU |= (1 << PIN6);

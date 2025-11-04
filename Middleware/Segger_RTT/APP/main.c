@@ -14,7 +14,7 @@ int main(void)
 	
 	SEGGER_RTT_Init();
  	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);		// output
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);	// output
 	
  	while(1==1)
  	{

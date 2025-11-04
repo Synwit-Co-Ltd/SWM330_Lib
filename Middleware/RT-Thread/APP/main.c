@@ -26,7 +26,7 @@ int main(void)
 	
 	SerialInit();
 	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);		// debug indication signal
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);	// debug indication signal
 	
 	rt_mb_init(&queueADC, "ADC", mbPool, sizeof(mbPool)/sizeof(mbPool[0]), RT_IPC_FLAG_FIFO);
 		

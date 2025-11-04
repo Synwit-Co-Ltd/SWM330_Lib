@@ -11,7 +11,7 @@ int main(void)
 	
 	SerialInit();
 
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);
 	
 	PORT_Init(PORTE, PIN13, PORTE_PIN13_ADC0_CH0, 0);
 	PORT_Init(PORTD, PIN10, PORTD_PIN10_ADC0_CH1, 0);
@@ -36,7 +36,7 @@ int main(void)
 	ADC_Init(ADC0, &ADC_initStruct);
 	
 	ADC_SEQ_initStruct.channels = ADC_CH5;
-	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_EXTRIG1;
+	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_EXTRIG0;
 	ADC_SEQ_initStruct.conv_cnt = 1;
 	ADC_SEQ_initStruct.samp_tim = ADC_SAMPLE_1CLOCK;
 	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
@@ -44,6 +44,7 @@ int main(void)
 	ADC_Open(ADC0);
 	
 	PORT_Init(PORTA, PIN8, FUNMUX0_ADC0_TRIG0, 1);	// Whenever a rising edge appears on this pin, ADC starts a conversion
+	PORTA->PULLU |= (1 << PIN8);
 	
 	while(1==1)
 	{

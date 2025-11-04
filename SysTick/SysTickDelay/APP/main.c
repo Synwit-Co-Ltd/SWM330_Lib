@@ -7,7 +7,7 @@ int main(void)
 {
 	SystemInit();
 	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);		// OUTPUT, connect to a LED
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);	// OUTPUT, connect to a LED
 	
 	while(1==1)
 	{

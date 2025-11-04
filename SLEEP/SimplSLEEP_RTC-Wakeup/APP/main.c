@@ -10,9 +10,9 @@ int main(void)
 	
 	SerialInit();
 	
-	SYS->LRCCR = (1 << SYS_LRCCR_ON_Pos);			// Turn on 32KHz LRC oscillator
+	SYS->RCCR = (1 << SYS_RCCR_LON_Pos);			// Turn on 32KHz LRC oscillator
 	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);				// output, connect a LED
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);			// output, connect a LED
 	
 	RTC_Config();
 	SYS->RTCWKCR |= (1 << SYS_RTCWKCR_EN_Pos);		// enable RTC wake-up
@@ -24,13 +24,13 @@ int main(void)
 		GPIO_ClrBit(GPIOA, PIN5);					// turn off the LED
 		
 		__disable_irq();
-		switchTo20MHz();							// Before sleep, switch to 20MHz
+		switchTo8MHz();								// Before sleep, switch to 8MHz
 		
 		SYS->RTCWKSR = SYS_RTCWKSR_FLAG_Msk;		// clear wake-up flag
 		RTC->PWRCR |= (1 << RTC_PWRCR_SLEEP_Pos);	// enter sleep mode
 		while((SYS->RTCWKSR & SYS_RTCWKSR_FLAG_Msk) == 0) __NOP();
 		
-		switchToPLL(1, 3, 60, PLL_OUT_DIV8, 0);		// After waking up, switch to PLL
+		switchToPLL(1, 2, 60, 2, 0);				// After waking up, switch to PLL
 		__enable_irq();
 	}
 }

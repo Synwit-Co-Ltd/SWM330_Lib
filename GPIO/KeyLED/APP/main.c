@@ -10,9 +10,9 @@ int main(void)
 {	
 	SystemInit();
 	
-	GPIO_Init(GPIOA, PIN8, 0, 1, 0, 0);				// input, pull-up enable, connect key
+	GPIO_INIT(GPIOA, PIN8, GPIO_INPUT_PullUp);		// input, pull-up enable, connect key
 	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);				// output, connect LED
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);			// output, connect LED
 	
 	while(1==1)
 	{

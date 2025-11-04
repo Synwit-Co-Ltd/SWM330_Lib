@@ -7,7 +7,7 @@ int main(void)
 	
 	SystemInit();
 	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);			// debug indication pin
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);		// debug indication pin
 	
 	PORT_Init(PORTA, PIN12, FUNMUX0_PWM0A_OUT,  0);
 	PORT_Init(PORTA, PIN13, FUNMUX1_PWM0AN_OUT, 0);

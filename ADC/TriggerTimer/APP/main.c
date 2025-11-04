@@ -12,7 +12,7 @@ int main(void)
 	
 	SerialInit();
 
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);
 	
 	PORT_Init(PORTE, PIN13, PORTE_PIN13_ADC0_CH0, 0);
 	PORT_Init(PORTD, PIN10, PORTD_PIN10_ADC0_CH1, 0);

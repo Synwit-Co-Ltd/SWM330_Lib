@@ -57,8 +57,8 @@ typedef struct {
 #define ADC_TRIGGER_TIMER1		3
 #define ADC_TRIGGER_EXTRIG0		4
 #define ADC_TRIGGER_EXTRIG1		5
-#define ADC_TRIGGER_PWM0		8
-#define ADC_TRIGGER_PWM1		9
+#define ADC_TRIGGER_PWM0		16
+#define ADC_TRIGGER_PWM1		17
 
 #define ADC_SAMPLE_1CLOCK		0
 #define ADC_SAMPLE_2CLOCK		1

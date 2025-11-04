@@ -12,27 +12,27 @@ int main(void)
 	
 	SystemInit();
 	
-	SYS->LRCCR |= (1 << SYS_LRCCR_ON_Pos);			// Turn on 32KHz LRC oscillator
+	SYS->RCCR |= (1 << SYS_RCCR_LON_Pos);			// Turn on 32KHz LRC oscillator
 	
-	GPIO_Init(GPIOA, PIN9, 1, 0, 0, 0);				// output, connect a LED
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);			// output, connect a LED
 	
-	GPIO_Init(GPIOA, PIN10, 0, 1, 0, 0);			// intput, pull-up enable, connect a key
-	SYS->PAWKEN |= (1 << PIN10);					// enable PA10 pin low wake up
+	GPIO_INIT(GPIOA, PIN8, GPIO_INPUT_PullUp);		// intput, pull-up enable, connect a key
+	SYS->PAWKEN |= (1 << PIN8);						// enable PA10 pin low wake up
 	
 	while(1==1)
 	{
-		GPIO_SetBit(GPIOA, PIN9);					// turn on the LED
+		GPIO_SetBit(GPIOA, PIN5);					// turn on the LED
 		for(int i = 0; i < SystemCoreClock/4; i++) __NOP();
-		GPIO_ClrBit(GPIOA, PIN9);					// turn off the LED
+		GPIO_ClrBit(GPIOA, PIN5);					// turn off the LED
 		
 		__disable_irq();
-		switchTo20MHz();							// Before sleep, switch to 20MHz
+		switchTo8MHz();								// Before sleep, switch to 8MHz
 		
-		SYS->PAWKSR = (1 << PIN10);					// clear wakeup flag
+		SYS->PAWKSR = (1 << PIN8);					// clear wakeup flag
 		RTC->PWRCR |= (1 << RTC_PWRCR_SLEEP_Pos);	// enter sleep mode
-		while((SYS->PAWKSR & (1 << PIN10)) == 0);	// wait wake-up
+		while((SYS->PAWKSR & (1 << PIN8)) == 0);	// wait wake-up
 		
-		switchToPLL(1, 3, 60, PLL_OUT_DIV8, 0);		// After waking up, switch to PLL
+		switchToPLL(1, 2, 60, 2, 0);				// After waking up, switch to PLL
 		__enable_irq();
 	}
 }

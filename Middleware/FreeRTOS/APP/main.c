@@ -25,7 +25,7 @@ int main(void)
 	
 	SerialInit();
 	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);		// debug indication signal
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);	// debug indication signal
 	
 	xTaskCreate(TaskADC, (const char *)"ADC", 128, NULL, 2, NULL);
 	xTaskCreate(TaskPWM, (const char *)"PWM", 128, NULL, 3, NULL);

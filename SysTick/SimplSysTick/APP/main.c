@@ -5,7 +5,7 @@ int main(void)
 {	
 	SystemInit();
 	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);		// output, connect a LED
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);	// output, connect a LED
 	
 	SysTick_Config(0x1000000);				// Note: SysTick counter is 24-bit width and SysTick will not be configured if argment bigger than 0x1000000.
 	
@@ -14,8 +14,8 @@ int main(void)
 	}
 }
 
+
 void SysTick_Handler(void)
 {	
 	GPIO_InvBit(GPIOA, PIN5);
 }
-
