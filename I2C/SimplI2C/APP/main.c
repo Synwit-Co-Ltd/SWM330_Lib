@@ -98,12 +98,12 @@ void I2CMstInit(void)
 {
 	I2C_InitStructure I2C_initStruct;
 	
-	PORT_Init(PORTA, PIN12, FUNMUX0_I2C0_SCL, 1);
-	PORTA->OPEND |= (1 << PIN12);	// open-drain
-	PORTA->PULLU |= (1 << PIN12);	// pull-up
-	PORT_Init(PORTA, PIN13, FUNMUX1_I2C0_SDA, 1);
-	PORTA->OPEND |= (1 << PIN13);
-	PORTA->PULLU |= (1 << PIN13);
+	PORT_Init(PORTC, PIN8, FUNMUX0_I2C0_SCL, 1);
+	PORTC->OPEND |= (1 << PIN8);	// open-drain
+	PORTC->PULLU |= (1 << PIN8);	// pull-up
+	PORT_Init(PORTC, PIN9, FUNMUX1_I2C0_SDA, 1);
+	PORTC->OPEND |= (1 << PIN9);
+	PORTC->PULLU |= (1 << PIN9);
 	
 	I2C_initStruct.Master = 1;
 	I2C_initStruct.MstClk = 100000;
@@ -120,12 +120,12 @@ void I2CSlvInit(void)
 {
 	I2C_InitStructure I2C_initStruct;
 	
-	PORT_Init(PORTA, PIN14, FUNMUX0_I2C1_SCL, 1);
-	PORTA->OPEND |= (1 << PIN14);	// open-drain
-	PORTA->PULLU |= (1 << PIN14);	// pull-up
-	PORT_Init(PORTA, PIN15, FUNMUX1_I2C1_SDA, 1);
-	PORTA->OPEND |= (1 << PIN15);
-	PORTA->PULLU |= (1 << PIN15);
+	PORT_Init(PORTD, PIN8, FUNMUX0_I2C1_SCL, 1);
+	PORTD->OPEND |= (1 << PIN8);	// open-drain
+	PORTD->PULLU |= (1 << PIN8);	// pull-up
+	PORT_Init(PORTD, PIN9, FUNMUX1_I2C1_SDA, 1);
+	PORTD->OPEND |= (1 << PIN9);
+	PORTD->PULLU |= (1 << PIN9);
 	
 	I2C_initStruct.Master = 0;
 	I2C_initStruct.MstClk = 0;
