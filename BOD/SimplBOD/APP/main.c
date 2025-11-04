@@ -2,13 +2,14 @@
 
 
 int main(void)
-{	
+{
 	SystemInit();
 	
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);		// output, connect a LED
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);	// output, connect a LED
 	
-	SYS->BODCR = (1 << SYS_BODCR_IE_Pos) | (3 << SYS_BODCR_INTLVL_Pos);		// enable interrupt, interrupt trigger level is 2.5v
-	SYS->BODSR = (1 << SYS_BODSR_IF_Pos);	// clear interrupt flag
+	SYS->BODCR = SYS_BODCR_EN_Msk |
+				 SYS_BODCR_IE_Msk | (2 << SYS_BODCR_LVL_Pos);		// enable interrupt, interrupt trigger level is 2.7v
+	SYS->BODSR = SYS_BODSR_IF_Msk;			// clear interrupt flag
 	NVIC_EnableIRQ(BOD_IRQn);
 	
 	while(1==1)
@@ -17,9 +18,10 @@ int main(void)
 	}
 }
 
+
 void BOD_Handler(void)
 {
-	SYS->BODSR = (1 << SYS_BODSR_IF_Pos);
+	SYS->BODSR = SYS_BODSR_IF_Msk;
 	
 	GPIO_SetBit(GPIOA, PIN5);
 }
