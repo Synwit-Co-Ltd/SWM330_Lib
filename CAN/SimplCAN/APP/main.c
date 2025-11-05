@@ -14,8 +14,8 @@ int main(void)
 	
 	SerialInit();
 	
-	PORT_Init(PORTA, PIN12, FUNMUX0_CAN0_TX, 0);
-	PORT_Init(PORTA, PIN13, FUNMUX1_CAN0_RX, 1);
+	PORT_Init(PORTC, PIN8, FUNMUX0_CAN0_TX, 0);
+	PORT_Init(PORTC, PIN9, FUNMUX1_CAN0_RX, 1);
 	
 	CAN_initStruct.Mode = CAN_MODE_SELFTEST;	// selftest mode, need to connect TX to RX
 	CAN_initStruct.CAN_bs1 = CAN_BS1_5tq;
