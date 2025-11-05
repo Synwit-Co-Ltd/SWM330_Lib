@@ -30,12 +30,12 @@ void TVP_HW_Init(void)
 {
 	I2C_InitStructure I2C_initStruct;
 	
-	PORT_Init(PORTE, PIN14, FUNMUX0_I2C1_SCL, 1);
-	PORTE->OPEND |= (1 << PIN14);	// open-drain
-	PORTE->PULLU |= (1 << PIN14);	// pull-up
-	PORT_Init(PORTE, PIN15, FUNMUX1_I2C1_SDA, 1);
-	PORTE->OPEND |= (1 << PIN15);
-	PORTE->PULLU |= (1 << PIN15);
+	PORT_Init(PORTC, PIN4, FUNMUX0_I2C1_SCL, 1);
+	PORTC->OPEND |= (1 << PIN4);	// open-drain
+	PORTC->PULLU |= (1 << PIN4);	// pull-up
+	PORT_Init(PORTC, PIN5, FUNMUX1_I2C1_SDA, 1);
+	PORTC->OPEND |= (1 << PIN5);
+	PORTC->PULLU |= (1 << PIN5);
 	
 	I2C_initStruct.Master = 1;
 	I2C_initStruct.MstClk = 100000;
@@ -62,6 +62,8 @@ uint8_t TVP_Read(uint8_t reg)
 	I2C_Start(I2C1, DEV_ADDR | 0, 1);
 	
 	I2C_Write(I2C1, reg, 1);
+	
+	SW_DelayUS(1);	// 不加延时无法发出 restart
 	
 	I2C_Start(I2C1, DEV_ADDR | 1, 1);
 	

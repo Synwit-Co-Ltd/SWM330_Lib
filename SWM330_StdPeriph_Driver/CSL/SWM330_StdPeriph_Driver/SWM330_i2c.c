@@ -220,7 +220,7 @@ uint8_t I2C_StopDone(I2C_TypeDef * I2Cx)
 *			Then, you can use I2C_WriteDone() to wait the operation done, and then use I2C_IsAck() to get the ack.
 *******************************************************************************************************************************/
 uint8_t I2C_Write(I2C_TypeDef * I2Cx, uint8_t data, uint8_t wait)
-{	
+{
 	I2Cx->TXDATA = data;
 	I2Cx->MCR = (1 << I2C_MCR_WR_Pos);
 	

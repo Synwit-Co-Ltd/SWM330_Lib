@@ -8,12 +8,12 @@ bool OV2640_Init(uint8_t outfmt, uint8_t clkdiv, uint16_t width, uint16_t height
 {
 	I2C_InitStructure  I2C_initStruct;
 	
-	PORT_Init(PORTE, PIN14, FUNMUX0_I2C1_SCL, 1);
-	PORTE->OPEND |= (1 << PIN14);	// open-drain
-	PORTE->PULLU |= (1 << PIN14);	// pull-up
-	PORT_Init(PORTE, PIN15, FUNMUX1_I2C1_SDA, 1);
-	PORTE->OPEND |= (1 << PIN15);
-	PORTE->PULLU |= (1 << PIN15);
+	PORT_Init(PORTC, PIN4, FUNMUX0_I2C1_SCL, 1);
+	PORTC->OPEND |= (1 << PIN4);	// open-drain
+	PORTC->PULLU |= (1 << PIN4);	// pull-up
+	PORT_Init(PORTC, PIN5, FUNMUX1_I2C1_SDA, 1);
+	PORTC->OPEND |= (1 << PIN5);
+	PORTC->PULLU |= (1 << PIN5);
 	
 	I2C_initStruct.Master = 1;
 	I2C_initStruct.MstClk = 100000;
@@ -23,13 +23,11 @@ bool OV2640_Init(uint8_t outfmt, uint8_t clkdiv, uint16_t width, uint16_t height
 	I2C_Init(I2C1, &I2C_initStruct);
 	I2C_Open(I2C1);
 	
-	GPIO_INIT(GPIOA, PIN14, GPIO_OUTPUT);		// PA14 -> OV_PWDN，高电平有效
-	GPIO_ClrBit(GPIOA, PIN14);
-	GPIO_INIT(GPIOA, PIN15, GPIO_OUTPUT);		// PA15 -> OV_RST， 低电平有效
-	GPIO_ClrBit(GPIOA, PIN15);
-	for(int i = 0; i < SystemCoreClock/1000; i++) __NOP();
-	GPIO_SetBit(GPIOA, PIN15);
-	for(int i = 0; i < SystemCoreClock/1000; i++) __NOP();
+	GPIO_INIT(GPIOC, PIN7, GPIO_OUTPUT);		// PC7 -> OV_RST， 低电平有效
+	GPIO_ClrBit(GPIOC, PIN7);
+	SW_DelayMS(10);
+	GPIO_SetBit(GPIOC, PIN7);
+	SW_DelayMS(10);
 	
 	OV2640_Reset();
 	
@@ -154,6 +152,8 @@ uint8_t OV2640_ReadReg(uint8_t reg_addr)
 	I2C_Start(I2C1, OV2640_I2C_ADDR | 0, 1);
 	
 	I2C_Write(I2C1, reg_addr, 1);
+	
+	SW_DelayUS(1);	// 不加延时无法发出 restart
 	
 	I2C_Start(I2C1, OV2640_I2C_ADDR | 1, 1);
 	

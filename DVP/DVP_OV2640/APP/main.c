@@ -2,6 +2,10 @@
 
 #include "OV2640.h"
 
+
+// 注意：PC5 为 ISP 引脚，若将其用于与摄像头的 I2C 通信，摄像头模块上 SDA 引脚不能有上拉电阻
+
+
 #define LCD_HDOT	480		// Horizontal points
 #define LCD_VDOT	272		// Vertical points
 #define LCD_DIRH	1		// horizontal display?
