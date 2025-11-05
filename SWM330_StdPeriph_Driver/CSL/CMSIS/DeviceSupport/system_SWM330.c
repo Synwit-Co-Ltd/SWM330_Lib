@@ -171,6 +171,10 @@ void SystemInit(void)
 	Flash_Param_at_xMHz(CyclesPerUs);
 	
 	IAP_Cache_Config(FMC->CACHE | FMC_CACHE_CEN_Msk | FMC_CACHE_CCLR_Msk, 0x0B11FFAC);	// Cache enable
+	
+	PORTC->PULLD &= ~(1 << PIN5);
+	PORTB->PULLD &= ~(1 << PIN8);
+	PORTB->PULLU &= ~((1 << PIN9) | (1 << PIN10));
 }
 
 
