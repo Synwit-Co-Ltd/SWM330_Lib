@@ -3,18 +3,18 @@
 
 #include "Background_rgb565.h"
 #include "Background_rgb888.h"
-#include "JPG_Synwit128_rgb565.h"
-#include "JPG_Synwit128_rgb888.h"
-#include "PNG_Synwit128_rgb565.h"
-#include "PNG_Synwit128_rgb888.h"
+#include "JPG_horse_rgb565.h"
+#include "JPG_horse_rgb888.h"
+#include "PNG_horse_rgb565.h"
+#include "PNG_horse_rgb888.h"
 
 
 #define LCD_HDOT	480		// 水平点数
 #define LCD_VDOT	272		// 垂直点数
 #define LCD_DIRH	1		// 水平显示？
 
-#define IMG_HDOT	128
-#define IMG_VDOT	128
+#define IMG_HDOT	160
+#define IMG_VDOT	160
 
 #define SRA_RGB565	1	// 0 SRA 处理 RGB888 图片   1 SRA 处理 RGB565 图片
 #define SRA_ARGB	0	// 0 前景图片像素不带 Alpha 值，使用固定值 0xFF，因此重叠部分必定显示前景图片	1 前景图片像素带 Alpha 值
@@ -49,15 +49,15 @@ int main(void)
 	
 #if SRA_RGB565
 	#if SRA_ARGB
-	memcpy(SRA_Buffer, PNG_Synwit128_rgb565, sizeof(PNG_Synwit128_rgb565));
+	memcpy(SRA_Buffer, PNG_horse_rgb565, sizeof(PNG_horse_rgb565));
 	#else
-	memcpy(SRA_Buffer, JPG_Synwit128_rgb565, sizeof(JPG_Synwit128_rgb565));
+	memcpy(SRA_Buffer, JPG_horse_rgb565, sizeof(JPG_horse_rgb565));
 	#endif
 #else
 	#if SRA_ARGB
-	memcpy(SRA_Buffer, PNG_Synwit128_rgb888, sizeof(PNG_Synwit128_rgb888));
+	memcpy(SRA_Buffer, PNG_horse_rgb888, sizeof(PNG_horse_rgb888));
 	#else
-	memcpy(SRA_Buffer, JPG_Synwit128_rgb888, sizeof(JPG_Synwit128_rgb888));
+	memcpy(SRA_Buffer, JPG_horse_rgb888, sizeof(JPG_horse_rgb888));
 	#endif
 #endif
 	
