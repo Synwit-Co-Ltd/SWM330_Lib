@@ -20,7 +20,7 @@ int main(void)
 	}
 }
 
-void BTIMR2_Handler(void)
+void TIMR0_Handler(void)
 {
 	TIMR_INTClr(TIMR0, TIMR_IT_TO);
 	
