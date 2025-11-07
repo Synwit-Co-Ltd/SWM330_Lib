@@ -21,13 +21,12 @@
 #define SRA_BG		0	// 0 前景图片与背景图片（OutputAddr 指定）混合    1 前景图片与 SRA->BGCOLOR 混合，BGCOLOR 格式由同 DstFormat
 
 
-#if SRA_RGB565 && (!SRA_ARGB)
-uint16_t *LCD_Buffer = (uint16_t *) PSRAMM_BASE;
-uint16_t *SRA_Buffer = (uint16_t *)(PSRAMM_BASE + 0x100000);	// SRA 源图片
-#else
-uint32_t *LCD_Buffer = (uint32_t *) PSRAMM_BASE;
-uint32_t *SRA_Buffer = (uint32_t *)(PSRAMM_BASE + 0x100000);	// SRA 源图片
-#endif
+void *LCD_Buffer = (void *) PSRAMM_BASE;
+void *Img_Buffer = (void *)(PSRAMM_BASE + 0x100000);	// Source Image
+void *SRA_Buffer = (void *)(PSRAMM_BASE + 0x200000);	// SRA Output Buffer
+
+
+DMA2D_LayerSetting fgLayer, bgLayer, outLayer;
 
 
 void SerialInit(void);
@@ -49,21 +48,28 @@ int main(void)
 	
 #if SRA_RGB565
 	#if SRA_ARGB
-	memcpy(SRA_Buffer, PNG_horse_rgb565, sizeof(PNG_horse_rgb565));
+	memcpy(Img_Buffer, PNG_horse_rgb565, sizeof(PNG_horse_rgb565));
 	#else
-	memcpy(SRA_Buffer, JPG_horse_rgb565, sizeof(JPG_horse_rgb565));
+	memcpy(Img_Buffer, JPG_horse_rgb565, sizeof(JPG_horse_rgb565));
 	#endif
 #else
 	#if SRA_ARGB
-	memcpy(SRA_Buffer, PNG_horse_rgb888, sizeof(PNG_horse_rgb888));
+	memcpy(Img_Buffer, PNG_horse_rgb888, sizeof(PNG_horse_rgb888));
 	#else
-	memcpy(SRA_Buffer, JPG_horse_rgb888, sizeof(JPG_horse_rgb888));
+	memcpy(Img_Buffer, JPG_horse_rgb888, sizeof(JPG_horse_rgb888));
 	#endif
 #endif
 	
 	SRA_InitStructure SRA_initStruct;
 	SRA_initStruct.IntEOTEn = 0;
 	SRA_Init(&SRA_initStruct);
+	
+	DMA2D_InitStructure DMA2D_initStruct;
+	DMA2D_initStruct.BurstSize = DMA2D_BURST_INC8;	// PSRAM Burst len is 32-byte, so word INC8
+	DMA2D_initStruct.BlockSize = DMA2D_BLOCK_32;
+	DMA2D_initStruct.Interval = CyclesPerUs;
+	DMA2D_initStruct.IntEn = 0;
+	DMA2D_Init(&DMA2D_initStruct);
 	
 	while(1==1)
 	{
@@ -108,7 +114,7 @@ void test_SRA(uint16_t img_width, uint16_t img_height, uint16_t scl_width, uint1
 	#endif
 	SRA_transParam.DstFormat = SRA_FMT_XRGB8888;
 #endif
-	SRA_transParam.ImageAddr = (uint32_t)SRA_Buffer;
+	SRA_transParam.ImageAddr = (uint32_t)Img_Buffer;
 	SRA_transParam.ImageWidth = img_width;
 	SRA_transParam.ImageHeight = img_height;
 	SRA_transParam.ScaleWidth = scl_width;
@@ -116,7 +122,30 @@ void test_SRA(uint16_t img_width, uint16_t img_height, uint16_t scl_width, uint1
 	SRA_transParam.RotateAngle = roate_angle;
 	SRA_transParam.OutputAddr = (uint32_t)LCD_Buffer;
 	SRA_transParam.OutputWidth = LCD_HDOT;
-	SRA_Transform(&SRA_transParam, &dst_width, &dst_height);
+	bool res = SRA_Transform(&SRA_transParam, &dst_width, &dst_height);
+	
+	if(res != true)
+	{
+		/* 若 SRA 生成图片的宽度大于屏幕宽度，则 SRA 不能直接输出到屏幕显存，
+		   而是需要先输出到另一个地址，然后再将 SRA 输出搬运到屏幕显存中显示
+		*/
+		SRA_transParam.OutputAddr = (uint32_t)SRA_Buffer;
+		SRA_transParam.OutputWidth = dst_width;
+		SRA_Transform(&SRA_transParam, &dst_width, &dst_height);
+		
+		/* 混合时需用到屏幕显存内容 */
+		fgLayer.Address = (uint32_t)LCD_Buffer;
+		fgLayer.LineOffset = 0;
+		fgLayer.ColorMode = SRA_RGB565 ? DMA2D_FMT_RGB565 : DMA2D_FMT_RGB888;
+		
+		outLayer.Address = (uint32_t)SRA_Buffer;
+		outLayer.LineCount = LCD_VDOT;
+		outLayer.LinePixel = LCD_HDOT;
+		outLayer.LineOffset = dst_width - LCD_HDOT;
+		DMA2D_PixelMove(&fgLayer, &outLayer);
+		
+		while(DMA2D_IsBusy()) __NOP();
+	}
 	
 #if SRA_BG
 	#if SRA_RGB565
@@ -130,6 +159,21 @@ void test_SRA(uint16_t img_width, uint16_t img_height, uint16_t scl_width, uint1
 	SRA_Start();
 	
 	while(SRA_Busy() != 0) __NOP();
+	
+	if(res != true)
+	{
+		fgLayer.Address = (uint32_t)SRA_Buffer;
+		fgLayer.LineOffset = dst_width - LCD_HDOT;
+		fgLayer.ColorMode = SRA_RGB565 ? DMA2D_FMT_RGB565 : DMA2D_FMT_RGB888;
+		
+		outLayer.Address = (uint32_t)LCD_Buffer;
+		outLayer.LineCount = (dst_height < LCD_VDOT) ? dst_height : LCD_VDOT;
+		outLayer.LinePixel = LCD_HDOT;
+		outLayer.LineOffset = 0;
+		DMA2D_PixelMove(&fgLayer, &outLayer);
+		
+		while(DMA2D_IsBusy()) __NOP();
+	}
 	
 	for(int i = 0; i < SystemCoreClock / 8; i++) __NOP();
 }

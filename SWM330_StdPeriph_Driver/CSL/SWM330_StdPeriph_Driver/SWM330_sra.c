@@ -319,6 +319,9 @@ bool SRA_Transform(SRA_TransformParam * transParam, uint16_t *dstWidth, uint16_t
 	*dstWidth  = dst_width;
 	*dstHeight = dst_height;
 	
+	if(dst_width > transParam->OutputWidth)
+		return false;
+	
 	return true;
 }
 
