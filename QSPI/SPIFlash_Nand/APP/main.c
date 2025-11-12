@@ -1,6 +1,8 @@
 #include "SWM330.h"
 #include "W25N01G.h"
 
+#include <string.h>
+
 
 #define EEPROM_ADDR	  0x0020000
 
@@ -37,6 +39,7 @@ int main(void)
 	
 	W25N01G_Erase(EEPROM_ADDR, 1);
 	
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
 	W25N01G_Read(EEPROM_ADDR, RdBuff);
 	
 	printf("\n\nAfter Erase: \n");
@@ -45,18 +48,21 @@ int main(void)
 	
 	W25N01G_Write(EEPROM_ADDR, WrBuff);
 	
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
 	W25N01G_Read(EEPROM_ADDR, RdBuff);
 	
 	printf("\n\nAfter Write: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
 	W25N01G_Read_2bit(EEPROM_ADDR, RdBuff);
 	
 	printf("\n\nDual Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
 	W25N01G_Read_IO2bit(EEPROM_ADDR, RdBuff);
 	
 	printf("\n\nDual IO Read: \n");
@@ -66,12 +72,14 @@ int main(void)
 	W25N01G_Erase(EEPROM_ADDR, 1);
 	W25N01G_Write_4bit(EEPROM_ADDR, WrBuff);
 	
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
 	W25N01G_Read_4bit(EEPROM_ADDR, RdBuff);
 	
 	printf("\n\nQuad Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
 	W25N01G_Read_IO4bit(EEPROM_ADDR, RdBuff);
 	
 	printf("\n\nQuad IO Read: \n");
@@ -81,10 +89,49 @@ int main(void)
 	W25N01G_Erase(EEPROM_ADDR, 1);
 	W25N01G_Write_DMA(EEPROM_ADDR, WrBuff, 4);
 	
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
 	W25N01G_Read_DMA(EEPROM_ADDR, RdBuff, 4, 4);
 	
 	printf("\n\nDMA Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
+	
+	
+	/* 2MB Read/write check */
+#if 1
+	uint32_t addr;
+	uint32_t rwbuff[2048 / 4];
+	
+	for(addr = 0; addr < 0x200000; addr += 1024 * 128)
+	{
+		W25N01G_Erase(addr, 1);
+	}
+	
+	for(addr = 0; addr < 0x200000; addr += 4096)
+	{
+		for(i = 0; i < 2048; i += 4)
+			rwbuff[i / 4] = addr + i;
+		
+		W25N01G_Write_4bit(addr, (uint8_t *)rwbuff);
+	}
+	
+	for(addr = 0; addr < 0x200000; addr += 4096)
+	{
+		W25N01G_Read_4bit(addr, (uint8_t *)rwbuff);
+		
+		for(i = 0; i < 2048; i += 4)
+		{
+			if(rwbuff[i / 4] != addr + i)
+			{
+				printf("\n\nError: expected 0x%08X, get 0x%08X\n", addr + i, rwbuff[i / 4]);
+				while(1) __NOP();
+			}
+		}
+	}
+	
+	if(addr == 0x200000)
+		printf("\n\nPass\n");
+#endif
+	
 	
 	while(1==1)
 	{
