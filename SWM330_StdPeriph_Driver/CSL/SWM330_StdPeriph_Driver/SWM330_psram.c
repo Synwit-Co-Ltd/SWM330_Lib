@@ -64,6 +64,7 @@ void PSRAM_Init(PSRAM_InitStructure * initStruct)
 				  (0	<< PSRAMC_CR0_FixLatency_Pos)  |
 				  (0xF	<< PSRAMC_CR0_InitLatency_Pos) |	// 4 Clock Latency @ 100MHz Max Frequency
 				  (0xF	<< PSRAMC_CR0_MustAllBe1_Pos)  |
+				  (0	<< PSRAMC_CR0_DriveStrnth_Pos) |
 				  (1	<< PSRAMC_CR0_PowerDown_Pos);		// 1 Normal operation, 0 Writing 0 causes the device to enter Deep Power Down
 	
 	PSRAMC->CR1 = (1	<< PSRAMC_CR1_RefInterval_Pos) |
