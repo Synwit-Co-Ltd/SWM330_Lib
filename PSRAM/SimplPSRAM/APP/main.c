@@ -65,10 +65,12 @@ int main(void)
 	ByteTest(PSRAMM_BASE+0x1235, ByteBuffer, sizeof(ByteBuffer)/1);
 	
 	
+#if 0
 	SleepTest();
 	
 	PowerDownTest();
-	
+#endif
+
 
 #if 1  // PSRAM Chip Test
 #define PSRAM_SIZE  (0x100000 * 2)

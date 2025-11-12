@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-#define EEPROM_ADDR	  0x0020000
+#define RW_PAGE	64
 
 
 #define N_DATA  48
@@ -17,8 +17,8 @@ uint8_t WrBuff[W25N_PAGE_SIZE] = {
 };
 
 
-void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width);
-void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width);
+void W25N01G_Write_DMA(uint32_t page, uint8_t buff[2048], uint8_t data_width);
+void W25N01G_Read_DMA(uint32_t page, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width);
 void SerialInit(void);
 
 int main(void)
@@ -37,60 +37,60 @@ int main(void)
 	W25N01G_FlashProtect(W25N_PROTECT_Upper_1MB);
 	
 	
-	W25N01G_Erase(EEPROM_ADDR, 1);
+	W25N01G_Erase(RW_PAGE, 1);
 	
 	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
-	W25N01G_Read(EEPROM_ADDR, RdBuff);
+	W25N01G_Read(RW_PAGE, RdBuff);
 	
 	printf("\n\nAfter Erase: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	W25N01G_Write(EEPROM_ADDR, WrBuff);
+	W25N01G_Write(RW_PAGE, WrBuff);
 	
 	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
-	W25N01G_Read(EEPROM_ADDR, RdBuff);
+	W25N01G_Read(RW_PAGE, RdBuff);
 	
 	printf("\n\nAfter Write: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
 	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
-	W25N01G_Read_2bit(EEPROM_ADDR, RdBuff);
+	W25N01G_Read_2bit(RW_PAGE, RdBuff);
 	
 	printf("\n\nDual Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
 	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
-	W25N01G_Read_IO2bit(EEPROM_ADDR, RdBuff);
+	W25N01G_Read_IO2bit(RW_PAGE, RdBuff);
 	
 	printf("\n\nDual IO Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	W25N01G_Erase(EEPROM_ADDR, 1);
-	W25N01G_Write_4bit(EEPROM_ADDR, WrBuff);
+	W25N01G_Erase(RW_PAGE, 1);
+	W25N01G_Write_4bit(RW_PAGE, WrBuff);
 	
 	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
-	W25N01G_Read_4bit(EEPROM_ADDR, RdBuff);
+	W25N01G_Read_4bit(RW_PAGE, RdBuff);
 	
 	printf("\n\nQuad Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
 	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
-	W25N01G_Read_IO4bit(EEPROM_ADDR, RdBuff);
+	W25N01G_Read_IO4bit(RW_PAGE, RdBuff);
 	
 	printf("\n\nQuad IO Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	W25N01G_Erase(EEPROM_ADDR, 1);
-	W25N01G_Write_DMA(EEPROM_ADDR, WrBuff, 4);
+	W25N01G_Erase(RW_PAGE, 1);
+	W25N01G_Write_DMA(RW_PAGE, WrBuff, 4);
 	
 	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
-	W25N01G_Read_DMA(EEPROM_ADDR, RdBuff, 4, 4);
+	W25N01G_Read_DMA(RW_PAGE, RdBuff, 4, 4);
 	
 	printf("\n\nDMA Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
@@ -99,30 +99,31 @@ int main(void)
 	/* 2MB Read/write check */
 #if 1
 	uint32_t addr;
-	uint32_t rwbuff[2048 / 4];
+	uint32_t *wrbuf = (uint32_t *)WrBuff;
+	uint32_t *rdbuf = (uint32_t *)RdBuff;
 	
-	for(addr = 0; addr < 0x200000; addr += 1024 * 128)
+	for(addr = 0; addr < 0x200000; addr += W25N_BLOCK_SIZE)
 	{
-		W25N01G_Erase(addr, 1);
+		W25N01G_Erase(addr / W25N_PAGE_SIZE, 1);
 	}
 	
-	for(addr = 0; addr < 0x200000; addr += 4096)
+	for(addr = 0; addr < 0x200000; addr += W25N_PAGE_SIZE)
 	{
-		for(i = 0; i < 2048; i += 4)
-			rwbuff[i / 4] = addr + i;
+		for(i = 0; i < W25N_PAGE_SIZE; i += 4)
+			wrbuf[i / 4] = addr + i;
 		
-		W25N01G_Write_4bit(addr, (uint8_t *)rwbuff);
+		W25N01G_Write_4bit(addr / W25N_PAGE_SIZE, (uint8_t *)wrbuf);
 	}
 	
-	for(addr = 0; addr < 0x200000; addr += 4096)
+	for(addr = 0; addr < 0x200000; addr += W25N_PAGE_SIZE)
 	{
-		W25N01G_Read_4bit(addr, (uint8_t *)rwbuff);
+		W25N01G_Read_4bit(addr / W25N_PAGE_SIZE, (uint8_t *)rdbuf);
 		
-		for(i = 0; i < 2048; i += 4)
+		for(i = 0; i < W25N_PAGE_SIZE; i += 4)
 		{
-			if(rwbuff[i / 4] != addr + i)
+			if(rdbuf[i / 4] != addr + i)
 			{
-				printf("\n\nError: expected 0x%08X, get 0x%08X\n", addr + i, rwbuff[i / 4]);
+				printf("\n\nError: expected 0x%08X, get 0x%08X\n", addr + i, rdbuf[i / 4]);
 				while(1) __NOP();
 			}
 		}
@@ -139,7 +140,7 @@ int main(void)
 }
 
 
-void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
+void W25N01G_Write_DMA(uint32_t page, uint8_t buff[2048], uint8_t data_width)
 {
 	static bool dma_inited = false;
 	
@@ -164,7 +165,7 @@ void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
 	
 	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectWrite);
 	
-	W25N01G_Write_(addr, buff, data_width, 0);
+	W25N01G_Write_(page, buff, data_width, 0);
 	
 	DMA_CH_Open(DMA_CH0);
 	
@@ -176,13 +177,13 @@ void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
 	
 	QSPI_DMADisable(QSPI0);
 	
-	W25N01G_Program_Execute(addr);
+	W25N01G_Program_Execute(page);
 	
 	while(W25N01G_FlashBusy()) __NOP();
 }
 
 
-void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width)
+void W25N01G_Read_DMA(uint32_t page, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width)
 {
 	static bool dma_inited = false;
 	
@@ -207,7 +208,7 @@ void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uin
 	
 	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectRead);
 	
-	W25N01G_Read_(addr, buff, addr_width, data_width, 0);
+	W25N01G_Read_(page, buff, addr_width, data_width, 0);
 	
 	DMA_CH_Open(DMA_CH1);
 	

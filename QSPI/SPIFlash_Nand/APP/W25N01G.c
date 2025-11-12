@@ -63,11 +63,11 @@ uint32_t W25N01G_ReadJEDEC(void)
 
 /*******************************************************************************************************************************
 * @brief	W25N01G Flash block erase, block size is 128KB
-* @param	addr is Flash address to erase
+* @param	page is page address to erase. 2KB per page, 64 page per block, so must meet page % 64 == 0 here.
 * @param	wait: 1 wait for erase operation done, 0 send out erase command, and then immediately return.
 * @return
 *******************************************************************************************************************************/
-void W25N01G_Erase(uint32_t addr, uint8_t wait)
+void W25N01G_Erase(uint32_t page, uint8_t wait)
 {
 	QSPI_CmdStructure cmdStruct;
 	QSPI_CmdStructClear(&cmdStruct);
@@ -76,7 +76,7 @@ void W25N01G_Erase(uint32_t addr, uint8_t wait)
 	cmdStruct.Instruction 		 = W25N_CMD_ERASE_BLOCK128KB;
 	cmdStruct.AddressMode 		 = QSPI_PhaseMode_1bit;
 	cmdStruct.AddressSize		 = QSPI_PhaseSize_24bit;	// the high 8bit is the dummy clock, and the low 16bit is the address
-	cmdStruct.Address			 = addr >> 12;				// Page Address
+	cmdStruct.Address			 = page;
 	cmdStruct.AlternateBytesMode = QSPI_PhaseMode_None;
 	cmdStruct.DummyCycles 		 = 0;
 	cmdStruct.DataMode 			 = QSPI_PhaseMode_None;
@@ -93,14 +93,14 @@ void W25N01G_Erase(uint32_t addr, uint8_t wait)
 
 
 /*******************************************************************************************************************************
-* @brief	W25N01G Flash page write, page size is 2112 Byte
-* @param	addr is Flash address to write, must be an integer multiple of 0x1000 (4096)
+* @brief	W25N01G Flash page write
+* @param	page is page address to write, 0-65535
 * @param	buff is the data to be written to W25N01G, the number of bytes must be 2048
 * @param	data_width is number of data line to use in data phase, can be 1 or 4
 * @param	data_phase indicates whether do data phase in the function, or outside the function (by DMA for example)
 * @return
 *******************************************************************************************************************************/
-void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width, uint8_t data_phase)
+void W25N01G_Write_(uint32_t page, uint8_t buff[2048], uint8_t data_width, uint8_t data_phase)
 {
 	QSPI_CmdStructure cmdStruct;
 	QSPI_CmdStructClear(&cmdStruct);
@@ -147,14 +147,14 @@ void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width, uint8
 	
 	while(QSPI_Busy(QSPI0)) __NOP();
 	
-	W25N01G_Program_Execute(addr);
+	W25N01G_Program_Execute(page);
 	
 	while(W25N01G_FlashBusy()) __NOP();
 }
 
 
 /* Program the Data Buffer content into the physical memory page */
-void W25N01G_Program_Execute(uint32_t addr)
+void W25N01G_Program_Execute(uint32_t page)
 {
 	QSPI_CmdStructure cmdStruct;
 	QSPI_CmdStructClear(&cmdStruct);
@@ -163,7 +163,7 @@ void W25N01G_Program_Execute(uint32_t addr)
 	cmdStruct.Instruction 		 = W25N_CMD_PROGRAM_EXECUTE;
 	cmdStruct.AddressMode 		 = QSPI_PhaseMode_1bit;
 	cmdStruct.AddressSize 		 = QSPI_PhaseSize_24bit;	// the high 8bit is the dummy clock, and the low 16bit is the address
-	cmdStruct.Address 			 = addr >> 12;				// Page Address
+	cmdStruct.Address 			 = page;
 	cmdStruct.AlternateBytesMode = QSPI_PhaseMode_None;
 	cmdStruct.DummyCycles 		 = 0;
 	cmdStruct.DataMode 			 = QSPI_PhaseMode_None;
@@ -175,15 +175,15 @@ void W25N01G_Program_Execute(uint32_t addr)
 
 
 /*******************************************************************************************************************************
-* @brief	W25N01G Flash page read, page size is 2112 Byte
-* @param	addr is Flash address to read, must be an integer multiple of 0x1000 (4096)
+* @brief	W25N01G Flash page read
+* @param	page is page address to read, 0-65535
 * @param	buff is the buffer used to save read data, and the size of it must be 2048
 * @param	addr_width is number of data line to use in address phase, can be 1, 2 or 4
 * @param	data_width is number of data line to use in data phase, can be 1, 2, or 4
 * @param	data_phase indicates whether do data phase in the function, or outside the function (by DMA for example)
 * @return
 *******************************************************************************************************************************/
-void W25N01G_Read_(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width, uint8_t data_phase)
+void W25N01G_Read_(uint32_t page, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width, uint8_t data_phase)
 {
 	QSPI_CmdStructure cmdStruct;
 	QSPI_CmdStructClear(&cmdStruct);
@@ -193,7 +193,7 @@ void W25N01G_Read_(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_
 	cmdStruct.Instruction 		 = W25N_CMD_PAGE_READ;
 	cmdStruct.AddressMode 		 = QSPI_PhaseMode_1bit;
 	cmdStruct.AddressSize 		 = QSPI_PhaseSize_24bit;	// the high 8bit is the dummy clock, and the low 16bit is the address
-	cmdStruct.Address 			 = addr >> 12;				// Page Address
+	cmdStruct.Address 			 = page;
 	cmdStruct.AlternateBytesMode = QSPI_PhaseMode_None;
 	cmdStruct.DummyCycles 		 = 0;
 	cmdStruct.DataMode 			 = QSPI_PhaseMode_None;
