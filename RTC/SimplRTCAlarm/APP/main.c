@@ -43,7 +43,6 @@ void RTC_Handler(void)
 {
 	if(RTC_INTStat(RTC, RTC_IT_ALRMA))
 	{
-		RTC_INTDis(RTC, RTC_IT_ALRMA);
 		RTC_INTClr(RTC, RTC_IT_ALRMA);
 		
 		RTC_GetDateTime(RTC, &dateTime);
