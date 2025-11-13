@@ -28,9 +28,15 @@ int main(void)
 		
 		__disable_irq();
 		
+		switchTo8MHz();
+		SYS->PLLCR |= SYS_PLLCR_OFF_Msk;
+		SYS->XTALCR &= ~SYS_XTALCR_ON_Msk;
+		
 		SYS->PAWKSR = (1 << PIN8);					// clear wakeup flag
 		RTC->PWRCR |= RTC_PWRCR_SLEEP_Msk;			// enter sleep mode
 		while((SYS->PAWKSR & (1 << PIN8)) == 0) __NOP();	// wait wake-up
+		
+		switchToPLL(1, 2, 50, 2, 0);				// After waking up, switch to PLL
 		
 		__enable_irq();
 	}
