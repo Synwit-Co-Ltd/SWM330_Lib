@@ -6,16 +6,19 @@ void RTC_Config(void);
 
 int main(void)
 {
+	for(int i = 0; i < SystemCoreClock; i++) __NOP();
+	
 	SystemInit();
 	
 	SerialInit();
 	
-	SYS->RCCR = (1 << SYS_RCCR_LON_Pos);			// Turn on 32KHz LRC oscillator
+	SYS->RCCR |= SYS_RCCR_LON_Msk;					// Turn on 32KHz LRC
 	
 	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);			// output, connect a LED
 	
 	RTC_Config();
-	SYS->RTCWKCR |= (1 << SYS_RTCWKCR_EN_Pos);		// enable RTC wake-up
+	RTC_WakeupSetup(RTC, 5, 0);						// wake up every 5 seconds
+	SYS->RTCWKCR |= SYS_RTCWKCR_EN_Msk;				// enable RTC wake-up
 	
 	while(1==1)
 	{
@@ -24,20 +27,19 @@ int main(void)
 		GPIO_ClrBit(GPIOA, PIN5);					// turn off the LED
 		
 		__disable_irq();
-		switchTo8MHz();								// Before sleep, switch to 8MHz
 		
 		SYS->RTCWKSR = SYS_RTCWKSR_FLAG_Msk;		// clear wake-up flag
-		RTC->PWRCR |= (1 << RTC_PWRCR_SLEEP_Pos);	// enter sleep mode
-		while((SYS->RTCWKSR & SYS_RTCWKSR_FLAG_Msk) == 0) __NOP();
+		RTC->PWRCR |= RTC_PWRCR_SLEEP_Msk;			// enter sleep mode
+		while((SYS->RTCWKSR & SYS_RTCWKSR_FLAG_Msk) == 0) __NOP();	// wait wake-up
 		
-		switchToPLL(1, 2, 60, 2, 0);				// After waking up, switch to PLL
 		__enable_irq();
+		
+		RTC_DateTime dateTime;
+		RTC_GetDateTime(RTC, &dateTime);
+		printf("Now Time: %02d : %02d\r\n", dateTime.Minute, dateTime.Second);
 	}
 }
 
-
-RTC_DateTime dateTime;
-RTC_AlarmStructure alarmStruct;
 
 void RTC_Config(void)
 {
@@ -51,25 +53,6 @@ void RTC_Config(void)
 	RTC_initStruct.Minute = 5;
 	RTC_initStruct.Second = 5;
 	RTC_Init(RTC, &RTC_initStruct);
-	
-	alarmStruct.Mode = RTC_ALARM_Daily;
-	alarmStruct.Hour = 10;
-	alarmStruct.Minute = 5;
-	alarmStruct.Second = 8;
-	alarmStruct.AlarmIEn = 1;
-	
-	RTC_AlarmSetup(RTC, RTC_ALARM_A, &alarmStruct);
-}
-
-void RTC_Handler(void)
-{
-	if(RTC_INTStat(RTC, RTC_IT_ALRMA))
-	{
-		RTC_INTClr(RTC, RTC_IT_ALRMA);
-		
-		RTC_GetDateTime(RTC, &dateTime);
-		printf("Now Time: %02d : %02d\r\n", dateTime.Minute, dateTime.Second);
-	}
 }
 
 
