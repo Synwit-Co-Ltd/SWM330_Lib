@@ -95,9 +95,9 @@ void I2S_Slave_Init(void)
 	I2S_InitStructure I2S_initStruct;
 	DMA_InitStructure DMA_initStruct;
 	
-	PORT_Init(PORTA, PIN13, FUNMUX1_I2S0_WS,   1);
-	PORT_Init(PORTA, PIN12, FUNMUX0_I2S0_SCLK, 1);
-	PORT_Init(PORTA, PIN14, FUNMUX0_I2S0_DATA, 0);
+	PORT_Init(PORTC, PIN1, FUNMUX1_I2S0_WS,   1);
+	PORT_Init(PORTC, PIN0, FUNMUX0_I2S0_SCLK, 1);
+	PORT_Init(PORTC, PIN2, FUNMUX0_I2S0_DATA, 0);
 	
 	I2S_initStruct.Mode = I2S_SLAVE_TX;
 	I2S_initStruct.ClkFreq = 0;
