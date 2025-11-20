@@ -110,9 +110,6 @@ void I2S_Master_Init(void)
 	I2S_Open(I2S0);
 	
 	
-	// I2S0 TX DMA
-	I2S0->CR1 |= (1 << I2S_CR1_DMATXEN_Pos);
-	
 	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
 	DMA_initStruct.Unit = DMA_UNIT_HALFWORD;
 	DMA_initStruct.Count = BUF_N;
@@ -120,11 +117,15 @@ void I2S_Master_Init(void)
 	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.PeripheralAddr = (uint32_t)&I2S0->DR;
 	DMA_initStruct.PeripheralAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_CH1_I2S0TX;
+	DMA_initStruct.Handshake = DMA_EXMRD_BTIMR0;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = DMA_IT_HALF | DMA_IT_DONE;
 	DMA_CH_Init(DMA_CH1, &DMA_initStruct);
 	DMA_CH_Open(DMA_CH1);
+	
+	// each time TIMR's counter overflows, DMA transfers a data to I2S0->DR register
+	TIMR_Init(BTIMR0, TIMR_MODE_TIMER, 1, I2S0->CR3 * 2 * ((I2S_initStruct.ChannelLen + 1) * 16), 0);
+	TIMR_Start(BTIMR0);
 }
 
 
