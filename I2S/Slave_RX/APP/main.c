@@ -1,5 +1,10 @@
 #include "SWM330.h"
 
+
+/* 说明：Slave_RX 程序需在 Master_TX 程序之前先跑起来
+ */
+
+
 #define BUF_N	1024
 uint16_t RX_Buffer[BUF_N] = {0};
 
@@ -44,6 +49,8 @@ void I2S_Slave_Init(void)
 	PORT_Init(PORTC, PIN1, FUNMUX1_I2S0_WS,   1);
 	PORT_Init(PORTC, PIN0, FUNMUX0_I2S0_SCLK, 1);
 	PORT_Init(PORTC, PIN2, FUNMUX0_I2S0_DATA, 1);
+	PORTC->PULLU |= (1 << PIN1);
+	PORTC->PULLD |= (1 << PIN0);
 	
 	I2S_initStruct.Mode = I2S_SLAVE_RX;
 	I2S_initStruct.ClkFreq = 0;
