@@ -1,5 +1,12 @@
 #include "SWM330.h"
 
+
+/* 说明：
+ * 1、可以使用 SWM341 的 I2S/MasterRX_SlaveTX 例程作为 I2S Slave_TX 配合本程序测试
+ * 2、Slave_TX 程序需在 Master_RX 程序之前先跑起来，且需要 I2S 从机的 WS 引脚开启上拉、CLK 引脚开启下拉（when ClkPolarity = I2S_CLK_IDLE_LOW）
+ */
+
+
 #define BUF_N	1024
 uint16_t RX_Buffer[BUF_N] = {0};
 
