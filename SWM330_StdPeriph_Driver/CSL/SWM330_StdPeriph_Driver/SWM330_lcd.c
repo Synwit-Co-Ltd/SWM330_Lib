@@ -40,7 +40,7 @@ void LCD_Init(LCD_TypeDef * LCDx, LCD_InitStructure * initStruct)
 				((initStruct->Format & 1)  << LCD_CR_FORMAT_Pos)   |
 			    ((initStruct->Format >> 1) << LCD_CR_MODE_Pos)     |
 				(2						   << LCD_CR_PARTSIZE_Pos) |
-				(3                         << LCD_CR_BURSTLEN_Pos) |
+				(2                         << LCD_CR_BURSTLEN_Pos) |
 				((1-initStruct->IntEOTEn)  << LCD_CR_AUTORESTA_Pos);
 	
 	LCDx->CRH1 = ((initStruct->HnPixel - 1)    << LCD_CRH1_PIX_Pos);
