@@ -33,7 +33,7 @@ typedef struct {
 	
 	/* only for DMA2D_LAYER_OUT, not for DMA2D_LAYER_FG and DMA2D_LAYER_BG */
 	uint16_t LineCount;			// line per screen
-	uint16_t LinePixel;			// pixel per line, must be even number when RGB565
+	uint16_t LinePixel;			// pixel per line
 } DMA2D_LayerSetting;
 
 

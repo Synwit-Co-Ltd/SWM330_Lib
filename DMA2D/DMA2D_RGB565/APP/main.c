@@ -1,6 +1,12 @@
 #include <string.h>
 #include "SWM330.h"
 
+
+/*	注意：RGB565 模式下，若图像宽度（LinePixel）为奇数，可能导致 DMA2D 后续运算输出错误像素值。
+ *	解决方法：通过 SYS->PRSTR0.DMA2D 复位 DMA2D 模块，然后重新执行 DMA2D_Init() 初始化。
+ */
+
+
 extern const unsigned char gImage_Synwit128[32768];
 
 
