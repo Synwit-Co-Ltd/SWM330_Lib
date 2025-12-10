@@ -3346,7 +3346,7 @@ typedef struct {
 	
 	__I  uint32_t SR;
 	
-	__O  uint32_t SWTRG;					// Software trigger
+		 uint32_t RESERVED;
 	
 	__IO uint32_t DHR;
 } DAC_TypeDef;
@@ -3354,10 +3354,12 @@ typedef struct {
 
 #define DAC_CR_EN_Pos				0
 #define DAC_CR_EN_Msk				(0x01 << DAC_CR_EN_Pos)
-#define DAC_CR_DMAEN_Pos			3
-#define DAC_CR_DMAEN_Msk			(0x01 << DAC_CR_DMAEN_Pos)
 #define DAC_CR_DHRFMT_Pos			9		// DHR Format, 0 12-bit data, DHR[11:0] => DOR[11:0]; 1 12-bit data, DHR[15:4] => DOR[11:0]; 3 8-bit data, DHR[7 :0] => DOR[11:4]
 #define DAC_CR_DHRFMT_Msk			(0x03 << DAC_CR_DHRFMT_Pos)
+#define DAC_CR_BUFOFF_Pos			11		// 0 buffer on, 1 buffer off
+#define DAC_CR_BUFOFF_Msk			(0x01 << DAC_CR_BUFOFF_Pos)
+#define DAC_CR_REFSEL_Pos			12		// reference select, 0 VDD, 1 Vrefp
+#define DAC_CR_REFSEL_Msk			(0x01 << DAC_CR_REFSEL_Pos)
 
 #define DAC_SR_DHRFULL_Pos			0		// 0 DHR not Full, can write now
 #define DAC_SR_DHRFULL_Msk			(0x01 << DAC_SR_DHRFULL_Pos)
