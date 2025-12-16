@@ -336,6 +336,9 @@ void MPULCD_DMAStart(LCD_TypeDef * LCDx, uint32_t * buff, uint16_t hpix, uint16_
 	LCDx->L[0].WVP = (0			 << LCD_WVP_STA_Pos) |
 				     ((vpix - 1) << LCD_WVP_STP_Pos);
 	
+	LCD->CR |= LCD_CR_IMMRELOAD_Msk;
+	__NOP(); __NOP(); __NOP(); __NOP();
+	
 	LCDx->START |= (1 << LCD_START_GO_Pos);
 }
 
