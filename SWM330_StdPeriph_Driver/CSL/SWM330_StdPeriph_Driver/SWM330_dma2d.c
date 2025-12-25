@@ -219,3 +219,24 @@ uint32_t DMA2D_INTStat(uint32_t it)
 {
 	return (DMA2D->IF & it) ? 1 : 0;
 }
+
+
+/*******************************************************************************************************************************
+* @brief	DMA2D reset internal state
+* @param
+* @return
+*******************************************************************************************************************************/
+void DMA2D_reset_state(void)
+{
+	uint32_t reg_CR = DMA2D->CR;
+	uint32_t reg_IE = DMA2D->IE;
+	
+	SYS->PRSTEN = 0x55;
+	SYS->PRSTR0 |= SYS_PRSTR0_DMA2D_Msk;
+	__NOP(); __NOP(); __NOP(); __NOP();
+	SYS->PRSTR0 = 0;
+	SYS->PRSTEN = 0;
+	
+	DMA2D->CR = reg_CR;
+	DMA2D->IE = reg_IE;
+}

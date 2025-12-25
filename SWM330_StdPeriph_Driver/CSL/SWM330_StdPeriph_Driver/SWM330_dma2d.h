@@ -83,4 +83,6 @@ void DMA2D_INTClr(uint32_t it);
 uint32_t DMA2D_INTStat(uint32_t it);
 
 
+void DMA2D_reset_state(void);
+
 #endif
