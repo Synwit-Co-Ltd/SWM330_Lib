@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>SWM330xG</Device>
           <Vendor>Synwit</Vendor>
-          <PackID>Synwit.SWM32_New.0.2.7</PackID>
+          <PackID>Synwit.SWM32_DFP.2.2.0</PackID>
           <PackURL>http://www.synwit.com/pack</PackURL>
           <Cpu>CPUTYPE("Cortex-M33") DSP CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
