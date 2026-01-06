@@ -43,7 +43,6 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 	
 	QSPIx->CR = (1						<< QSPI_CR_TOEN_Pos)   |
 				(0						<< QSPI_CR_SSHIFT_Pos) |
-				(0						<< QSPI_CR_DUAL_Pos)   |
 				(8						<< QSPI_CR_FFTHR_Pos)  |
 				(initStruct->IntEn		<< QSPI_CR_ERRIE_Pos)  |
 				((initStruct->ClkDiv-1)	<< QSPI_CR_CLKDIV_Pos);
@@ -617,7 +616,7 @@ void QSPI_INTDis(QSPI_TypeDef * QSPIx, uint32_t it)
 /*******************************************************************************************************************************
 * @brief	QSPI interrupt flag clear
 * @param	QSPIx is the QSPI to set
-* @param	it is interrupt type, can be QSPI_IT_ERR, QSPI_IT_DONE, QSPI_IT_FFTHR, QSPI_IT_PSMAT, QSPI_IT_TO and their '|' operation
+* @param	it is interrupt type, can be QSPI_IT_ERR, QSPI_IT_DONE, QSPI_IT_PSMAT, QSPI_IT_TO and their '|' operation
 * @return
 *******************************************************************************************************************************/
 void QSPI_INTClr(QSPI_TypeDef * QSPIx, uint32_t it)

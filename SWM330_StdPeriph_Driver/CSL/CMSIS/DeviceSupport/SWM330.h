@@ -2067,10 +2067,6 @@ typedef struct {
 #define QSPI_CR_SSHIFT_Msk			(0x01 << QSPI_CR_SSHIFT_Pos)
 #define QSPI_CR_BIDI_Pos			5		// Single line bidirectional mode: 0 IO0 as output, IO1 as input; 1 IO0 as input and output
 #define QSPI_CR_BIDI_Msk			(0x01 << QSPI_CR_BIDI_Pos)
-#define QSPI_CR_DUAL_Pos			6		// Dual Flash mode
-#define QSPI_CR_DUAL_Msk			(0x01 << QSPI_CR_DUAL_Pos)
-#define QSPI_CR_BANK_Pos			7		// QSPI Bank Select
-#define QSPI_CR_BANK_Msk			(0x01 << QSPI_CR_BANK_Pos)
 #define QSPI_CR_FFTHR_Pos			8		// FIFO Threshold, in indirect read  mode, when the number of data  in FIFO >= CR.FFTHR+1, SR.FFTHR set
 											//				   in indirect write mode, when the number of space in FIFO >= CR.FFTHR+1, SR.FFTHR set
 #define QSPI_CR_FFTHR_Msk			(0x0F << QSPI_CR_FFTHR_Pos)
