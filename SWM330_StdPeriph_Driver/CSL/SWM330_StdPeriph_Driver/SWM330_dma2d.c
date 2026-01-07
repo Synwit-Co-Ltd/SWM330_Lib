@@ -151,6 +151,8 @@ void DMA2D_PixelBlend(DMA2D_LayerSetting * fgLayer, DMA2D_LayerSetting * bgLayer
 * @brief	DMA2D busy query
 * @param
 * @return	1 DMA2D is busy, 0 DMA2D is dile, operation done
+* @note		返回 0 时，最后若干数据可能还未写入 PSRAM 中，此时不能执行 DMA2D_reset_state() 等操作；需等待 PSRAM_Busy() 返回 0，
+*			即对 PSRAM 的读写操作全部完成后，才能执行 DMA2D_reset_state() 等操作
 *******************************************************************************************************************************/
 uint32_t DMA2D_IsBusy(void)
 {
