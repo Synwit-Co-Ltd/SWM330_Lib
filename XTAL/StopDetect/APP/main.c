@@ -13,8 +13,9 @@ int main(void)
 	SerialInit();
 	
 	for(int i = 0; i < SystemCoreClock/4; i++) __NOP();	// Wait for the crystal to stabilize, to prevent misidentification of crystal vibration stop during power-on
-   	
-	SYS->XTALSR = SYS_XTALSR_STOP_Msk;					// clear STOP flag
+	
+	SYS->XTALSR = SYS_XTALSR_STOPDET_Msk | SYS_XTALSR_STOP_Msk;	// XTAL Stop Detect enable, and clear STOP flag
+	
 	NVIC_ClearPendingIRQ(XTALSTOP_IRQn);
 	NVIC_EnableIRQ(XTALSTOP_IRQn);
    	
