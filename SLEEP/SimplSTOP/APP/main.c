@@ -1,42 +1,50 @@
 #include "SWM330.h"
 
 
-/* note:
- * 1) After entering STOP mode, you can only wake-up through the wake-up pin, and cannot reset the chip by pressing the reset button.
- * 2) The program restarts from the beginning after wake-up form the STOP mode.
- * 3) The wake-up pins are PD6 and PD15, their falling edge wake-up chip, so need to keep high level during STOP mode.
+/* STOP mode wake-up source: RTC_GPIO pin, RTC Wakeup. reset pin cannot work in STOP mode.
  */
 
 
 void SerialInit(void);
 
 int main(void)
-{	
-	uint32_t i;
-	
+{
 	SystemInit();
 	
 	SerialInit();
 	
-	SYS->RCCR |= (1 << SYS_RCCR_LON_Pos);			// Turn on 32KHz LRC oscillator
+	SYS->CLKSEL |= SYS_CLKSEL_SLEEP_Msk;			// sleep clock: XTAL 32K
 	
-	printf("BACKUP[0]: %08X\r\n", SYS->BACKUP[0]);	// Note: do not have data retention function
-	SYS->BACKUP[0] += 1;
+	RTC_InitStructure RTC_initStruct;
+	RTC_initStruct.clksrc = RTC_CLKSRC_XTAL32K;		// for STOP mode, can only be RTC_CLKSRC_XTAL32K
+	RTC_initStruct.Year = 2026;
+	RTC_initStruct.Month = 1;
+	RTC_initStruct.Date = 15;
+	RTC_initStruct.Hour = 17;
+	RTC_initStruct.Minute = 5;
+	RTC_initStruct.Second = 5;
+	RTC_Init(RTC, &RTC_initStruct);
+	
+	printf("BACKUP[0]: %08X\r\n", RTC->BACKUP[0]);
+	RTC->BACKUP[0] += 1;
+	
+	RTC_WakeupSetup(RTC, 10, 0);
+	
+	RTC->TAMPER = RTC_TAMPER_ENA_Msk | RTC_TAMPER_POLAR_Msk |	// fall-edge tamper detect
+				  (7 << RTC_TAMPER_SAMFREQ_Pos) |				// 128 samples per second
+				  (0 << RTC_TAMPER_PUPDIS_Pos);					// RTC_GPIO pull-up enable
 	
 	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);			// output, connect a LED
-	
-//	PORT_Init(PORTD, PIN6, PORTD_PIN6_WAKEUP, 1);
-//	PORTD->PULLU |= (1 << PIN6);
 	
 	while(1==1)
 	{
 		GPIO_SetBit(GPIOA, PIN5);					// turn on the LED
-		for(i = 0; i < SystemCoreClock/4; i++) __NOP();
+		for(int i = 0; i < SystemCoreClock; i++) __NOP();
 		GPIO_ClrBit(GPIOA, PIN5);					// turn off the LED
+		for(int i = 0; i < SystemCoreClock; i++) __NOP();
 		
 		RTC->PWRCR |= (1 << RTC_PWRCR_STOP_Pos);	// enter STOP mode
-	
-		for(i = 0; i < 5000; i++);
+		while(1) __NOP();							// run from beginning after wake-up
 	}
 }
 

@@ -3659,25 +3659,25 @@ typedef struct {
 
 #define RTC_TAMPER_ENA_Pos          0       // tamper detect enable
 #define RTC_TAMPER_ENA_Msk          (0x01 << RTC_TAMPER_ENA_Pos)
-#define RTC_TAMPER_POLAR_Pos        1
+#define RTC_TAMPER_POLAR_Pos        1		// 0 rise edge trigger tamper, 1 fall edge trigge tamper
 #define RTC_TAMPER_POLAR_Msk        (0x01 << RTC_TAMPER_POLAR_Pos)
-#define RTC_TAMPER_IE_Pos           2
+#define RTC_TAMPER_IE_Pos           2		// interrupt enable
 #define RTC_TAMPER_IE_Msk           (0x01 << RTC_TAMPER_IE_Pos)
 #define RTC_TAMPER_TSEN_Pos         7      // tamper gen timestamp enable
 #define RTC_TAMPER_TSEN_Msk         (0x01 << RTC_TAMPER_TSEN_Pos)
-#define RTC_TAMPER_SAMFREQ_Pos      8
+#define RTC_TAMPER_SAMFREQ_Pos      8		// tamper sample frequency, 0 1-time per second, 1 2/s, ..., 7 128/s
 #define RTC_TAMPER_SAMFREQ_Msk      (0x07 << RTC_TAMPER_SAMFREQ_Pos)
 #define RTC_TAMPER_FILTER_Pos       11
 #define RTC_TAMPER_FILTER_Msk       (0x03 << RTC_TAMPER_FILTER_Pos)
-#define RTC_TAMPER_PRECHG_Pos       13
+#define RTC_TAMPER_PRECHG_Pos       13		// Pull-up enable time prior to sampling. 0 1 RTCCLK period, 1 2 RTCCLK period, 2 4 RTCCLK period, 3 8 RTCCLK period
 #define RTC_TAMPER_PRECHG_Msk       (0x03 << RTC_TAMPER_PRECHG_Pos)
-#define RTC_TAMPER_PUPDIS_Pos       15
+#define RTC_TAMPER_PUPDIS_Pos       15		// Pull-up disable before sampling
 #define RTC_TAMPER_PUPDIS_Msk       (0x01 << RTC_TAMPER_PUPDIS_Pos)
-#define RTC_TAMPER_PIN_Pos          16
+#define RTC_TAMPER_PIN_Pos          16		// tamper pin, 0 RTC_GPIO
 #define RTC_TAMPER_PIN_Msk          (0x01 << RTC_TAMPER_PIN_Pos)
-#define RTC_TAMPER_TSPIN_Pos        17
+#define RTC_TAMPER_TSPIN_Pos        17		// timestamp trigger pin, 0 RTC_GPIO
 #define RTC_TAMPER_TSPIN_Msk        (0x01 << RTC_TAMPER_TSPIN_Pos)
-#define RTC_TAMPER_OUTPP_Pos        18
+#define RTC_TAMPER_OUTPP_Pos        18		// RTC_ALARM out type, 0 open-drain, 1 push-pull
 #define RTC_TAMPER_OUTPP_Msk        (0x01 << RTC_TAMPER_OUTPP_Pos)
 
 #define RTC_ALRMASS_SUBSEC_Pos      0
