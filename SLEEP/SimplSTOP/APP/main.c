@@ -25,10 +25,10 @@ int main(void)
 	RTC_initStruct.Second = 5;
 	RTC_Init(RTC, &RTC_initStruct);
 	
-	printf("BACKUP[0]: %08X\r\n", RTC->BACKUP[0]);
+	printf("BACKUP[0]: %08X\n", RTC->BACKUP[0]);
 	RTC->BACKUP[0] += 1;
 	
-	RTC_WakeupSetup(RTC, 10, 0);
+	RTC_WakeupSetup(RTC, 10, 0);	// Wake up after being stopped for 10 seconds
 	
 	RTC->TAMPER = RTC_TAMPER_ENA_Msk | RTC_TAMPER_POLAR_Msk |	// fall-edge tamper detect
 				  (7 << RTC_TAMPER_SAMFREQ_Pos) |				// 128 samples per second
@@ -43,6 +43,7 @@ int main(void)
 		GPIO_ClrBit(GPIOA, PIN5);					// turn off the LED
 		for(int i = 0; i < SystemCoreClock; i++) __NOP();
 		
+		printf("Enter stop mode\n");
 		RTC->PWRCR |= (1 << RTC_PWRCR_STOP_Pos);	// enter STOP mode
 		while(1) __NOP();							// run from beginning after wake-up
 	}
