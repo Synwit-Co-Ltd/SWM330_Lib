@@ -26,6 +26,8 @@ int main(void)
 	
 	SerialInit();
 	
+	printf("%d\n", SystemCoreClock);
+	
 	PORT_Init(PORTE, PIN9,  PORTE_PIN9_PSRAM_RST, 0);
 	PORT_Init(PORTE, PIN10, PORTE_PIN10_PSRAM_CS, 0);
 	PORT_Init(PORTE, PIN11, PORTE_PIN11_PSRAM_CK, 0);
