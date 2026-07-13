@@ -127,6 +127,10 @@ void SystemInit(void)
 {
 	SYS->CLKEN1 |= (1 << SYS_CLKEN1_ANAC_Pos);
 	
+	__NOP(); __NOP(); __NOP(); __NOP(); __NOP();
+	
+	SYS->PWRCR = (SYS->PWRCR & (~0xF)) | 10;
+	
 	LDO_1V8_On(RTC_CLKSRC_LRC32K);	// Power for PSRAM and PE0-11, PE14, PA5 pin
 	
 	Flash_Param_at_xMHz(150);
