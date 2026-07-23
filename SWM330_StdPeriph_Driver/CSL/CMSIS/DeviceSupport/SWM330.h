@@ -3658,6 +3658,8 @@ typedef struct {
 #define RTC_LVRCR_ENA_Msk      		(0x01 << RTC_LVRCR_ENA_Pos)
 #define RTC_LVRCR_LVL_Pos      		1
 #define RTC_LVRCR_LVL_Msk      		(0x03 << RTC_LVRCR_LVL_Pos)
+#define RTC_LVRCR_RSTST_Pos			4		// reset status, 1 = LVR reset occurred; write 1 to clear.
+#define RTC_LVRCR_RSTST_Msk			(0x01 << RTC_LVRCR_RSTST_Pos)
 
 #define RTC_X32KCR_ON_Pos           0
 #define RTC_X32KCR_ON_Msk           (0x01 << RTC_X32KCR_ON_Pos)
