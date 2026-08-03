@@ -5,14 +5,6 @@
 #include "queue.h"
 
 
-/* Enable FPU support:
- * 1) replace port.c with APP\FreeRTOS\portable\GCC\ARM_CM4F\port.c
- * 2) In Options => C/C++ (AC6) => Include Paths page, 
- *		replace .\APP\FreeRTOS\portable\GCC\ARM_CM3 with .\APP\FreeRTOS\portable\GCC\ARM_CM4F
- * 3) In Options => Target page,  change Floating Point Hardware option from Not Used to Single Precision
-*/
-
-
 QueueHandle_t queueADC;
 
 void TaskADC(void *arg);
