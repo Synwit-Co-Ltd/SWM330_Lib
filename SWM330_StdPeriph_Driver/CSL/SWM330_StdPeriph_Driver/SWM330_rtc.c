@@ -57,7 +57,7 @@ void RTC_Init(RTC_TypeDef * RTCx, RTC_InitStructure * initStruct)
 	
 	RTCx->DR = ((initStruct->Date   % 10) << RTC_DR_DATE_Pos) |
 			   ((initStruct->Date   / 10) << RTC_DR_DATE10_Pos) |
-			   (calcWeekDay(initStruct->Year, initStruct->Month, initStruct->Date) << RTC_DR_DAY_Pos) |
+			   ((calcWeekDay(initStruct->Year, initStruct->Month, initStruct->Date) + 1) << RTC_DR_DAY_Pos) |
 			   ((initStruct->Month  % 10) << RTC_DR_MON_Pos) |
 			   ((initStruct->Month  / 10) << RTC_DR_MON10_Pos) |
 			   ((initStruct->Year   % 10) << RTC_DR_YEAR_Pos) |
