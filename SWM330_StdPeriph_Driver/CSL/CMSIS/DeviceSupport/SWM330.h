@@ -3977,4 +3977,8 @@ static __INLINE void SW_exit_critical(uint32_t primask)
 }
 
 
+#define SW_MIN(a, b)	((a) < (b) ? (a) : (b))
+#define SW_MAX(a, b)	((a) > (b) ? (a) : (b))
+
+
 #endif //__SWM330_H__
