@@ -252,7 +252,7 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	switch (pdrv) {
+	switch (cmd) {
 #if !FF_FS_READONLY /* Complete pending write process (needed at FF_FS_READONLY == 0) */
     case CTRL_SYNC:
         switch (pdrv) {
