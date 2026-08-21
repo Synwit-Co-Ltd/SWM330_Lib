@@ -1,6 +1,10 @@
 #include "SWM330.h"
 
 
+#define TEST_TS				0
+#define TEST_ALARM_UPDATE	0
+
+
 RTC_DateTime dateTime;
 RTC_AlarmStructure alarmStruct;
 
@@ -8,7 +12,7 @@ RTC_AlarmStructure alarmStruct;
 void SerialInit(void);
 
 int main(void)
-{	
+{
 	RTC_InitStructure RTC_initStruct;
 	
 	SystemInit();
@@ -29,12 +33,15 @@ int main(void)
 	alarmStruct.Minute = 5;
 	alarmStruct.Second = 8;
 	alarmStruct.AlarmIEn = 1;
-	
 	RTC_AlarmSetup(RTC, RTC_ALARM_A, &alarmStruct);
-		
+	
+#if TEST_TS
+	RTC->TAMPER &= ~RTC_TAMPER_PIN_Msk;				// RTC_IO input enable
+	RTC->CR |= RTC_CR_TSEN_Msk | RTC_CR_TSIE_Msk;	// RTC_IO 引脚上检测到低电平时触发 TS 中断、并将当时时间保存到时间戳寄存器中
+#endif
+	
 	while(1==1)
 	{
-		
 	}
 }
 
@@ -47,6 +54,23 @@ void RTC_Handler(void)
 		
 		RTC_GetDateTime(RTC, &dateTime);
 		printf("Now Time: %02d : %02d\r\n", dateTime.Minute, dateTime.Second);
+		
+#if TEST_ALARM_UPDATE
+		alarmStruct.Second += 3;
+		if(alarmStruct.Second > 59)
+		{
+			alarmStruct.Minute += 1;
+			alarmStruct.Second -= 60;
+		}
+		RTC_AlarmSetup(RTC, RTC_ALARM_A, &alarmStruct);
+#endif
+	}
+	else if(RTC_INTStat(RTC, RTC_IT_TS))
+	{
+		RTC_GetTimeStamp(RTC, &dateTime);
+		printf("TimeStamp: %02d : %02d\r\n", dateTime.Minute, dateTime.Second);
+		
+		RTC_INTClr(RTC, RTC_IT_TS);
 	}
 }
 
