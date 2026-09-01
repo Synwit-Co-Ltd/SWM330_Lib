@@ -238,6 +238,7 @@ void DMA2D_reset_state(void)
 	__NOP(); __NOP(); __NOP(); __NOP();
 	SYS->PRSTR0 = 0;
 	SYS->PRSTEN = 0;
+	__NOP(); __NOP(); __NOP(); __NOP();
 	
 	DMA2D->CR = reg_CR;
 	DMA2D->IE = reg_IE;
