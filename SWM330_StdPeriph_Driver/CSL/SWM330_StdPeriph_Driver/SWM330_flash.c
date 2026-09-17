@@ -74,13 +74,19 @@ uint32_t FLASH_Write(uint32_t addr, uint32_t buff[], uint32_t count)
 * @param	xMHz == SystemCoreClock / 1000000
 * @return
 *******************************************************************************************************************************/
+#if defined ( __ICCARM__ )
+__ramfunc
+#endif
 void Flash_Param_at_xMHz(uint32_t xMHz)
 {
+	uint32_t ns_per_cycle = 1000 / xMHz;
+	
 	uint32_t primask = SW_enter_critical();
 	
-	IAP_Flash_ParamTAC(6, 0x0B11FFAC);
+	__NOP();__NOP();__NOP();__NOP();__NOP();
+	__NOP();__NOP();__NOP();__NOP();__NOP();
 	
-	IAP_Flash_Param(1000 / xMHz, 0x0B11FFAC);
+	IAP_Flash_Param(ns_per_cycle, 0x0B11FFAC);
 	
 	if(xMHz < 48)
 		IAP_Flash_ParamTAC(1, 0x0B11FFAC);
