@@ -99,5 +99,8 @@ void Flash_Param_at_xMHz(uint32_t xMHz)
 	else if(xMHz < 152)
 		IAP_Flash_ParamTAC(5, 0x0B11FFAC);
 	
+	__NOP();__NOP();__NOP();__NOP();__NOP();
+	__NOP();__NOP();__NOP();__NOP();__NOP();
+	
 	SW_exit_critical(primask);
 }
