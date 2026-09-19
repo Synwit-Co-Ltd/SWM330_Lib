@@ -1,7 +1,6 @@
+#include <string.h>
 #include "SWM330.h"
 #include "W25N01G.h"
-
-#include <string.h>
 
 
 #define RW_PAGE	64
@@ -163,6 +162,8 @@ void W25N01G_Write_DMA(uint32_t page, uint8_t buff[2048], uint8_t data_width)
 		dma_inited = true;
 	}
 	
+	DMA_CH_SetAddrAndCount(DMA_CH0, (uint32_t)buff, 2048);
+	
 	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectWrite);
 	
 	W25N01G_Write_(page, buff, data_width, 0);
@@ -205,6 +206,8 @@ void W25N01G_Read_DMA(uint32_t page, uint8_t buff[2048], uint8_t addr_width, uin
 		
 		dma_inited = true;
 	}
+	
+	DMA_CH_SetAddrAndCount(DMA_CH1, (uint32_t)buff, 2048);
 	
 	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectRead);
 	
