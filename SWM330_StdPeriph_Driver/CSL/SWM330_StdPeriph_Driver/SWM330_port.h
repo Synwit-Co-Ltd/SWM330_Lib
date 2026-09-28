@@ -187,7 +187,7 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 
 #define PORTC_PIN3_GPIO			0
 #define PORTC_PIN3_FUNMUX1		1
-#define PORTC_PIN4_LCD_B3		2
+#define PORTC_PIN3_LCD_B3		2
 #define PORTC_PIN3_SD_D7		3
 #define PORTC_PIN3_DVP_D6		4
 #define PORTC_PIN3_ADC0_CH7		7
