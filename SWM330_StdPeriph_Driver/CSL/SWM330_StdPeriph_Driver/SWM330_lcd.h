@@ -7,9 +7,9 @@ typedef struct {
 	uint8_t  Format;		// LCD_FMT_RGB565, LCD_FMT_RGB888, LCD_FMT_SRGB565, LCD_FMT_SRGB888
 	uint16_t HnPixel;		// Number of horizontal pixels, up to 8192
 	uint16_t VnPixel;		// Number of vertical pixels, up to 8192
-	uint8_t  Hfp;			// horizonal front porch, up to 512
+	uint16_t Hfp;			// horizonal front porch, up to 512
 	uint16_t Hbp;			// horizonal back porch,  up to 512
-	uint8_t  Vfp;			// vertical front porch,  up to 512
+	uint16_t Vfp;			// vertical front porch,  up to 512
 	uint16_t Vbp;			// vertical back porch,   up to 512
 	uint16_t HsyncWidth;	// up to 512
 	uint16_t VsyncWidth;	// up to 512
