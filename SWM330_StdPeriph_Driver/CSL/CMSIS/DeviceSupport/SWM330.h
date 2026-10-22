@@ -1809,7 +1809,7 @@ typedef struct {
 #define RDMA_LEN_PART_Pos			24		// 8: left 8/16
 #define RDMA_LEN_PART_Msk			(0xFFu<< RDMA_LEN_PART_Pos)
 
-#define RDMA_SR_SRCERR_Pos			0		// Ð´ 1 ï¿½ï¿½ï¿½ï¿½
+#define RDMA_SR_SRCERR_Pos			0		// Ð´ 1 ÇåÁã
 #define RDMA_SR_SRCERR_Msk			(0x01 << RDMA_SR_SRCERR_Pos)
 #define RDMA_SR_DESERR_Pos			1
 #define RDMA_SR_DESERR_Msk			(0x01 << RDMA_SR_DESERR_Pos)
@@ -2102,6 +2102,11 @@ typedef struct {
 #define QSPI_CCR_SIOO_Msk			(0x01 << QSPI_CCR_SIOO_Pos)
 #define QSPI_CCR_FRCM_Pos			29		// Free run clock mode, continuously output the clock for test and calibration purposes
 #define QSPI_CCR_FRCM_Msk			(0x01 << QSPI_CCR_FRCM_Pos)
+
+#define QSPI_SSHIFT_CYCLE_Pos		0		//Sample Shift Cycle Count in System clock
+#define QSPI_SSHIFT_CYCLE_Msk		(0x0F << QSPI_SSHIFT_CYCLE_Pos)
+#define QSPI_SSHIFT_SPACE_Pos		4		//When there are still SPACE vacancies in the RX FIFO, pause the reception in advance to prevent FIFO overflow caused by inability to pause in time
+#define QSPI_SSHIFT_SPACE_Msk		(0x0F << QSPI_SSHIFT_SPACE_Pos)
 
 #define QSPI_CACHE_CLR_Pos			0
 #define QSPI_CACHE_CLR_Msk			(0x01 << QSPI_CACHE_CLR_Pos)
@@ -2459,7 +2464,7 @@ typedef struct {
 	
 	__I  uint32_t IR48;
 	
-	__IO uint32_t SLPCR;					// Ð´ 0xF0 ï¿½ï¿½ï¿½ï¿½ï¿½Ë¯ï¿½ï¿½Ä£Ê½ï¿½ï¿½ Ð´ 0xC0 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¯ï¿½ï¿½Ä£Ê½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½
+	__IO uint32_t SLPCR;					// Ð´ 0xF0 ½øÈë°ëË¯ÃßÄ£Ê½£¬ Ð´ 0xC0 ½øÈëÉî¶ÈË¯ÃßÄ£Ê½£¬Ð´ÆäËûÖµ»½ÐÑ
 	
 	__IO uint32_t INITTR;					// tPU, Device Initialization in us
 	
@@ -2530,7 +2535,7 @@ typedef struct {
 #define PSRAMC_PWDNTR_DPDIN_Pos		16		// tDPDIN, Deep Power Down CR0[15]=0 register write to DPD power level in us
 #define PSRAMC_PWDNTR_DPDIN_Msk		(0xFFFFu<< PSRAMC_PWDNTR_DPDIN_Pos)
 
-#define PSRAMC_MR0_DRVST_Pos		0		// ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
+#define PSRAMC_MR0_DRVST_Pos		0		// Çý¶¯Ç¿¶È
 #define PSRAMC_MR0_DRVST_Msk		(0x03 << PSRAMC_MR0_DRVST_Pos)
 #define PSRAMC_MR0_RDLatency_Pos	2
 #define PSRAMC_MR0_RDLatency_Msk	(0x07 << PSRAMC_MR0_RDLatency_Pos)
@@ -2539,7 +2544,7 @@ typedef struct {
 
 #define PSRAMC_MR4_PartialRef_Pos	0		// Partial Array Refresh, 0 Full Array
 #define PSRAMC_MR4_PartialRef_Msk	(0x07 << PSRAMC_MR4_PartialRef_Pos)
-#define PSRAMC_MR4_FastRef_Pos		3		// 0 ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½Â£ï¿½ 1 ï¿½Â¶ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½
+#define PSRAMC_MR4_FastRef_Pos		3		// 0 ¿ìËÙË¢ÐÂ£¬ 1 ÎÂ¶ÈÔÊÐíÊ±Æô¶¯ÂýËÙË¢ÐÂ
 #define PSRAMC_MR4_FastRef_Msk		(0x01 << PSRAMC_MR4_FastRef_Pos)
 #define PSRAMC_MR4_WRLatency_Pos	5
 #define PSRAMC_MR4_WRLatency_Msk	(0x07 << PSRAMC_MR4_WRLatency_Pos)
@@ -3258,7 +3263,7 @@ typedef struct {
 	
 	__IO uint32_t CFG0;
 	
-	__IO uint32_t CFG1;						// ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ 0x5A5A5A5Aï¿½ï¿½0xA5A5A5A5 ï¿½ï¿½ï¿½ readonlyï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½Öµï¿½Ö¸ï¿½ readonly
+	__IO uint32_t CFG1;						// ÒÀ´ÎÐ´Èë 0x5A5A5A5A¡¢0xA5A5A5A5 ½â³ý readonly£¬Ð´ÆäËûÖµ»Ö¸´ readonly
 	
 	__IO uint32_t CFG2;
 	
@@ -3270,7 +3275,7 @@ typedef struct {
 } FMC_TypeDef;
 
 
-#define FMC_ERASE_ADDR_Pos			0		// ï¿½ï¿½10Î»ï¿½ï¿½Ð§ï¿½ï¿½1KÃ¿Ò³
+#define FMC_ERASE_ADDR_Pos			0		// ¸ß10Î»ÓÐÐ§£¬1KÃ¿Ò³
 #define FMC_ERASE_ADDR_Msk			(0xFFFFF << FMC_ERASE_ADDR_Pos)
 #define FMC_ERASE_REQ_Pos			24
 #define FMC_ERASE_REQ_Msk			(0xFFu<< FMC_ERASE_REQ_Pos)
@@ -3279,10 +3284,10 @@ typedef struct {
 #define FMC_CACHE_CEN_Msk			(0x01 << FMC_CACHE_CEN_Pos)
 #define FMC_CACHE_CPEN_Pos			1		// Cache Predict Enable
 #define FMC_CACHE_CPEN_Msk			(0x01 << FMC_CACHE_CPEN_Pos)
-#define FMC_CACHE_CCLR_Pos			31		// Cache Clearï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
+#define FMC_CACHE_CCLR_Pos			31		// Cache Clear£¬×Ô¶¯ÇåÁã
 #define FMC_CACHE_CCLR_Msk			(0x01u<< FMC_CACHE_CCLR_Pos)
 
-#define FMC_CFG0_WREN_Pos			9		// ï¿½ï¿½Ð´Ê¹ï¿½ï¿½
+#define FMC_CFG0_WREN_Pos			9		// ²ÁÐ´Ê¹ÄÜ
 #define FMC_CFG0_WREN_Msk			(0x01 << FMC_CFG0_WREN_Pos)
 
 #define FMC_STAT_ERASEBUSY_Pos		0
