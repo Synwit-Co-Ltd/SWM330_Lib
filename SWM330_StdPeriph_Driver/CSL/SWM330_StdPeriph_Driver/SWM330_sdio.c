@@ -138,7 +138,7 @@ uint32_t SDIO_Init(uint32_t freq)
 	SDIO->CR2 |= (1 << SDIO_CR2_SDCLKEN_Pos) | SDIO_CR2_CLKEN_Msk |
 				 (calcSDCLKDiv(freq) << SDIO_CR2_SDCLKDIV_Pos);	// Initialization is complete and SDCLK switches to high speed
 	
-	while((SDIO->CR2 & SDIO_CR2_CLKRDY_Msk) == 0) {}
+	while((SDIO->CR2 & SDIO_CR2_CLKRDY_Msk) == 0) __NOP();
 	
 	SDIO_SendCmd(SD_CMD_APP_CMD, SD_cardInfo.RCA << 16, SD_RESP_32b, &resp);
 	
@@ -337,7 +337,7 @@ uint32_t _SDIO_SendCmd(uint32_t cmd, uint32_t arg, uint32_t resp_type, uint32_t 
 	{
 		resp_data[0] = SDIO->RESP[0];
         if (SD_RESP_32b_busy == resp_type) {
-            while (SDIO->STAT & ((1 << 0) | (1 << 1) | (1 << 2))) {} //wait cmd/data line no busy
+            while (SDIO->STAT & ((1 << 0) | (1 << 1) | (1 << 2))) __NOP(); //wait cmd/data line no busy
         }
 	}
 	else if(resp_type == SD_RESP_128b)
