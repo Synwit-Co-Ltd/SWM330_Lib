@@ -1338,7 +1338,9 @@ typedef struct {
 	
 	__IO uint32_t CMPTRG;
 	
-		 uint32_t RESERVED3[2];
+	__IO uint32_t CMPTRG2;
+	
+		 uint32_t RESERVED3;
 	
 	__IO uint32_t EVMUX;
 	
@@ -1435,6 +1437,9 @@ typedef struct {
 #define PWM_CMPTRG_DIR_Msk			(0x01 << PWM_CMPTRG_DIR_Pos)
 #define PWM_CMPTRG_ATP_Pos			29
 #define PWM_CMPTRG_ATP_Msk			(0x07u<< PWM_CMPTRG_ATP_Pos)
+
+#define PWM_CMPTRG2_INTV_Pos		0		// Compare Trigger Interval, 0: trigger once per cycle; 1: trigger once every 2 cycle; 2: trigger once every 3 cycles; ...
+#define PWM_CMPTRG2_INTV_Msk		(0x07 << PWM_CMPTRG2_INTV_Pos)
 
 #define PWM_EVMUX_START_Pos			0
 #define PWM_EVMUX_START_Msk			(0x07 << PWM_EVMUX_START_Pos)
@@ -1534,6 +1539,8 @@ typedef struct {
 	};
 	
 	__IO uint32_t EVSR;
+	
+	__IO uint32_t SWEV;						// Software simulation of external event
 } PWMG_TypeDef;
 
 

@@ -101,7 +101,7 @@ void PWM0AInit(void)
 	
 	
 	/* Mask */
-	PWM_CmpTrigger(PWM0, 1500, PWM_DIR_UP, 40, PWM_TRG_1, 7);	// when counting up and counter == 1500, PWM will generate PWM_TRG_1 signal
+	PWM_CmpTrigger(PWM0, 1500, PWM_DIR_UP, 40, PWM_TRG_1, 0);	// when counting up and counter == 1500, PWM will generate PWM_TRG_1 signal
 	
 	PWM_OutMask(PWM0, PWM_CH_A, PWM_EVT_1, 0, PWM_EVT_1, 1);	// PWM0A and PWM0AN output 0 and 1 respectively when detect PWM_EVT_1 event
 	PWM_OutMask(PWM0, PWM_CH_B, PWM_EVT_1, 0, PWM_EVT_1, 1);	// PWM0B and PWM0BN output 0 and 1 respectively when detect PWM_EVT_1 event

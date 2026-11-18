@@ -204,20 +204,20 @@ void PWM_OvfTrigger(PWM_TypeDef * PWMx, uint32_t en_up, uint32_t en_down, uint32
 * @param	dir = PWM_DIR_UP: when counting up, do the compare; dir = PWM_DIR_DOWN: when counting down, do the compare
 * @param	width is the trigger signal width: width * 4 clock cycle, so no trigger signal output when width == 0
 * @param	trig_chn select which the generated trigger signal will be used as: PWM_TRG_0, PWM_TRG_1, ..., or PWM_TRG_7
-* @param	adc_trig_pos: when the specified width trigger signal is sent, the adc trigger signal is also sent at the 
-*			adc_trig_pos/8 position of the trigger signal width, with the value 0--7
+* @param	trig_interval: 0 - trigger each cycle; 1 - trigger once every 2 cycle; ... ; 7 - Triggers once every 8 cycles.
 * @return
 *******************************************************************************************************************************/
-void PWM_CmpTrigger(PWM_TypeDef * PWMx, uint16_t match, uint32_t dir, uint32_t width, uint32_t trig_chn, uint32_t adc_trig_pos)
+void PWM_CmpTrigger(PWM_TypeDef * PWMx, uint16_t match, uint32_t dir, uint32_t width, uint32_t trig_chn, uint32_t trig_interval)
 {
-	PWMx->CMPTRG = (1        << PWM_CMPTRG_EN_Pos)    |
-				   (match    << PWM_CMPTRG_CMP_Pos)   |
-				   (dir      << PWM_CMPTRG_DIR_Pos)   |
-				   (width    << PWM_CMPTRG_WIDTH_Pos) |
-				   (trig_chn << PWM_CMPTRG_MUX_Pos);
+	PWMx->CMPTRG = (1         << PWM_CMPTRG_EN_Pos)    |
+				   (match     << PWM_CMPTRG_CMP_Pos)   |
+				   (dir       << PWM_CMPTRG_DIR_Pos)   |
+				   ((width/4) << PWM_CMPTRG_WIDTH_Pos) |
+				   (trig_chn  << PWM_CMPTRG_MUX_Pos)   |
+				   /* 在发出指定宽度触发信号的同时，还会在该触发信号宽度的 PWM->CMPTRG.ATP/8 位置处发出adc触发信号，取值0--7 */
+				   (3         << PWM_CMPTRG_ATP_Pos);
 	
-	PWM0->CMPTRG &= ~PWM_CMPTRG_ATP_Msk;
-	PWM0->CMPTRG |= (adc_trig_pos << PWM_CMPTRG_ATP_Pos);
+	PWMx->CMPTRG2 = (trig_interval << PWM_CMPTRG2_INTV_Pos);
 }
 
 /*******************************************************************************************************************************
