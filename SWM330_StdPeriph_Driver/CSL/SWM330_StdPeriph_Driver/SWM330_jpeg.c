@@ -78,7 +78,6 @@ void JPEG_Decode(JPEG_TypeDef * JPEGx, jfif_info_t * jfif_info, jpeg_outset_t * 
 	
 	JPEGx->CFG = (hxvx << JPEG_CFG_SRCFMT_Pos)  |
 				 (0    << JPEG_CFG_SCANMOD_Pos) |
-				 (0    << JPEG_CFG_NISCOMP_Pos) |
 				 (jfif_info->CompInfo[0].htab_id_dc << JPEG_CFG_HT1COMP_Pos) |
 				 (jfif_info->CompInfo[1].htab_id_dc << JPEG_CFG_HT2COMP_Pos) |
 				 (jfif_info->CompInfo[2].htab_id_dc << JPEG_CFG_HT3COMP_Pos) |

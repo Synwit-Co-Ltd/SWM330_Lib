@@ -375,7 +375,7 @@ typedef struct {
 
 #define SYS_PLLCR_OUTEN_Pos		    0       // can only be set after LOCK
 #define SYS_PLLCR_OUTEN_Msk		    (0x01 << SYS_PLLCR_OUTEN_Pos)
-#define SYS_PLLCR_INSEL_Pos		    1       // 0 XTAL, 1 HRC
+#define SYS_PLLCR_INSEL_Pos		    1       // 1 XTAL, 0 HRC
 #define SYS_PLLCR_INSEL_Msk		    (0x01 << SYS_PLLCR_INSEL_Pos)
 #define SYS_PLLCR_OFF_Pos		    2
 #define SYS_PLLCR_OFF_Msk		    (0x01 << SYS_PLLCR_OFF_Pos)
@@ -594,7 +594,11 @@ typedef struct {
 
 
 typedef struct {
-		 uint32_t RESERVED3[16];
+		 uint32_t RESERVED[8];
+	
+	__I  uint32_t ICLST;					// Input capture Line State
+	
+		 uint32_t RESERVED2[7];
 	
 	__IO uint32_t EN;
 } TIMRG_TypeDef;
@@ -608,6 +612,11 @@ typedef struct {
 #define TIMRG_EN_TIMR2_Msk			(0x01 << TIMRG_EN_TIMR2_Pos)
 #define TIMRG_EN_TIMR3_Pos			3
 #define TIMRG_EN_TIMR3_Msk			(0x01 << TIMRG_EN_TIMR3_Pos)
+
+#define TIMRG_ICLST_TIMR0_Pos		0
+#define TIMRG_ICLST_TIMR0_Msk		(0x01 << TIMRG_ICLST_TIMR0_Pos)
+#define TIMRG_ICLST_TIMR1_Pos		1
+#define TIMRG_ICLST_TIMR1_Msk		(0x01 << TIMRG_ICLST_TIMR1_Pos)
 
 
 
@@ -802,6 +811,8 @@ typedef struct {
 #define SPI_CTRL_RFCLR_Msk			(0x01 << SPI_CTRL_RFCLR_Pos)
 #define SPI_CTRL_TFCLR_Pos			25		// TX FIFO Clear
 #define SPI_CTRL_TFCLR_Msk			(0x01 << SPI_CTRL_TFCLR_Pos)
+#define SPI_CTRL_SAMPDLY_Pos		26		// sample delay 0/1/2/3 system clock cycle
+#define SPI_CTRL_SAMPDLY_Msk		(0x03 << SPI_CTRL_SAMPDLY_Pos)
 #define SPI_CTRL_LSBF_Pos			28		// LSB Fisrt
 #define SPI_CTRL_LSBF_Msk			(0x01 << SPI_CTRL_LSBF_Pos)
 #define SPI_CTRL_NSYNC_Pos			29
@@ -945,7 +956,7 @@ typedef struct {
 #define I2S_CR3_SCLKDIV_Pos			0
 #define I2S_CR3_SCLKDIV_Msk			(0xFFF<< I2S_CR3_SCLKDIV_Pos)
 #define I2S_CR3_SCLKODD_Pos			12		// 0: Fsclk = Fpclk / (SCLKDIV * 2), 1: Fsclk = Fpclk / (SCLKDIV * 2 + 1)
-#define I2S_CR3_SCLKODD_Msk			(0xFFF << I2S_CR3_SCLKODD_Pos)
+#define I2S_CR3_SCLKODD_Msk			(0x01 << I2S_CR3_SCLKODD_Pos)
 
 
 
@@ -1387,6 +1398,14 @@ typedef struct {
 #define PWM_OCR_INVAN_Msk			(0x01 << PWM_OCR_INVAN_Pos)
 #define PWM_OCR_INVBN_Pos			7
 #define PWM_OCR_INVBN_Msk			(0x01 << PWM_OCR_INVBN_Pos)
+#define PWM_OCR_FORCEA_Pos			8		// PWM channel A forced output enable, the forced level is set by IDLEA.
+#define PWM_OCR_FORCEA_Msk			(0x01 << PWM_OCR_FORCEA_Pos)
+#define PWM_OCR_FORCEB_Pos			9
+#define PWM_OCR_FORCEB_Msk			(0x01 << PWM_OCR_FORCEB_Pos)
+#define PWM_OCR_FORCEAN_Pos			10
+#define PWM_OCR_FORCEAN_Msk			(0x01 << PWM_OCR_FORCEAN_Pos)
+#define PWM_OCR_FORCEBN_Pos			11
+#define PWM_OCR_FORCEBN_Msk			(0x01 << PWM_OCR_FORCEBN_Pos)
 
 #define PWM_BRKCR_OUTA_Pos			0		// PWM channel A output level when brake state
 #define PWM_BRKCR_OUTA_Msk			(0x01 << PWM_BRKCR_OUTA_Pos)
@@ -1483,6 +1502,8 @@ typedef struct {
 #define PWM_IE_DNCMPA_Msk			(0x01 << PWM_IE_DNCMPA_Pos)
 #define PWM_IE_DNCMPB_Pos			5		// when counting down, the counter match CMPB/CMPB2 interrupt enabled
 #define PWM_IE_DNCMPB_Msk			(0x01 << PWM_IE_DNCMPB_Pos)
+#define PWM_IE_RELOAD_Pos			6		// PWM counter reload interrupt enable
+#define PWM_IE_RELOAD_Msk			(0x01 << PWM_IE_RELOAD_Pos)
 
 #define PWM_IF_UPOVF_Pos			0
 #define PWM_IF_UPOVF_Msk			(0x01 << PWM_IF_UPOVF_Pos)
@@ -1496,6 +1517,8 @@ typedef struct {
 #define PWM_IF_DNCMPA_Msk			(0x01 << PWM_IF_DNCMPA_Pos)
 #define PWM_IF_DNCMPB_Pos			5
 #define PWM_IF_DNCMPB_Msk			(0x01 << PWM_IF_DNCMPB_Pos)
+#define PWM_IF_RELOAD_Pos			6
+#define PWM_IF_RELOAD_Msk			(0x01 << PWM_IF_RELOAD_Pos)
 
 #define PWM_SR_STAT_Pos				0		// 0 IDLE, 1 ACTIVE, 2 PAUSE
 #define PWM_SR_STAT_Msk				(0x03 << PWM_SR_STAT_Pos)
@@ -2280,15 +2303,15 @@ typedef struct {
 #define SDIO_IE_CMDCRCERR_Pos		17		// Command CRC Error Status Enable
 #define SDIO_IE_CMDCRCERR_Msk		(0x01 << SDIO_IE_CMDCRCERR_Pos)
 #define SDIO_IE_CMDENDERR_Pos		18		// Command End Bit Error Status Enable
-#define SDIO_IE_CMDENDERR_Msk		(0x01 << SDIO_IE_CMDENDCERR_Pos)
+#define SDIO_IE_CMDENDERR_Msk		(0x01 << SDIO_IE_CMDENDERR_Pos)
 #define SDIO_IE_CMDIDXERR_Pos		19		// Command Index Error Status Enable
-#define SDIO_IE_CMDIDXERR_Msk		(0x01 << SDIO_IE_CMDIDXCERR_Pos)
+#define SDIO_IE_CMDIDXERR_Msk		(0x01 << SDIO_IE_CMDIDXERR_Pos)
 #define SDIO_IE_DATTIMEOUT_Pos		20		// Data Timeout Error Status Enable
 #define SDIO_IE_DATTIMEOUT_Msk		(0x01 << SDIO_IE_DATTIMEOUT_Pos)
 #define SDIO_IE_DATCRCERR_Pos		21		// Data CRC Error Status Enable
 #define SDIO_IE_DATCRCERR_Msk		(0x01 << SDIO_IE_DATCRCERR_Pos)
 #define SDIO_IE_DATENDERR_Pos		22		// Data End Bit Error Status Enable
-#define SDIO_IE_DATENDERR_Msk		(0x01 << SDIO_IE_DATENDCERR_Pos)
+#define SDIO_IE_DATENDERR_Msk		(0x01 << SDIO_IE_DATENDERR_Pos)
 #define SDIO_IE_CURLIMERR_Pos		23		// Current Limit Error Status Enable
 #define SDIO_IE_CURLIMERR_Msk		(0x01 << SDIO_IE_CURLIMERR_Pos)
 #define SDIO_IE_CMD12ERR_Pos		24		// Auto CMD12 Error Status Enable
@@ -2323,15 +2346,15 @@ typedef struct {
 #define SDIO_IM_CMDCRCERR_Pos		17
 #define SDIO_IM_CMDCRCERR_Msk		(0x01 << SDIO_IM_CMDCRCERR_Pos)
 #define SDIO_IM_CMDENDERR_Pos		18
-#define SDIO_IM_CMDENDERR_Msk		(0x01 << SDIO_IM_CMDENDCERR_Pos)
+#define SDIO_IM_CMDENDERR_Msk		(0x01 << SDIO_IM_CMDENDERR_Pos)
 #define SDIO_IM_CMDIDXERR_Pos		19
-#define SDIO_IM_CMDIDXERR_Msk		(0x01 << SDIO_IM_CMDIDXCERR_Pos)
+#define SDIO_IM_CMDIDXERR_Msk		(0x01 << SDIO_IM_CMDIDXERR_Pos)
 #define SDIO_IM_DATTIMEOUT_Pos		20
 #define SDIO_IM_DATTIMEOUT_Msk		(0x01 << SDIO_IM_DATTIMEOUT_Pos)
 #define SDIO_IM_DATCRCERR_Pos		21
 #define SDIO_IM_DATCRCERR_Msk		(0x01 << SDIO_IM_DATCRCERR_Pos)
 #define SDIO_IM_DATENDERR_Pos		22
-#define SDIO_IM_DATENDERR_Msk		(0x01 << SDIO_IM_DATENDCERR_Pos)
+#define SDIO_IM_DATENDERR_Msk		(0x01 << SDIO_IM_DATENDERR_Pos)
 #define SDIO_IM_CURLIMERR_Pos		23
 #define SDIO_IM_CURLIMERR_Msk		(0x01 << SDIO_IM_CURLIMERR_Pos)
 #define SDIO_IM_CMD12ERR_Pos		24
@@ -2798,7 +2821,7 @@ typedef struct {
 #define DMA2D_CR_WAIT_Msk			(0xFFFFu<<DMA2D_CR_WAIT_Pos)
 
 #define DMA2D_PFCCR_CFMT_Pos		0		// Color Format, 0 ARGB8888, 1 RGB8888, 2 RGB565
-#define DMA2D_PFCCR_CFMT_Msk		(0x07 << DMA2D_CFMT_FORMAT_Pos)
+#define DMA2D_PFCCR_CFMT_Msk		(0x07 << DMA2D_PFCCR_CFMT_Pos)
 #define DMA2D_PFCCR_AINV_Pos		3		// Alpha Invert
 #define DMA2D_PFCCR_AINV_Msk		(0x01 << DMA2D_PFCCR_AINV_Pos)
 #define DMA2D_PFCCR_RBSWAP_Pos		4		// RB Swap, 0 RGB, 1 BGR
@@ -2880,8 +2903,6 @@ typedef struct {
 #define JPEG_CFG_SRCFMT_Msk			(0x03 << JPEG_CFG_SRCFMT_Pos)
 #define JPEG_CFG_SCANMOD_Pos		2		// JPEG scan mode, 0 interleaved (three components), 1 non-interleaved (single component)
 #define JPEG_CFG_SCANMOD_Msk		(0x01 << JPEG_CFG_SCANMOD_Pos)
-#define JPEG_CFG_NISCOMP_Pos		3		// Non-Interleaved Scanning Component, 0 component 1, 1 component 2, 2 component 3
-#define JPEG_CFG_NISCOMP_Msk		(0x03 << JPEG_CFG_NISCOMP_Pos)
 #define JPEG_CFG_HT1COMP_Pos		5		// Huffman Table for Component 1, 0 table 0, 1 table 1
 #define JPEG_CFG_HT1COMP_Msk		(0x01 << JPEG_CFG_HT1COMP_Pos)
 #define JPEG_CFG_HT2COMP_Pos		6
@@ -2927,6 +2948,8 @@ typedef struct {
 #define JPEG_CR_HTCNT_Msk			(0x01 << JPEG_CR_HTCNT_Pos)
 #define JPEG_CR_CUCNT_Pos			12		// The number of CU in the restart interval
 #define JPEG_CR_CUCNT_Msk			(0xFFFF<<JPEG_CR_CUCNT_Pos)
+#define JPEG_CR_HALT_Pos			28		// Decoding halt
+#define JPEG_CR_HALT_Msk			(0x01 << JPEG_CR_HALT_Pos)
 
 #define JPEG_IR_IEDONE_Pos			0		// Frame processing finish interrupt enable
 #define JPEG_IR_IEDONE_Msk			(0x01 << JPEG_IR_IEDONE_Pos)
@@ -2934,18 +2957,24 @@ typedef struct {
 #define JPEG_IR_IEEMPTY_Msk			(0x01 << JPEG_IR_IEEMPTY_Pos)
 #define JPEG_IR_IEERROR_Pos			3		// JPEG error interrupt enable
 #define JPEG_IR_IEERROR_Msk			(0x01 << JPEG_IR_IEERROR_Pos)
+#define JPEG_IR_IEBUSERR_Pos		4		// BUS error interrupt enable
+#define JPEG_IR_IEBUSERR_Msk		(0x01 << JPEG_IR_IEBUSERR_Pos)
 #define JPEG_IR_ICDONE_Pos			5		// Interrupt Clear, write-ongly
 #define JPEG_IR_ICDONE_Msk			(0x01 << JPEG_IR_ICDONE_Pos)
 #define JPEG_IR_ICEMPTY_Pos			7
 #define JPEG_IR_ICEMPTY_Msk			(0x01 << JPEG_IR_ICEMPTY_Pos)
 #define JPEG_IR_ICERROR_Pos			8
 #define JPEG_IR_ICERROR_Msk			(0x01 << JPEG_IR_ICERROR_Pos)
+#define JPEG_IR_ICBUSERR_Pos		9
+#define JPEG_IR_ICBUSERR_Msk		(0x01 << JPEG_IR_ICBUSERR_Pos)
 #define JPEG_IR_IFDONE_Pos			10		// Interrupt Flag, read-only
 #define JPEG_IR_IFDONE_Msk			(0x01 << JPEG_IR_IFDONE_Pos)
 #define JPEG_IR_IFEMPTY_Pos			12
 #define JPEG_IR_IFEMPTY_Msk			(0x01 << JPEG_IR_IFEMPTY_Pos)
 #define JPEG_IR_IFERROR_Pos			13
 #define JPEG_IR_IFERROR_Msk			(0x01 << JPEG_IR_IFERROR_Pos)
+#define JPEG_IR_IFBUSERR_Pos		14
+#define JPEG_IR_IFBUSERR_Msk		(0x01 << JPEG_IR_IFBUSERR_Pos)
 
 #define JPEG_SR_BUSY_Pos			0
 #define JPEG_SR_BUSY_Msk			(0x01 << JPEG_SR_BUSY_Pos)
@@ -2955,10 +2984,10 @@ typedef struct {
 #define JPEG_SR_REIMERR_Msk			(0x01 << JPEG_SR_REIMERR_Pos)
 #define JPEG_SR_BUFBUSY_Pos			4		// JPEG decoder stream buffering status
 #define JPEG_SR_BUFBUSY_Msk			(0x01 << JPEG_SR_BUFBUSY_Pos)
-#define JPEG_SR_DMARDBUSY_Pos		5
-#define JPEG_SR_DMARDBUSY_Msk		(0x01 << JPEG_SR_DMARDBUSY_Pos)
-#define JPEG_SR_DMAWRBUSY_Pos		6
-#define JPEG_SR_DMAWRBUSY_Msk		(0x01 << JPEG_SR_DMAWRBUSY_Pos)
+#define JPEG_SR_DMARDIDLE_Pos		5		// JPEG AHB DMA read IDLE
+#define JPEG_SR_DMARDIDLE_Msk		(0x01 << JPEG_SR_DMARDIDLE_Pos)
+#define JPEG_SR_DMAWRIDLE_Pos		6
+#define JPEG_SR_DMAWRIDLE_Msk		(0x01 << JPEG_SR_DMAWRIDLE_Pos)
 
 #define JPEG_IMGSIZ_HPIX_Pos		0		// JPEG image width (minus 1)
 #define JPEG_IMGSIZ_HPIX_Msk		(0x7FF<< JPEG_IMGSIZ_HPIX_Pos)
@@ -3020,6 +3049,8 @@ typedef struct {
 #define SRA_SR_BUSY_Msk				(0x01 << SRA_SR_BUSY_Pos)
 #define SRA_SR_ABORT_Pos			1		// 1 Abort pending
 #define SRA_SR_ABORT_Msk			(0x01 << SRA_SR_ABORT_Pos)
+#define SRA_SR_BUSBUSY_Pos			2
+#define SRA_SR_BUSBUSY_Msk			(0x01 << SRA_SR_BUSBUSY_Pos)
 
 #define SRA_IFE_FRAME_Pos			0
 #define SRA_IFE_FRAME_Msk			(0x01 << SRA_IFE_FRAME_Pos)
@@ -3087,9 +3118,9 @@ typedef struct {
 #define SRA_SRCSIZE_HEIGHT_Msk		(0x7FFF << SRA_SRCSIZE_HEIGHT_Pos)
 
 #define SRA_DSTSIZE_WIDTH_Pos		0
-#define SRA_DSTSIZE_WIDTH_Msk		(0x7FFF << SRA_DSTSIZE_WIDTH_Pos)
+#define SRA_DSTSIZE_WIDTH_Msk		(0xFFFF << SRA_DSTSIZE_WIDTH_Pos)
 #define SRA_DSTSIZE_HEIGHT_Pos		16
-#define SRA_DSTSIZE_HEIGHT_Msk		(0x7FFF << SRA_DSTSIZE_HEIGHT_Pos)
+#define SRA_DSTSIZE_HEIGHT_Msk		(0xFFFFu<< SRA_DSTSIZE_HEIGHT_Pos)
 
 
 
@@ -3255,6 +3286,8 @@ typedef struct {
 #define DVP_OUTCR_BUSBUSY_Msk		(0x01 << DVP_OUTCR_BUSBUSY_Pos)
 #define DVP_OUTCR_BUSERR_Pos		4
 #define DVP_OUTCR_BUSERR_Msk		(0x01 << DVP_OUTCR_BUSERR_Pos)
+#define DVP_OUTCR_VALID_Pos			5		// status of frame in capturing, 0 invalid, 1 valid
+#define DVP_OUTCR_VALID_Msk			(0x01 << DVP_OUTCR_VALID_Pos)
 
 
 
