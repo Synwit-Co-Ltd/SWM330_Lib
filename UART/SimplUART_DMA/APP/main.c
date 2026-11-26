@@ -79,7 +79,7 @@ int main(void)
 			{
 				UART_WriteByte(UART0, TX_String[i][j]);
 				
-				while(UART_IsTXBusy(UART0));
+				while(UART_IsTXBusy(UART0)) __NOP();
 			}
 			
 			SW_DelayMS(500);
@@ -131,7 +131,7 @@ int fputc(int ch, FILE *f)
 {
 	UART_WriteByte(UART0, ch);
 	
-	while(UART_IsTXBusy(UART0));
+	while(UART_IsTXBusy(UART0)) __NOP();
  	
 	return ch;
 }

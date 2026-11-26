@@ -89,7 +89,7 @@ int fputc(int ch, FILE *f)
 {
 	UART_WriteByte(UART0, ch);
 	
-	while(UART_IsTXBusy(UART0));
+	while(UART_IsTXBusy(UART0)) __NOP();
  	
 	return ch;
 }
